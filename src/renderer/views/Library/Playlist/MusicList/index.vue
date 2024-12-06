@@ -1,60 +1,8 @@
 <template>
   <div :class="$style.list">
-    <div class="thead">
-      <table>
-        <thead>
-          <tr v-if="actionButtonsVisible">
-            <th class="num" style="width: 5%;">#</th>
-            <th class="nobreak">{{ $t('music_name') }}</th>
-            <th class="nobreak" style="width: 22%;">{{ $t('music_singer') }}</th>
-            <th class="nobreak" style="width: 22%;">{{ $t('music_album') }}</th>
-            <th class="nobreak" style="width: 9%;">{{ $t('music_time') }}</th>
-            <th class="nobreak" style="width: 16%;">{{ $t('action') }}</th>
-          </tr>
-          <tr v-else>
-            <th class="num" style="width: 5%;">#</th>
-            <th class="nobreak">{{ $t('music_name') }}</th>
-            <th class="nobreak" style="width: 25%;">{{ $t('music_singer') }}</th>
-            <th class="nobreak" style="width: 28%;">{{ $t('music_album') }}</th>
-            <th class="nobreak" style="width: 10%;">{{ $t('music_time') }}</th>
-          </tr>
-        </thead>
-      </table>
-    </div>
     <div v-show="list.length" ref="dom_listContent" :class="$style.content">
       <base-virtualized-list
-        v-if="actionButtonsVisible" ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
-        :item-height="listItemHeight" container-class="scroll" content-class="list"
-        @scroll="saveListPosition" @contextmenu.capture="handleListRightClick"
-      >
-        <div
-          class="list-item" :class="[{ [$style.active]: playerInfo.isPlayList && playerInfo.playIndex === index }, { selected: selectedIndex == index || rightClickSelectedIndex == index }, { active: selectedList.includes(item) }, { disabled: !assertApiSupport(item.source) }]"
-          @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
-        >
-          <div class="list-item-cell no-select" :class="$style.num" style="flex: 0 0 5%;">
-            <transition name="play-active">
-              <div v-if="playerInfo.isPlayList && playerInfo.playIndex === index" :class="$style.playIcon">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 512 512" space="preserve">
-                  <use xlink:href="#icon-play-outline" />
-                </svg>
-              </div>
-              <div v-else class="num">{{ index + 1 }}</div>
-            </transition>
-          </div>
-          <div class="list-item-cell auto name" :aria-label="item.name">
-            <span class="select name">{{ item.name }}</span>
-            <span v-if="isShowSource" class="no-select label-source">{{ item.source }}</span>
-          </div>
-          <div class="list-item-cell" style="flex: 0 0 22%;"><span class="select" :aria-label="item.singer">{{ item.singer }}</span></div>
-          <div class="list-item-cell" style="flex: 0 0 22%;"><span class="select" :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
-          <div class="list-item-cell" style="flex: 0 0 9%;"><span class="no-select">{{ item.interval || '--/--' }}</span></div>
-          <div class="list-item-cell" style="flex: 0 0 16%; padding-left: 0; padding-right: 0;">
-            <material-list-buttons :index="index" :download-btn="assertApiSupport(item.source) && item.source != 'local'" @btn-click="handleListBtnClick" />
-          </div>
-        </div>
-      </base-virtualized-list>
-      <base-virtualized-list
-        v-else ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
+        ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
         :item-height="listItemHeight" container-class="scroll" content-class="list"
         @scroll="saveListPosition" @contextmenu.capture="handleListRightClick"
       >
@@ -63,23 +11,20 @@
           :class="[{ [$style.active]: playerInfo.isPlayList && playerInfo.playIndex === index }, { selected: selectedIndex == index || rightClickSelectedIndex == index }, { active: selectedList.includes(item) }, { disabled: !assertApiSupport(item.source) }]"
           @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
         >
-          <div class="list-item-cell no-select" :class="$style.num" style="flex: 0 0 5%;">
-            <transition name="play-active">
-              <div v-if="playerInfo.isPlayList && playerInfo.playIndex === index" :class="$style.playIcon">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 512 512" space="preserve">
-                  <use xlink:href="#icon-play-outline" />
-                </svg>
+          <div :class="$style.songInfo" class="list-item-cell auto name">
+            <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" alt="item.name" loading="lazy">
+            <div :class="$style.info">
+              <div :class="$style.title">
+                <span class="select name" :aria-label="item.name">{{ item.name }}</span>
+                <span v-if="isShowSource" class="no-select label-source">{{ item.source }}</span>
               </div>
-              <div v-else class="num">{{ index + 1 }}</div>
-            </transition>
+              <div :class="$style.subtitle">
+                <span class="select" :aria-label="item.singer">{{ item.singer }}</span>
+              </div>
+            </div>
           </div>
-          <div class="list-item-cell auto name">
-            <span class="select name" :aria-label="item.name">{{ item.name }}</span>
-            <span v-if="isShowSource" class="no-select label-source">{{ item.source }}</span>
-          </div>
-          <div class="list-item-cell" style="flex: 0 0 25%;"><span class="select" :aria-label="item.singer">{{ item.singer }}</span></div>
-          <div class="list-item-cell" style="flex: 0 0 28%;"><span class="select" :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
-          <div class="list-item-cell" style="flex: 0 0 10%;"><span class="no-select">{{ item.interval || '--/--' }}</span></div>
+          <div class="list-item-cell" style="flex: 0 0 40%;"><span class="select" :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
+          <div :class="$style.textRight" class="list-item-cell" style="flex: 0 0 8%;"><span class="no-select">{{ item.interval || '--/--' }}</span></div>
         </div>
       </base-virtualized-list>
     </div>
@@ -300,6 +245,12 @@ export default {
       listRef.value.scrollTo(0, true)
     }
 
+    const resizeImage = (imgUrl, size = 512) => {
+      if (!imgUrl) return ''
+      let httpsImgUrl = imgUrl
+      return `${httpsImgUrl}?param=${size}y${size}`
+    }
+
     return {
       listItemHeight,
       handleListItemClick,
@@ -354,6 +305,8 @@ export default {
       isShowMusicToggleModal,
       selectedToggleMusicInfo,
       toggleSource,
+
+      resizeImage,
     }
   },
 }
@@ -362,6 +315,40 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+.textRight{
+  text-align: right;
+}
+.songInfo{
+  display: flex;
+  align-items: center;
+  .info {
+    margin-left: 10px;
+  }
+  .cover{
+      height: 38px;
+      width: 38px;
+      border-radius: 4px;
+      object-fit: cover;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  .subtitle {
+    font-size: 12px;
+    opacity: 0.68;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    word-break: break-all;
+  }
+}
 
 .list {
   overflow: hidden;
@@ -373,6 +360,7 @@ export default {
   :global(.list-item) {
     &.active {
       color: var(--color-button-font);
+      background-color: var(--color-primary-alpha-900);
     }
   }
   :global {

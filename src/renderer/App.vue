@@ -45,7 +45,12 @@ onMounted(() => {
 <style lang="less">
 @import './assets/styles/index.less';
 @import './assets/styles/layout.less';
-
+.title{
+  font-size: 42px;
+  color: var(--color-text);
+  font-weight: 600;
+  padding-top: 24px;
+}
 html {
   height: 100vh;
 }
@@ -176,8 +181,8 @@ body {
     left: 0;
     height: 84px;
     backdrop-filter: saturate(180%) blur(20px);
-    background-color: var(--color-primary-light-1000-alpha-200);
-    z-index: 9999;
+    background-color: var(--color-primary-light-1000-alpha-150);
+    z-index: 9;
     -webkit-app-region: drag;
     padding-right: 10vw;
     padding-left: 10vw;
@@ -197,9 +202,13 @@ body {
 
 #player-container{
   position: fixed;
-  bottom: 0;
+  right: 0;
   left: 0;
-  width: 100%;
+  bottom: 0;
+  height: 64px;
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: var(--color-primary-light-1000-alpha-150);
+  z-index: 9;
 }
 </style>
 

@@ -13,7 +13,6 @@
 .view {
   position: relative;
   z-index: 1;
-  padding-top: 64px;
+  padding-top: 84px;
 }
-
 </style>

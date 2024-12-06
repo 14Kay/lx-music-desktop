@@ -80,7 +80,7 @@ const handleSearch = (text) => {
 @import '@renderer/assets/styles/layout.less';
 
 .noitem {
-  position: absolute;
+  padding-top: 25vh;
   top: 0;
   left: 0;
   height: 100%;

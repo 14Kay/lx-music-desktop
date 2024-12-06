@@ -1,31 +1,16 @@
 <template>
   <div :class="$style.container">
-    <div :class="$style.songListHeader">
-      <div :class="$style.songListHeaderLeft" :style="{ backgroundImage: 'url('+(picUrl || listDetailInfo.info.img)+')' }">
-        <!-- <span v-if="listDetailInfo.info.play_count" :class="$style.playNum">{{ listDetailInfo.info.play_count }}</span> -->
-      </div>
-      <div :class="$style.songListHeaderMiddle">
-        <h3 :title="listDetailInfo.info.name">{{ listDetailInfo.info.name }}</h3>
-        <p :title="listDetailInfo.info.desc">{{ listDetailInfo.info.desc }}</p>
-      </div>
-      <div :class="$style.songListHeaderRight">
-        <base-btn
-          :class="$style.headerRightBtn"
-          :disabled="!!listDetailInfo.noItemLabel"
-          @click="playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list)"
-        >
-          {{ $t('list__play') }}
-        </base-btn>
-        <base-btn
-          :class="$style.headerRightBtn"
-          :disabled="!!listDetailInfo.noItemLabel"
-          @click="addSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.info.name)"
-        >
-          {{ $t('list__collect') }}
-        </base-btn>
-        <base-btn :class="$style.headerRightBtn" @click="handleBack">{{ $t('back') }}</base-btn>
-      </div>
-    </div>
+    <common-playlist-info
+    :id="listDetailInfo.id"
+    :author="listDetailInfo.info.author"
+    :cover="picUrl || listDetailInfo.info.img"
+    :title="listDetailInfo.info.name"
+    :description="listDetailInfo.info.desc"
+    :count="listDetailInfo.total"
+    :is-collected="isCollected"
+    @play="playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list)"
+    @collect="handleCollect"
+    />
     <div :class="$style.list">
       <material-online-list
         ref="listRef"
@@ -46,17 +31,16 @@ import { ref, watch } from '@common/utils/vueTools'
 import { listDetailInfo } from '@renderer/store/songList/state'
 import { setVisibleListDetail } from '@renderer/store/songList/action'
 import { useRouter } from '@common/utils/vueRouter'
-import { addSongListDetail, playSongListDetail } from './action'
+import { addSongListDetail, playSongListDetail, isAlreadyExists, removeSongListDetail } from './action'
 import useList from './useList'
 import useKeyBack from './useKeyBack'
-
 
 const source = ref<LX.OnlineSource>('kw')
 const id = ref<string>('')
 const page = ref<number>(1)
 const picUrl = ref<string>('')
 const refresh = ref<boolean>(false)
-
+const isCollected = ref<boolean>(false)
 
 interface Query {
   source?: string
@@ -123,19 +107,23 @@ export default {
 
     const handleBack = () => {
       setVisibleListDetail(false)
-      if (window.lx.songListInfo.fromName) void router.replace({ name: window.lx.songListInfo.fromName })
+      if (window.lx.songListInfo.fromName) void router.push({ name: window.lx.songListInfo.fromName })
       else router.back()
     }
 
+    const handleCollect = async() => {
+      if (!isAlreadyExists(listDetailInfo.id, listDetailInfo.source)) {
+        await addSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.info.name, picUrl.value || listDetailInfo.info.img)
+        isCollected.value = true
+      } else {
+        removeSongListDetail(listDetailInfo.id, listDetailInfo.source)
+        isCollected.value = false
+      }
+    }
     useKeyBack(handleBack)
 
     watch([source, id, page, refresh], async([_source, _id, _page, _refresh]) => {
-      if (!_source || !_id) return router.replace({ path: '/songList/list' })
-      // console.log(_source, _id, _page, _refresh, picUrl.value)
-      // source.value = _source
-      // id.value = _id
-      // refresh.value = _refresh
-      // page.value = _page ?? 1
+      isCollected.value = isAlreadyExists(_id, _source)
       void getListData(_source, _id, _page, _refresh)
     }, {
       immediate: true,
@@ -153,6 +141,9 @@ export default {
       playSongListDetail,
       handlePlayList,
       handleBack,
+
+      isCollected,
+      handleCollect,
     }
   },
 }
@@ -167,6 +158,7 @@ export default {
   // top: 0;
   // width: 100%;
   // height: 100%;
+  padding-top: 24px;
   display: flex;
   flex-flow: column nowrap;
 }
@@ -245,6 +237,7 @@ export default {
   min-height: 0;
   flex: auto;
   height: 100%;
+  margin-top: 32px;
 }
 </style>
 

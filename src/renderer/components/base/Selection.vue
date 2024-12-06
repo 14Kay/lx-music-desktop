@@ -1,12 +1,14 @@
 <template>
   <div class="content" :class="[$style.select, show ? $style.active : '']">
     <div ref="dom_btn" class="label-content" :class="$style.label" @click="handleShow">
-      <span class="label">{{ label }}</span>
-      <div class="icon" :class="$style.icon">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
-          <use xlink:href="#icon-down" />
-        </svg>
-      </div>
+      <base-button small>
+        <span class="label">{{ label }}</span>
+        <div class="icon" :class="$style.icon">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
+            <use xlink:href="#icon-down" />
+          </svg>
+        </div>
+      </base-button>
     </div>
     <ul v-if="show" ref="dom_list" class="selection-list scroll" :class="$style.list" :style="listStyles">
       <li
@@ -121,7 +123,8 @@ export default {
   font-size: 12px;
   position: relative;
   width: 300px;
-
+  display: flex;
+  align-items: center;
   &.active {
     .label {
       background-color: var(--color-button-background);
@@ -139,7 +142,6 @@ export default {
 
 .label {
   background-color: var(--color-button-background);
-  padding: 0 10px;
   transition: background-color @transition-normal;
   height: @selection-height;
   // line-height: 27px;

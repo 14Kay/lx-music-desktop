@@ -2,14 +2,13 @@ import { tempListMeta, userLists } from '@renderer/store/list/state'
 import { dialog } from '@renderer/plugins/Dialog'
 import syncSourceList from '@renderer/store/list/syncSourceList'
 import { getListDetail, getListDetailAll } from '@renderer/store/songList/action'
-import { createUserList, setTempList } from '@renderer/store/list/action'
+import { createUserList, setTempList, removeUserList } from '@renderer/store/list/action'
 import { playList } from '@renderer/core/player/action'
 import { LIST_IDS } from '@common/constants'
 import { toMD5 } from '@renderer/utils'
-
 const getListId = (id: string, source: LX.OnlineSource) => `${source}__${id}`
 
-export const addSongListDetail = async(id: string, source: LX.OnlineSource, name?: string) => {
+export const addSongListDetail = async(id: string, source: LX.OnlineSource, name?: string, cover?: string) => {
   // console.log(this.listDetail.info)
   // if (!this.listDetail.info.name) return
   const listId = getListId(id, source)
@@ -28,11 +27,26 @@ export const addSongListDetail = async(id: string, source: LX.OnlineSource, name
   const list = await getListDetailAll(id, source)
   await createUserList({
     name,
+    cover,
     id: `${source}_${toMD5(listId)}`,
     list,
     source,
     sourceListId: id,
   })
+}
+
+export const removeSongListDetail = (id: string, source: LX.OnlineSource) => {
+  const listId = getListId(id, source)
+  const md5Id = `${source}_${toMD5(listId)}`
+  const targetList = userLists.find(l => l.id == md5Id)
+  if (!targetList) return
+  void removeUserList([targetList.id])
+}
+
+export const isAlreadyExists = (id: string, source: LX.OnlineSource) => {
+  const listId = getListId(id, source)
+  const md5Id = `${source}_${toMD5(listId)}`
+  return userLists.some(l => l.id == md5Id)
 }
 
 export const playSongListDetail = async(id: string, source: LX.OnlineSource, list?: LX.Music.MusicInfoOnline[], index: number = 0) => {

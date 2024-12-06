@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style.progress, className]">
+  <div :class="[$style.progress, className]" :style="{height: height + 'px'}">
     <div :class="[$style.progressBar, $style.progressBar2, {[$style.barTransition]: isActiveTransition}]" :style="{ transform: `scaleX(${progress || 0})` }" @transitionend="handleTransitionEnd" />
     <div v-show="dragging" :class="[$style.progressBar, $style.progressBar3]" :style="{ transform: `scaleX(${dragProgress || 0})` }" />
   </div>
@@ -27,6 +27,10 @@ export default {
     handleTransitionEnd: {
       type: Function,
       required: true,
+    },
+    height: {
+      type: Number,
+      default: 5,
     },
   },
   setup(props) {
@@ -95,11 +99,10 @@ export default {
 
 .progress {
   width: 100%;
-  height: 5px;
   overflow: hidden;
   transition: @transition-normal;
   transition-property: background-color;
-  background-color: var(--color-primary-light-100-alpha-800);
+  background-color: var(--color-050);
   // background-color: #f5f5f5;
   position: relative;
   border-radius: 40px;
@@ -125,7 +128,7 @@ export default {
 }
 
 .progressBar2 {
-  background-color: var(--color-primary-light-100-alpha-400);
+  background-color: var(--color-primary);
   will-change: transform;
 }
 

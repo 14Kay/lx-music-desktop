@@ -2,8 +2,8 @@
   <div :class="$style.controlBtn">
     <!-- <common-volume-bar /> -->
     <button :class="$style.titleBtn" :aria-label="$t('player__add_music_to')" @click="addMusicTo">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="90%" viewBox="0 0 512 512" space="preserve">
-        <use xlink:href="#icon-add-2" />
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="75%" viewBox="0 0 512 512" space="preserve">
+        <use xlink:href="#icon-heart" />
       </svg>
     </button>
     <button :class="$style.titleBtn" :aria-label="toggleDesktopLyricBtnTitle" @click="toggleDesktopLyric" @contextmenu="toggleLockDesktopLyric">
@@ -14,8 +14,8 @@
         <use xlink:href="#icon-desktop-lyric-off" />
       </svg>
     </button>
-    <common-volume-btn />
     <common-toggle-play-mode-btn />
+    <common-volume-progress />
     <common-list-add-modal v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo" />
   </div>
 </template>
@@ -56,14 +56,13 @@ export default {
 
 .controlBtn {
   padding-left: 20px;
-  padding-right: 10px;
   flex: none;
   display: flex;
   flex-flow: row nowrap;
   gap: 10px;
-
+  align-items: center;
   button {
-    color: var(--color-button-font);
+    color: var(--color-1000);
   }
 }
 

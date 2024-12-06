@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.container">
+    <h1 class="title">搜索<span v-show="searchType">{{ searchType === 'music' ? '歌曲': '歌单' }}</span> <span v-show="searchText">"{{ searchText }}"</span></h1>
     <div :class="$style.header">
       <base-tab v-model="source" :list="sources" @change="handleSourceChange" />
       <base-tab v-model="searchType" :list="searchTypes" @change="handleTypeChange" />
@@ -128,6 +129,7 @@ export default {
 
 .header {
   // padding: 5px 0;
+  margin-top: 24px;
   flex: none;
   display: flex;
   flex-flow: row nowrap;

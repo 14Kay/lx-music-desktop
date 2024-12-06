@@ -2,47 +2,37 @@
  * @Description: 我的最爱
  * @Author: 14K
  * @Date: 2024-12-03 15:39:40
- * @LastEditTime: 2024-12-03 23:16:57
+ * @LastEditTime: 2024-12-06 14:57:06
  * @LastEditors: 14K
 -->
 <template>
   <div :class="$style.lists" :style="rowStyles">
     <div>
-      <div>
-        <Cover
+      <material-playlist
         :id="loveList.id"
-        :image-url="_loveLists.cover || ''"
-        :play-button-size="22"
-      />
-     </div>
-     <div :class="$style.text">
-       <div :class="$style.title">{{ $t(loveList.name) }} </div>
-      </div>
+        :cover="_loveLists.cover || ''"
+        :title="$t(loveList.name)"
+        :is-my-playlist="true"
+        :count="_loveLists.count"
+        ></material-playlist>
     </div>
     <div>
-      <div>
-        <Cover
+      <material-playlist
         :id="defaultList.id"
-        :image-url="_defaultLists.cover || ''"
-        :play-button-size="22"
-      />
-     </div>
-      <div :class="$style.text">
-        <div :class="$style.title"> {{ $t(defaultList.name) }} </div>
-      </div>
+        :cover="_defaultLists.cover || ''"
+        :title="$t(defaultList.name)"
+        :is-my-playlist="true"
+        :count="_defaultLists.count"
+        ></material-playlist>
     </div>
-
     <div v-for="item in _userLists" :key="item.id">
-      <div>
-        <Cover
+      <material-playlist
         :id="item.id"
-        :image-url="item.cover || ''"
-        :play-button-size="22"
-      />
-     </div>
-     <div :class="$style.text">
-        <div :class="$style.title"> {{ item.name }} </div>
-      </div>
+        :cover="item.cover || ''"
+        :title="item.name"
+        :is-my-playlist="true"
+        :count="item.count"
+        ></material-playlist>
     </div>
   </div>
 </template>
@@ -51,13 +41,12 @@
 import { loveList, defaultList, userLists } from '@renderer/store/list/state'
 import { getListMusics } from '@renderer/store/list/action'
 import { ref, computed, onBeforeUnmount, watch } from 'vue'
-import Cover from './Cover.vue'
-
 let stopWatchUserList: any = null
 
 interface List {
   cover: string | null | undefined
   id: string
+  count: number
 }
 
 const props = defineProps({
@@ -71,8 +60,8 @@ const props = defineProps({
   },
 })
 
-const _loveLists = ref<List>({ cover: null, id: '' })
-const _defaultLists = ref<List>({ cover: null, id: '' })
+const _loveLists = ref<List>({ cover: null, id: '', count: 0 })
+const _defaultLists = ref<List>({ cover: null, id: '', count: 0 })
 const _userLists = ref<Array<List & { name: string }>>([])
 
 const rowStyles = computed(() => ({
@@ -85,6 +74,7 @@ getListMusics(loveList.id).then(res => {
     _loveLists.value = {
       cover: res.find(item => item.meta.picUrl)?.meta.picUrl,
       id: loveList.id,
+      count: res.length,
     }
   }
 })
@@ -94,17 +84,19 @@ getListMusics(defaultList.id).then(res => {
     _defaultLists.value = {
       cover: res.find(item => item.meta.picUrl)?.meta.picUrl,
       id: defaultList.id,
+      count: res.length,
     }
   }
 })
 
-async function fetchAndAddList(id: string, name: string) {
+async function fetchAndAddList(id: string, name: string, cover: string | null | undefined) {
   const res = await getListMusics(id)
   if (res) {
     _userLists.value.push({
-      cover: res.find(item => item.meta.picUrl)?.meta.picUrl,
+      cover: cover ?? res.find(item => item.meta.picUrl)?.meta.picUrl,
       name,
       id,
+      count: res.length,
     })
   }
 }
@@ -112,8 +104,7 @@ async function fetchAndAddList(id: string, name: string) {
 const getList = () => {
   _userLists.value = []
   userLists.forEach(list => {
-    console.log('list', list.id, list.name)
-    fetchAndAddList(list.id, list.name)
+    fetchAndAddList(list.id, list.name, list.cover)
   })
 }
 getList()

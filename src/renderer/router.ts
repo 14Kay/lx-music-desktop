@@ -39,11 +39,19 @@ const router = createRouter({
       },
     },
     {
-      path: '/list',
-      name: 'List',
-      component: require('./views/List/index.vue').default,
+      path: '/library',
+      name: 'Library',
+      component: require('./views/Library/index.vue').default,
       meta: {
-        name: 'List',
+        name: 'Library',
+      },
+    },
+    {
+      path: '/library/playlist',
+      name: 'Playlist',
+      component: require('./views/Library/Playlist/index.vue').default,
+      meta: {
+        name: 'Playlist',
       },
     },
     {

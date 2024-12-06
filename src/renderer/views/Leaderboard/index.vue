@@ -1,9 +1,12 @@
 <template>
   <div :class="$style.leaderboard">
-    <div :class="$style.lists">
+    <div class="title" :class="$style.leaderboardTitle">
+      <h1>排行榜</h1>
       <div :class="$style.listsSelect">
         <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name" @update:model-value="handleToggleSource" />
       </div>
+    </div>
+    <div :class="$style.lists">
       <BoardList ref="boardListRef" :board-id="boardId" :source="source" @show-menu="$refs.musicListRef?.hideMenu()" />
     </div>
     <div :class="$style.list">
@@ -86,10 +89,13 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-
+.leaderboardTitle{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .leaderboard {
   height: 100%;
-  display: flex;
   position: relative;
 }
 .header {
@@ -115,9 +121,10 @@ export default {
 
 .lists {
   flex: none;
-  width: 14.8%;
   display: flex;
-  flex-flow: column nowrap;
+  align-items: center;
+  margin-top: 24px;
+  overflow: hidden;
 }
 .listsHeader {
   position: relative;
@@ -168,9 +175,7 @@ export default {
       }
     }
   }
-  // line-height: 38px;
-  // padding: 0 10px;
-  border-bottom: var(--color-list-header-border-bottom);
+
   flex: none;
 }
 
@@ -181,6 +186,7 @@ export default {
   flex: auto;
   display: flex;
   flex-flow: column nowrap;
+  margin-top: 24px;
   // .noItem {
 
   // }

@@ -62,7 +62,7 @@ export default {
 
     // const theme = useRefGetter('theme')
     // const setting = useRefGetter('setting')
-    let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-light-200-alpha-800')
+    let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-light-200-alpha-400')
     // watch(theme, theme => {
     //   themeColor = themes[theme || 'green']
     // })

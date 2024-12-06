@@ -40,6 +40,7 @@ const getListData = async(source: LX.OnlineSource, tabId: string, sortId: string
 }
 
 const togglePage = (page: number) => {
+  console.log(page)
   void router.replace({
     path: route.path,
     query: {

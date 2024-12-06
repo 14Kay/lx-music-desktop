@@ -36,7 +36,7 @@ import Arrows from './Arrows.vue'
 }
 
 .navbar{
-  flex: 2;
+  flex: 3;
   display: flex;
   justify-content: center;
   text-transform: uppercase;

@@ -66,11 +66,11 @@ const handleTogglePage = (page: number) => {
 
 <style lang="less" module>
 .container {
-  position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+  margin-top: 12px;
 }
 
 .list {

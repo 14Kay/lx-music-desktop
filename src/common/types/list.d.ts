@@ -3,6 +3,7 @@ declare namespace LX {
     interface UserListInfo {
       id: string
       name: string
+      cover?: string
       // list: LX.Music.MusicInfo[]
       source?: LX.OnlineSource
       sourceListId?: string

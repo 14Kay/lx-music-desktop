@@ -1,4 +1,3 @@
-
 <template>
     <div class="navigation-buttons">
         <base-button-icon @click="go('back')"><base-svg-icon icon-class="arrow-left" /></base-button-icon>
@@ -10,6 +9,7 @@
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const go = (where) => {
+  console.log(router)
   if (where === 'back') router.go(-1)
   else router.go(1)
 }

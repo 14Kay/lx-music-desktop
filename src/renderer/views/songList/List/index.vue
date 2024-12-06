@@ -5,7 +5,7 @@
         <tag-list :source="source" :tag-id="tagId" :sort-id="sortId" />
         <sort-tab :source="source" :tag-id="tagId" :sort-id="sortId" />
       </div>
-      <base-btn :class="$style.btn" outline min @click="visibleOpenSongListModal = true">{{ $t('songlist__import_input_show_btn') }}</base-btn>
+      <base-button :class="$style.btn" @click="visibleOpenSongListModal = true">{{ $t('songlist__import_input_show_btn') }}</base-button>
       <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name" @update:model-value="handleToggleSource" />
     </div>
     <list-view :source="source" :tag-id="tagId" :sort-id="sortId" :page="page" />
@@ -28,7 +28,6 @@ const source = ref<LX.OnlineSource>('kw')
 const tagId = ref<string>('')
 const sortId = ref<string>('')
 const page = ref<number>(1)
-
 
 interface Query {
   source?: string
@@ -128,6 +127,7 @@ export default {
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
+  margin-bottom: 12px;
   // padding-right: 5px;
   // box-sizing: border-box;
   padding-bottom: 5px;
@@ -136,24 +136,17 @@ export default {
   flex: auto;
   display: flex;
   flex-flow: row nowrap;
+  gap: 16px;
 }
 
 .btn {
-  color: var(--color-font);
-  transition: color @transition-fast;
-  background: none !important;
-  &:hover {
-    color: var(--color-primary-font-hover);
-  }
+  margin-right: 16px;
 }
-
 
 .select {
   font-size: 12px;
   width: auto;
   flex: none;
-  padding: 0 5px;
-
   &:hover {
     :global(.icon) {
       opacity: 1;

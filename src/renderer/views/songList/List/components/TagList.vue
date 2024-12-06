@@ -1,12 +1,14 @@
 <template>
   <div :class="[$style.tagList, {[$style.active]: popupVisible}]">
     <div ref="dom_btn" :class="$style.label" @click.stop="handleShow">
-      <span>{{ tagName }}</span>
-      <div :class="$style.icon">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
-          <use xlink:href="#icon-down" />
-        </svg>
-      </div>
+      <base-button small>
+        <span>{{ tagName }}</span>
+        <div :class="$style.icon">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
+            <use xlink:href="#icon-down" />
+          </svg>
+        </div>
+      </base-button>
     </div>
     <div :class="$style.popup" :style="popupStyle" :aria-hidden="!popupVisible" @click.stop>
       <div :class="$style.list" class="scroll">
@@ -122,7 +124,8 @@ onBeforeUnmount(() => {
 .tagList {
   font-size: 12px;
   position: relative;
-
+  display: flex;
+  align-items: center;
   &.active {
     .label {
       .icon {
@@ -140,7 +143,6 @@ onBeforeUnmount(() => {
 }
 
 .label {
-  padding: 8px 15px;
   // background-color: var(--color-button-background);
   transition: color @transition-normal;
   // border-top: 2px solid @color-tab-border-bottom;

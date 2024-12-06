@@ -24,8 +24,8 @@ exports.createThemeColors = (rgbaColor, fontRgbaColor, isDark, isDarkFont) => {
   }
   preColor = RGB_Linear_Shade(isDark ? -0.35 : 1, preColor)
   colors[`--color-primary-light-${1000}`] = preColor
-  for (let j = 1; j < 10; j += 1) {
-    colors[`--color-primary-light-${1000}-alpha-${j * 100}`] = RGB_Alpha_Shade(0.1 * j, preColor)
+  for (let j = 1; j < 20; j += 1) {
+    colors[`--color-primary-light-${1000}-alpha-${j * 50}`] = RGB_Alpha_Shade(0.05 * j, preColor)
   }
 
   colors['--color-theme'] = isDark ? colors['--color-primary-light-900'] : rgbaColor

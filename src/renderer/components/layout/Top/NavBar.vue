@@ -28,12 +28,12 @@ export default {
       const size = iconSize.value
       return [
         {
-          to: '/list',
-          tips: t('my_list'),
+          to: '/library',
+          tips: t('library'),
           size,
-          name: 'List',
+          name: 'Library',
           enable: true,
-          title: '音乐库',
+          title: t('library'),
         },
         {
           to: '/search',
@@ -41,7 +41,7 @@ export default {
           size,
           name: 'Search',
           enable: true,
-          title: '搜索',
+          title: t('search'),
         },
         {
           to: '/songList/list',
@@ -49,7 +49,7 @@ export default {
           size,
           name: 'SongList',
           enable: true,
-          title: '歌单广场',
+          title: t('song_list'),
         },
         {
           to: '/leaderboard',
@@ -57,7 +57,7 @@ export default {
           size,
           name: 'Leaderboard',
           enable: true,
-          title: '排行榜',
+          title: t('leaderboard'),
         },
         {
           to: '/setting',
@@ -65,7 +65,7 @@ export default {
           size,
           enable: true,
           name: 'Setting',
-          title: '设置',
+          title: t('setting'),
         },
       ].filter(m => m.enable)
     })

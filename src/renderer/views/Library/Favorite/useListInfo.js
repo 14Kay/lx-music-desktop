@@ -1,32 +1,42 @@
 import { ref, watch, computed, onBeforeUnmount } from '@common/utils/vueTools'
-import { playMusicInfo, playInfo } from '@renderer/store/player/state'
+import { playMusicInfo, playInfo, isPlay } from '@renderer/store/player/state'
 import { getListMusics } from '@renderer/store/list/action'
 import { appSetting } from '@renderer/store/setting'
 
 
-export default ({ props, maxCount }) => {
+export default ({ listId, maxCount }) => {
   const rightClickSelectedIndex = ref(-1)
   const selectedIndex = ref(-1)
   const dom_listContent = ref(null)
   const listRef = ref(null)
-
-  const excludeListIds = computed(() => ([props.listId]))
-
+  const playing = ref(false)
+  const count = ref(0)
+  const excludeListIds = computed(() => ([listId]))
+  const cover = ref('')
 
   const list = ref([])
-  watch(() => props.listId, id => {
+  watch(() => listId, id => {
     getListMusics(id).then(l => {
       list.value = [...l]
+      count.value = list.value.length
       if (list.value.length > maxCount) {
         list.value = list.value.slice(0, maxCount)
       }
+      cover.value = list.value.find(item => item.meta && item.meta.picUrl)?.meta.picUrl
     })
   }, {
     immediate: true,
   })
 
+
+  watch(() => isPlay.value, status => {
+    playing.value = status
+  }, {
+    immediate: true,
+  })
+
   const playerInfo = computed(() => ({
-    isPlayList: playMusicInfo.listId == props.listId,
+    isPlayList: playMusicInfo.listId == listId,
     playIndex: playInfo.playIndex,
   }))
 
@@ -37,12 +47,14 @@ export default ({ props, maxCount }) => {
   const isShowSource = computed(() => appSetting['list.isShowSource'])
 
   const handleMyListUpdate = (ids) => {
-    if (!ids.includes(props.listId)) return
-    getListMusics(props.listId).then(l => {
+    if (!ids.includes(listId)) return
+    getListMusics(listId).then(l => {
       list.value = [...l]
+      count.value = list.value.length
       if (list.value.length > maxCount) {
         list.value = list.value.slice(0, maxCount)
       }
+      cover.value = list.value.find(item => item.meta && item.meta.picUrl)?.meta.picUrl
     })
   }
 
@@ -62,5 +74,8 @@ export default ({ props, maxCount }) => {
     setSelectedIndex,
     isShowSource,
     excludeListIds,
+    playing,
+    count,
+    cover,
   }
 }

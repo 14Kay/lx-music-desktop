@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style.sliderContent, { [$style.disabled]: disabled }, className]">
+  <div :class="[$style.sliderContent, { [$style.disabled]: disabled }, className]" :style="{width: width + 'px'}">
     <div :class="[$style.slider]">
       <div ref="dom_sliderBar" :class="$style.sliderBar" :style="{ transform: `scaleX(${(value - min) / (max - min) || 0})` }" />
     </div>
@@ -32,6 +32,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    width: {
+      type: Number,
+      default: 100,
     },
   },
   emits: ['change'],
@@ -89,15 +93,17 @@ export default {
 .sliderContent {
   flex: none;
   position: relative;
-  width: 100px;
-  padding: 5px 0;
+  padding: 4px 0;
   // margin-right: 10px;
   display: flex;
   align-items: center;
-  opacity: .5;
+  opacity: 1;
   transition: opacity @transition-normal;
   &:hover {
     opacity: 1;
+    .sliderBar{
+      background-color: var(--color-primary);
+    }
   }
   &.disabled {
     opacity: .3;
@@ -110,12 +116,12 @@ export default {
 .slider {
   // cursor: pointer;
   width: 100%;
-  height: 5px;
+  height: 4px;
   border-radius: 20px;
   overflow: hidden;
   transition: @transition-normal;
   transition-property: background-color, opacity;
-  background-color: var(--color-primary-alpha-700);
+  background-color: var(--color-100);
   // background-color: #f5f5f5;
   position: relative;
   // border-radius: @radius-progress-border;
@@ -137,7 +143,7 @@ export default {
   height: 100%;
   // border-radius: @radius-progress-border;
   transition-duration: 0.2s;
-  background-color: var(--color-button-font);
+  background-color: var(--color-800);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 

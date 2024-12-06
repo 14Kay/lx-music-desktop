@@ -111,8 +111,6 @@ export default {
 
 .pagination {
   display: inline-block;
-  background-color: var(--color-button-background);
-  // border-top-left-radius: 8px;
   border-radius: @radius-border;
   ul {
     display: flex;
@@ -126,7 +124,6 @@ export default {
       // border-radius: .3125rem;
       transition: 0.4s ease;
       transition-property: all;
-      line-height: 1.2;
       display: flex;
       // border-right: none;
       svg {
@@ -135,10 +132,13 @@ export default {
       span,
       button {
         display: block;
-        padding: 7px 12px;
-        line-height: 1.2;
+        width: 34px;
+        height: 34px;
         color: var(--color-button-font);
-        font-size: 13px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       &.active {
         span {

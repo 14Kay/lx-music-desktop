@@ -52,9 +52,10 @@ export const moveListMusics = async(fromId: string, toId: string, musicInfos: LX
   })
 }
 
-export const createUserList = async({ name, id = `userlist_${Date.now()}`, list = [], source, sourceListId, position = -1 }: {
+export const createUserList = async({ name, id = `userlist_${Date.now()}`, list = [], source, cover, sourceListId, position = -1 }: {
   name?: string
   id?: string
+  cover?: string
   list?: LX.Music.MusicInfo[]
   source?: LX.OnlineSource
   sourceListId?: string
@@ -66,6 +67,7 @@ export const createUserList = async({ name, id = `userlist_${Date.now()}`, list 
       {
         id,
         name: name ?? 'list',
+        cover: cover ?? '',
         source,
         sourceListId,
         locationUpdateTime: position < 0 ? null : Date.now(),

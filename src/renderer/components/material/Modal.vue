@@ -230,7 +230,7 @@ export default {
 @import '@renderer/assets/styles/layout.less';
 
 .container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

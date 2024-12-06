@@ -5,7 +5,7 @@
       :key="item[itemKey]" :class="[$style.listItem, {[$style.active]: modelValue == item[itemKey]}]" tabindex="-1" role="tab"
       :aria-label="item[itemLabel]" ignore-tip :aria-selected="modelValue == item[itemKey]" @click="handleToggle(item[itemKey])"
     >
-      <span :class="$style.label">{{ item[itemLabel] }}</span>
+      <base-button>{{ item[itemLabel] }}</base-button>
     </li>
   </ul>
 </template>
@@ -58,10 +58,9 @@ export default {
 .list {
   display: flex;
   flex-flow: row nowrap;
-  font-size: 12px;
-  gap: 25px;
-  padding: 0 15px;
-
+  font-size: 15px;
+  font-weight: 700;
+  gap: 16px;
   &.left {
     justify-content: flex-start;
   }

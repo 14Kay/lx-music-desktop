@@ -17,7 +17,7 @@
           @contextmenu="handleContextMenu"
         >
         <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
-          <button v-show="text" type="button" @click="handleClearList">
+          <button v-show="text" :class="$style.close" type="button" @click="handleClearList">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 24 24" space="preserve">
               <use xlink:href="#icon-window-close" />
             </svg>
@@ -271,6 +271,9 @@ export default {
       padding: 8px 7px;
       color: var(--color-700);
       transition: background-color .2s ease;
+      position: absolute;
+      right: 0;
+      top: 0;
       &:last-child {
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
@@ -283,14 +286,23 @@ export default {
         background-color: var(--color-button-background-active);
       }
     }
+    .close{
+        right: 30px;
+      }
   }
   .list {
     // background-color: @color-search-form-background;
     font-size: 13px;
     transition: .3s ease;
-    height: 0;
+    height: 0px;
     transition-property: height;
     overflow: hidden;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    color: var(--color-1000);
+    backdrop-filter: saturate(180%) blur(20px);
+    background-color: var(--color-primary-light-1000-alpha-150);
     li {
       cursor: pointer;
       padding: 8px 5px;

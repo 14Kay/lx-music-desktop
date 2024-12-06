@@ -2,22 +2,15 @@
   <div :class="$style.container">
     <div v-show="!props.listInfo.noItemLabel" ref="dom_list_ref" :class="$style.listContent" class="scroll">
       <ul>
-        <li v-for="item in props.listInfo.list" :key="item.id" :class="$style.item" @click="toDetail(item)">
-          <div :class="$style.image">
-            <img :class="$style.img" loading="lazy" decoding="async" :src="item.img">
-          </div>
-          <div :class="$style.desc">
-            <h4>{{ item.name }}</h4>
-            <div>
-              <p :class="$style.author">{{ item.author }}</p>
-              <p v-if="item.time" :class="$style.time">{{ item.time }}</p>
-              <div :class="$style.songlist_info">
-                <span v-if="item.total != null"><svg-icon name="music" />{{ item.total }}</span>
-                <span v-if="item.play_count != null"><svg-icon name="headphones" />{{ item.play_count }}</span>
-                <span v-if="visibleSource">{{ item.source }}</span>
-              </div>
-            </div>
-          </div>
+        <li v-for="item in props.listInfo.list" :key="item.id" :class="$style.item">
+          <material-playlist
+          :id="item.id"
+          :cover="item.img"
+          :title="item.name"
+          :subtitle="`${item.author} - ${item.time}`"
+          :source="item.source"
+          :from-name="route.name as string"
+          ></material-playlist>
         </li>
         <li v-for="(i, index) in 6" :key="index" :class="$style.item" style="margin-bottom: 0;height: 0;" />
       </ul>
@@ -35,8 +28,8 @@
 
 <script setup lang="ts">
 import { ref } from '@common/utils/vueTools'
-import type { ListInfo, ListInfoItem } from '@renderer/store/songList/state'
-import { useRoute, useRouter } from '@common/utils/vueRouter'
+import type { ListInfo } from '@renderer/store/songList/state'
+import { useRoute } from '@common/utils/vueRouter'
 
 
 const props = withDefaults(defineProps<{
@@ -46,28 +39,14 @@ const props = withDefaults(defineProps<{
   visibleSource: false,
 })
 
-const router = useRouter()
 const route = useRoute()
 
 const dom_list_ref = ref<HTMLElement | null>(null)
 
 const emit = defineEmits(['toggle-page'])
 
-
 const togglePage = (page: number) => {
   emit('toggle-page', page)
-}
-
-const toDetail = (info: ListInfoItem) => {
-  void router.push({
-    path: '/songList/detail',
-    query: {
-      source: info.source,
-      id: info.id,
-      picUrl: info.img,
-      fromName: route.name as string,
-    },
-  })
 }
 
 defineExpose({
@@ -81,7 +60,6 @@ defineExpose({
     return dom_list_ref.value?.scrollTop ?? 0
   },
 })
-
 
 </script>
 
@@ -99,22 +77,19 @@ defineExpose({
   flex-flow: column nowrap;
   font-size: 14px;
   box-sizing: border-box;
-  padding: 15px 15px 0;
-
-  ul {
+  overflow: hidden;
+  > ul {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px 24px;
   }
 }
 .item {
-  max-width: 360px;
-  width: 32%;
   box-sizing: border-box;
   display: flex;
-  // flex-flow: column nowrap;
-  // padding: 10px;
-  margin-bottom: 20px;
   cursor: pointer;
   transition: opacity @transition-normal;
   &:hover {

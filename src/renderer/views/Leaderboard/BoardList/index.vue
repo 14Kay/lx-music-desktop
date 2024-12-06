@@ -1,18 +1,22 @@
 <template>
-  <ul ref="dom_lists_list" class="scroll" :class="$style.listsContent">
-    <li
-      v-for="(item, index) in list"
-      :key="item.id" :class="[$style.listsItem, { [$style.active]: item.id == boardId }, { [$style.clicked]: rightClickItemIndex == index }]"
-      :aria-label="item.name" @click="handleToggleList(item.id)" @contextmenu="handleRigthClick($event, index)"
-    >
-      <span :class="$style.listsLabel">
-        <transition name="list-active">
-          <svg-icon v-if="item.id == boardId" name="angle-right-solid" :class="$style.activeIcon" />
-        </transition>
-        {{ item.name }}
-      </span>
-    </li>
-  </ul>
+  <div :class="$style.listsContentContainer" :style="{height: isOpen ? height + 'px': maxHeight + 'px'}">
+    <div>
+      <ul ref="domContainer" :class="[$style.listsContent]">
+        <li
+          v-for="(item, index) in list"
+          :key="item.id" :class="[$style.listsItem, { [$style.active]: item.id == boardId }, { [$style.clicked]: rightClickItemIndex == index }]"
+          :aria-label="item.name" @click="handleToggleList(item.id)" @contextmenu="handleRigthClick($event, index)"
+        >
+          <base-button :class="$style.listsLabel">
+            {{ item.name }}
+          </base-button>
+        </li>
+      </ul>
+    </div>
+    <base-button v-show="(height > maxHeight) || isOpen" :class="$style.more" @click="isOpen = !isOpen">
+      <base-svg-icon icon-class="more" />
+    </base-button>
+  </div>
   <base-menu
     v-model="isShowMenu"
     :menus="menus"
@@ -23,11 +27,13 @@
 </template>
 
 <script setup>
-import { watch, shallowReactive, ref } from '@common/utils/vueTools'
+import { watch, shallowReactive } from '@common/utils/vueTools'
 import { getBoardsList, setBoard } from '@renderer/store/leaderboard/action'
 import { boards } from '@renderer/store/leaderboard/state'
 import useMenu from './useMenu'
 import { useRouter, useRoute } from '@common/utils/vueRouter'
+import { useMore } from './useMore'
+import { ref } from 'vue'
 
 const props = defineProps({
   source: {
@@ -39,7 +45,9 @@ const props = defineProps({
     default: undefined,
   },
 })
-
+const maxHeight = 38
+const isOpen = ref(false)
+const domContainer = ref()
 const emit = defineEmits(['show-menu'])
 
 const router = useRouter()
@@ -66,6 +74,8 @@ const {
   menuClick,
 } = useMenu({ emit, list })
 
+const { height } = useMore(domContainer)
+
 const handleRigthClick = (event, index) => {
   rightClickItemIndex.value = index
   showMenu(event, index)
@@ -76,7 +86,6 @@ const handleMenuClick = (action) => {
   rightClickItemIndex.value = -1
   menuClick(action, index, props.source)
 }
-
 
 watch(() => props.source, async(source) => {
   // const source = (await getLeaderboardSetting()).source as LX.OnlineSource
@@ -89,21 +98,53 @@ watch(() => props.source, async(source) => {
 })
 
 defineExpose({ hideMenu: handleMenuClick })
-
 </script>
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
 
+.open{
+  flex-wrap: wrap !important;
+}
+
+.more{
+  position: absolute;
+  right: 0;
+  z-index: 9;
+  top: 0;
+  &:before{
+    content: '';
+    display: block;
+    width: 120%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 8;
+    left: -121%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    pointer-events: none;
+  }
+}
+.listsContentContainer{
+  width: 100%;
+  position: relative;
+  height: 38px;
+  overflow: hidden;
+  transition: all .3s ease;
+  >div{
+    display: inline-block;
+  }
+}
+
 .listsContent {
-  flex: auto;
-  min-width: 0;
-  overflow-y: scroll;
-  // overflow-y: scroll !important;
-  // border-right: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 15px;
+  font-weight: 700;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 .listsItem {
-  position: relative;
   transition: .3s ease;
   transition-property: color, background-color;
   background-color: transparent;
@@ -143,10 +184,7 @@ defineExpose({ hideMenu: handleMenuClick })
   height: 100%;
   padding: 0 10px;
   font-size: 13px;
-  line-height: 36px;
   .mixin-ellipsis-1;
 }
-
-
 </style>
 

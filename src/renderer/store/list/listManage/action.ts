@@ -6,7 +6,7 @@ import {
   tempList,
   userLists,
 } from './state'
-import { overwriteListPosition, overwriteListUpdateInfo, removeListPosition, removeListUpdateInfo } from '@renderer/utils/data'
+import { overwriteListPosition, overwriteListUpdateInfo, removeListUpdateInfo } from '@renderer/utils/data'
 import { LIST_IDS } from '@common/constants'
 import { arrPush, arrUnshift } from '@common/utils/common'
 
@@ -39,6 +39,7 @@ const removeMusicList = (id: string) => {
 const createUserList = ({
   name,
   id,
+  cover,
   source,
   sourceListId,
   locationUpdateTime,
@@ -47,6 +48,7 @@ const createUserList = ({
     userLists.push({
       name,
       id,
+      cover,
       source,
       sourceListId,
       locationUpdateTime,
@@ -55,6 +57,7 @@ const createUserList = ({
     userLists.splice(position, 0, {
       name,
       id,
+      cover,
       source,
       sourceListId,
       locationUpdateTime,
@@ -143,9 +146,10 @@ export const listDataOverwrite = ({ defaultList, loveList, userList, tempList }:
   return updatedListIds
 }
 
-export const userListCreate = ({ name, id, source, sourceListId, position, locationUpdateTime }: {
+export const userListCreate = ({ name, id, cover, source, sourceListId, position, locationUpdateTime }: {
   name: string
   id: string
+  cover?: string
   source?: LX.OnlineSource
   sourceListId?: string
   position: number
@@ -155,6 +159,7 @@ export const userListCreate = ({ name, id, source, sourceListId, position, locat
   const newList: LX.List.UserListInfo = {
     name,
     id,
+    cover,
     source,
     sourceListId,
     locationUpdateTime,
@@ -166,7 +171,7 @@ export const userListsRemove = (ids: string[]) => {
   const changedIds = []
   for (const id of ids) {
     removeUserList(id)
-    removeListPosition(id)
+    // removeListPosition(id)
     removeListUpdateInfo(id)
     if (!allMusicList.has(id)) continue
     removeMusicList(id)

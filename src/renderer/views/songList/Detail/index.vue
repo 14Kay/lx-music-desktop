@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.container">
     <common-playlist-info
-    :id="listDetailInfo.id"
+    :list-id="listDetailInfo.id"
     :author="listDetailInfo.info.author"
     :cover="picUrl || listDetailInfo.info.img"
     :title="listDetailInfo.info.name"

@@ -302,6 +302,12 @@ export const getSystemFonts = async() => {
   })
 }
 
+export const saveImage = async(data: LX.UploadImageParams) => {
+  return rendererInvoke(CMMON_EVENT_NAME.save_image, data).catch(() => {
+    return ''
+  })
+}
+
 export const getUserSoundEffectEQPresetList = async() => {
   return rendererInvoke<LX.SoundEffect.EQPreset[]>(WIN_MAIN_RENDERER_EVENT_NAME.get_sound_effect_eq_preset)
 }

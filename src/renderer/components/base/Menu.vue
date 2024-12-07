@@ -84,24 +84,26 @@ export default {
 @import '@renderer/assets/styles/layout.less';
 
 .list {
-  font-size: 12px;
+  font-size: 14px;
   position: absolute;
   opacity: 0;
   transform: scale(0);
   transform-origin: 0 0 0;
   transition: .14s ease;
   transition-property: transform, opacity;
-  border-radius: @radius-border;
+  border-radius: @radius-border * 1.5;
   background-color: var(--color-content-background);
   box-shadow: 0 1px 8px 0 rgba(0,0,0,.2);
   z-index: 10;
   overflow: hidden;
+  padding: 8px;
   // will-change: transform;
 }
 .listItem {
   cursor: pointer;
   min-width: 96px;
-  line-height: 34px;
+  line-height: 40px;
+  border-radius: 5px;
   // color: var(--color-button-font);
   padding: 0 10px;
   text-align: center;

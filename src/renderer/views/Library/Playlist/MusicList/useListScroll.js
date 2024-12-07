@@ -33,7 +33,7 @@ export default ({ props, listRef, list, handleRestoreScroll }) => {
     handleRestoreScroll(route.query.scrollIndex, false)
     if (route.query.scrollIndex != null) {
       router.replace({
-        path: '/list',
+        path: '/library',
         query: {
           id: props.listId,
           updated: true,

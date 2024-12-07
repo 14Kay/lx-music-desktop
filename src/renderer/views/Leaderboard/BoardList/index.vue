@@ -121,7 +121,7 @@ defineExpose({ hideMenu: handleMenuClick })
     top: 0;
     z-index: 8;
     left: -121%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), var(--color-primary-light-1000));
     pointer-events: none;
   }
 }

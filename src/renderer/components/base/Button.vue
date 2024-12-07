@@ -36,7 +36,7 @@ defineProps({
     align-items: center;
     font-weight: 600;
     font-size: 16px;
-    background: #f5f5f7;
+    background: var(--color-025);
     color: var(--color-secondary);
     transition: 0.2s;
     border: none;

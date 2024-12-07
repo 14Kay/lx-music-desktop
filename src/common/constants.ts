@@ -15,6 +15,7 @@ export const STORE_NAMES = {
   LRC_EDITED: 'lyrics_edited',
   THEME: 'theme',
   SOUND_EFFECT: 'sound_effect',
+  AVATAR: 'avatar',
 } as const
 
 export const APP_EVENT_NAMES = {

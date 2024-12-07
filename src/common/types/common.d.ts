@@ -52,6 +52,11 @@ declare namespace LX {
     workArea?: Electron.Rectangle
   }
 
+  interface UploadImageParams {
+    name: string
+    file: Buffer
+  }
+
   interface HotKey {
     name: string
     action: string

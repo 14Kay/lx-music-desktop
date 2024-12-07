@@ -162,7 +162,7 @@ export default {
       if (!listId || listId == LIST_IDS.DOWNLOAD || !playMusicInfo.musicInfo) { return }
       if (playInfo.playIndex == -1) return
       void router.push({
-        path: '/list',
+        path: '/library',
         query: {
           id: listId,
           scrollIndex: playInfo.playIndex,

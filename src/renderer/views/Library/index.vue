@@ -1,6 +1,6 @@
 <template>
     <div id="my-list" :class="$style.container" @click="handleContainerClick">
-      <h1 :id="$style.title" class="title"><img :class="$style.avatar" src="https://q1.qlogo.cn/g?b=qq&nk=619113277&s=640" alt="avatar"> 14K的音乐库</h1>
+      <h1 :id="$style.title" class="title"><img :class="$style.avatar" :src="appSetting['common.avatar'] || 'https://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=60y60'" alt="avatar"> {{ appSetting['common.username'] || 'guest' }}的音乐库</h1>
       <Favorite :list-id="loveList.id" />
       <div :class="$style.lists">
         <div :class="$style.listsTitle">
@@ -28,6 +28,7 @@ import MyList from './List/index.vue'
 import OpenNewListModal from './components/OpenNewListModal.vue'
 import { ref } from 'vue'
 import { createUserList } from '@renderer/store/list/action'
+import { appSetting } from '@renderer/store/setting'
 
 export default {
   name: 'Library',
@@ -46,6 +47,7 @@ export default {
       visibleOpenNewListModal,
       createList,
       loveList,
+      appSetting,
     }
   },
 }

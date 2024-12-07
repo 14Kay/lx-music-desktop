@@ -8,6 +8,7 @@ const modules = {
     get_system_fonts: 'get_system_fonts',
     get_app_setting: 'get_app_setting',
     set_app_setting: 'set_app_setting',
+    save_image: 'save_image',
   },
   player: {
     invoke_play_music: 'play_music',

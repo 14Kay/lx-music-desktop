@@ -12,7 +12,6 @@ export default ({ props, onLoadedList }) => {
 
   const excludeListIds = computed(() => ([props.listId]))
 
-
   const list = ref([])
   watch(() => props.listId, id => {
     getListMusics(id).then(l => {

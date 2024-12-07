@@ -9,7 +9,7 @@
   <div :class="$style.lists" :style="rowStyles">
     <div>
       <material-playlist
-        :id="loveList.id"
+        :list-id="loveList.id"
         :cover="_loveLists.cover || ''"
         :title="$t(loveList.name)"
         :is-my-playlist="true"
@@ -18,7 +18,7 @@
     </div>
     <div>
       <material-playlist
-        :id="defaultList.id"
+        :list-id="defaultList.id"
         :cover="_defaultLists.cover || ''"
         :title="$t(defaultList.name)"
         :is-my-playlist="true"
@@ -27,7 +27,7 @@
     </div>
     <div v-for="item in _userLists" :key="item.id">
       <material-playlist
-        :id="item.id"
+        :list-id="item.id"
         :cover="item.cover || ''"
         :title="item.name"
         :is-my-playlist="true"

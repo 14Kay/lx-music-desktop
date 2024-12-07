@@ -1,17 +1,27 @@
 <template lang="pug">
 dt#basic {{ $t('setting__basic') }}
 dd
-  div
-    .gap-top
-      base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({'common.isShowAnimation': $event})")
-    .gap-top
-      base-checkbox(id="setting_animate" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({'common.randomAnimate': $event})")
-    .gap-top
-      base-checkbox(id="setting_start_in_fullscreen" :model-value="appSetting['common.startInFullscreen']" :label="$t('setting__basic_start_in_fullscreen')" @update:model-value="updateSetting({'common.startInFullscreen': $event})")
-    .gap-top
-      base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
-    .p.gap-top
-      base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
+.div(:class="$style.usename")
+  .div {{ $t('setting__username') }}
+  .div
+    base-input.gap-left(:class="$style.portInput" :model-value="appSetting['common.username']" type="string" :placeholder="$t('setting__username_tip')" @update:model-value="setUsername")
+
+.div(:class="$style.avatarContainer")
+  .div 头像
+  .div(:class="$style.avatar")
+    base-image(:radius="5" :src="appSetting['common.avatar'] || 'https://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=60y60'")
+    base-upload(@uploaded="setAvatar")
+
+h3#basic_theme
+dd
+.gap-top
+  base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({'common.isShowAnimation': $event})")
+.gap-top
+  base-checkbox(id="setting_animate" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({'common.randomAnimate': $event})")
+.gap-top
+  base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
+.p.gap-top
+  base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
 
 dd
   h3#basic_theme {{ $t('setting__basic_theme') }}
@@ -90,18 +100,6 @@ dd
     base-checkbox.gap-left(
       v-for="item in controlBtnPositionList" :id="`setting_basic_control_btn_position_${item.id}`" :key="item.id"
       name="setting_basic_control_btn_position" need :model-value="appSetting['common.controlBtnPosition']" :value="item.id" :label="item.name" @update:model-value="updateSetting({'common.controlBtnPosition': $event})")
-dd
-  h3#basic_playbar_progress_style {{ $t('setting__basic_playbar_progress_style') }}
-  div
-    base-checkbox.gap-left(
-      id="setting_basic_playbar_progress_style_mini" name="setting_basic_playbar_progress_style"
-      need :model-value="appSetting['common.playBarProgressStyle']" value="mini" :label="$t('setting__basic_playbar_progress_style_mini')" @update:model-value="updateSetting({'common.playBarProgressStyle': $event})")
-    base-checkbox.gap-left(
-      id="setting_basic_playbar_progress_style_middle" name="setting_basic_playbar_progress_style"
-      need :model-value="appSetting['common.playBarProgressStyle']" value="middle" :label="$t('setting__basic_playbar_progress_style_middle')" @update:model-value="updateSetting({'common.playBarProgressStyle': $event})")
-    base-checkbox.gap-left(
-      id="setting_basic_playbar_progress_style_full" name="setting_basic_playbar_progress_style"
-      need :model-value="appSetting['common.playBarProgressStyle']" value="full" :label="$t('setting__basic_playbar_progress_style_full')" @update:model-value="updateSetting({'common.playBarProgressStyle': $event})")
 
 ThemeSelectorModal(v-model="isShowThemeSelectorModal")
 ThemeEditModal(v-model="isShowThemeEditModal" :theme-id="editThemeId" @submit="handleRefreshTheme")
@@ -124,6 +122,7 @@ import PlayTimeoutModal from './PlayTimeoutModal.vue'
 import UserApiModal from './UserApiModal.vue'
 import { appSetting, updateSetting } from '@renderer/store/setting'
 import { getThemes, applyTheme, findTheme, buildBgUrl } from '@renderer/store/utils'
+import { debounce } from '@common/utils'
 
 export default {
   name: 'SettingBasic',
@@ -311,7 +310,12 @@ export default {
       ]
     })
 
-
+    const setUsername = debounce(name => {
+      updateSetting({ 'common.username': name.trim() })
+    }, 500)
+    const setAvatar = (url) => {
+      updateSetting({ 'common.avatar': url })
+    }
     return {
       appSetting,
       updateSetting,
@@ -341,6 +345,9 @@ export default {
       editThemeId,
       handleEditTheme,
       fontSizeList,
+
+      setUsername,
+      setAvatar,
     }
   },
 }
@@ -348,6 +355,23 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+.avatar{
+  display: grid;
+  align-items: center;
+  grid-template-columns: 60px 1fr;
+}
+.usename{
+  display: grid;
+  align-items: center;
+  grid-template-columns: 60px 1fr;
+}
+
+.avatarContainer{
+  display: grid;
+  align-items: center;
+  grid-template-columns: 60px 1fr;
+  margin-top: 12px
+}
 
 .theme {
   display: flex;

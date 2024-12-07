@@ -2,7 +2,7 @@
  * @Description: 我的最爱
  * @Author: 14K
  * @Date: 2024-12-03 15:39:40
- * @LastEditTime: 2024-12-06 20:28:48
+ * @LastEditTime: 2024-12-07 17:50:43
  * @LastEditors: 14K
 -->
 <template>
@@ -26,7 +26,7 @@
                     <div :class="$style.title">我最爱的音乐</div>
                     <div :class="$style.sub_title">{{ count }} 首歌</div>
                 </div>
-                <button :class="$style.play">
+                <button :class="$style.play" @click.stop="togglePlay">
                     <base-svg-icon v-show="!isPlay" :class="$style.svg" icon-class="play" />
                     <base-svg-icon v-show="isPlay" :class="[$style.svg,$style.pause]" icon-class="pause" />
                 </button>
@@ -52,6 +52,8 @@ import { loveList } from '@renderer/store/list/state'
 import { useI18n } from '@root/lang'
 import { computed } from 'vue'
 import { appSetting } from '@renderer/store/setting'
+import { togglePlay } from '@renderer/core/player'
+
 import {
   musicInfo,
   isPlay,
@@ -87,7 +89,6 @@ const title = computed(() => {
 
 const router = useRouter()
 const goCollectList = () => {
-  console.log(count.value)
   router.push({
     path: '/library/playlist',
     query: {

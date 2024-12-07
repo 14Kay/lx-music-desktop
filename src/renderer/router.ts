@@ -48,10 +48,10 @@ const router = createRouter({
     },
     {
       path: '/library/playlist',
-      name: 'Playlist',
+      name: 'LibraryPlaylist',
       component: require('./views/Library/Playlist/index.vue').default,
       meta: {
-        name: 'Playlist',
+        name: 'Library',
       },
     },
     {

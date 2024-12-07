@@ -45,6 +45,8 @@ export default (setting: any): Partial<LX.AppSetting> => {
 
     if (setting.tray?.isShow != null) setting.tray.enable = setting.tray?.isShow
 
+    setting['common.avatar'] = setting.avatar
+    setting['common.username'] = setting.username
     setting['common.windowSizeId'] = setting.windowSizeId
     setting['common.startInFullscreen'] = setting.startInFullscreen
     setting['common.langId'] = setting.langId

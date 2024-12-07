@@ -7,7 +7,14 @@ declare global {
 
     interface AppSetting {
       version: string
-
+      /**
+       * 主页显示的用户名
+       */
+      'common.username': string
+      /**
+       * 主页显示头像
+       */
+      'common.avatar': string
       /**
        * 窗口大小id
        */

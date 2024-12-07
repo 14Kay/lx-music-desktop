@@ -36,7 +36,6 @@ import { ref, computed, toRefs } from 'vue'
 defineEmits(['play', 'goto'])
 
 const props = defineProps({
-  id: { type: String, required: true },
   imageUrl: { type: String, required: true },
   fixedSize: { type: Number, default: 0 },
   playButtonSize: { type: Number, default: 22 },

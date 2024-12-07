@@ -1,12 +1,36 @@
 import path from 'node:path'
 import os from 'node:os'
+import cp from 'node:child_process'
+
+const getComputerName = () => {
+  let name: string | undefined
+  switch (process.platform) {
+    case 'win32':
+      name = process.env.COMPUTERNAME
+      break
+    case 'darwin':
+      try {
+        name = cp.execSync('scutil --get ComputerName').toString().trim()
+      } catch {}
+      break
+    case 'linux':
+      // Don't fail even if hostnamectl is unavailable
+      try {
+        name = cp.execSync('hostnamectl --pretty').toString().trim()
+      } catch {}
+      break
+  }
+  if (!name) name = os.hostname()
+  return name
+}
 
 const isMac = process.platform == 'darwin'
 const isWin = process.platform == 'win32'
 
 const defaultSetting: LX.AppSetting = {
   version: '2.1.0',
-
+  'common.avatar': 'https://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=60y60',
+  'common.username': getComputerName() || 'guest',
   'common.windowSizeId': 3,
   'common.fontSize': 16,
   'common.startInFullscreen': false,

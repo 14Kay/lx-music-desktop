@@ -4,7 +4,7 @@
       <ul>
         <li v-for="item in props.listInfo.list" :key="item.id" :class="$style.item">
           <material-playlist
-          :id="item.id"
+          :list-id="item.id"
           :cover="item.img"
           :title="item.name"
           :subtitle="`${item.author} - ${item.time}`"

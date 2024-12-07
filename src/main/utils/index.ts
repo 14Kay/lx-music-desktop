@@ -247,7 +247,7 @@ export const getTheme = () => {
   // themeId = 'naruto'
   // themeId = 'pink'
   // themeId = 'black'
-  let theme = themes.find(theme => theme.id == themeId)
+  let theme: any = themes.find(theme => theme.id == themeId)
   if (!theme) {
     userThemes = getStore(STORE_NAMES.THEME).get('themes') as LX.Theme[] | null ?? []
     theme = userThemes.find(theme => theme.id == themeId)
@@ -266,17 +266,17 @@ export const getTheme = () => {
   }
 
   const colors: Record<string, string> = {
-    ...theme.config.themeColors,
-    ...theme.config.extInfo,
+    ...theme?.config.themeColors,
+    ...theme?.config.extInfo,
   }
 
   return {
     shouldUseDarkColors,
     theme: {
       id: global.lx.appSetting['theme.id'],
-      name: theme.name,
-      isDark: theme.isDark,
-      isDarkFont: theme.isDarkFont,
+      name: theme?.name,
+      isDark: theme?.isDark,
+      isDarkFont: theme?.isDarkFont,
       colors,
     },
   }

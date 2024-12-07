@@ -1,6 +1,7 @@
 import { mainHandle, mainOn } from '@common/mainIpc'
 import { CMMON_EVENT_NAME } from '@common/ipcNames'
 import { getFonts } from '@main/utils/fontManage'
+import uploadImage from '@main/modules/sync/uploadImage'
 
 // 公共操作事件（公共，只注册一次）
 export default () => {
@@ -21,6 +22,10 @@ export default () => {
 
   mainHandle<string[]>(CMMON_EVENT_NAME.get_system_fonts, async() => {
     return getFonts()
+  })
+
+  mainHandle<LX.UploadImageParams, string>(CMMON_EVENT_NAME.save_image, async({ params: { name, file } }) => {
+    return uploadImage(lxDataPath, name, file)
   })
 }
 

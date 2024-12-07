@@ -191,7 +191,7 @@ export default {
     const handleListToggle = (id) => {
       if (id == props.listId) return
       router.replace({
-        path: '/list',
+        path: '/library',
         query: { id },
       }).catch(_ => _)
     }
@@ -213,7 +213,7 @@ export default {
     watch(() => userLists, (lists) => {
       if (lists.some(l => l.id == props.listId)) return
       void router.replace({
-        path: '/list',
+        path: '/library',
         query: {
           id: defaultList.id,
         },

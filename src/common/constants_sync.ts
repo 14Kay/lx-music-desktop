@@ -55,6 +55,8 @@ export const File = {
   serverDataPath: 'sync/server',
   clientDataPath: 'sync/client',
 
+  avatarDataPath: 'sync/avatar',
+
   serverInfoJSON: 'serverInfo.json',
   userDir: 'users',
   userDevicesJSON: 'devices.json',

@@ -42,9 +42,10 @@ const createFontColors = (rgbaColor, isDark, isDarkFont) => {
   let colors = {
     '--color-1000': rgbaColor,
   }
-  let step = (isDarkFont ? 0.02 : 0.05) * (isDark ? -1 : 1)
-  for (let i = 1; i < 21; i += 1) {
-    colors[`--color-${String(1000 - 50 * i).padStart(3, '0')}`] = RGB_Linear_Shade(step * i, rgbaColor)
+  let step = (isDarkFont ? 0.02 : 0.025) * (isDark ? -1 : 1)
+  let count = isDarkFont ? 20 : 40
+  for (let i = 1; i < count + 1; i += 1) {
+    colors[`--color-${String(1000 - (isDarkFont ? 50 : 25) * i).padStart(3, '0')}`] = RGB_Linear_Shade(step * i, rgbaColor)
   }
   // console.log(colors)
   return colors
@@ -57,11 +58,12 @@ const createFontDarkColors = (rgbaColor, isDarkFont) => {
   let colors = {
     '--color-1000': rgbaColor,
   }
-  const step = isDarkFont ? -0.015 : -0.05
+  const step = isDarkFont ? -0.015 : -0.025
+  let count = isDarkFont ? 20 : 40
   let preColor = rgbaColor
-  for (let i = 1; i < 21; i += 1) {
+  for (let i = 1; i < count + 1; i += 1) {
     preColor = RGB_Linear_Shade(step, preColor)
-    colors[`--color-${String(1000 - 50 * i).padStart(3, '0')}`] = preColor
+    colors[`--color-${String(1000 - (isDarkFont ? 50 : 25) * i).padStart(3, '0')}`] = preColor
   }
 
   // console.log(colors)

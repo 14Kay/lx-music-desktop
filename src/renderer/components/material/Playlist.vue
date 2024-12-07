@@ -2,7 +2,6 @@
   <div>
     <div>
       <common-cover
-        :id="id"
         :image-url="cover"
         :is-my-playlist="isMyPlaylist"
         :play-button-size="playButtonSize"
@@ -23,10 +22,9 @@
 import { useRouter } from 'vue-router'
 import { playList } from '@renderer/core/player'
 import useList from './../../views/songList/Detail/useList'
-import { listDetailInfo } from '@renderer/store/songList/state'
 
 const props = withDefaults(defineProps<{
-  id: string
+  listId: string
   cover: string
   playButtonSize?: number
   title: string
@@ -49,10 +47,10 @@ const router = useRouter()
 
 const play = async() => {
   if (!props.source) {
-    playList(props.id, randomFrom(0, props.count - 1))
+    playList(props.listId, randomFrom(0, props.count - 1))
   } else {
     const { getListData, handlePlayList } = useList()
-    await getListData(props.source, props.id, 1, false)
+    await getListData(props.source, props.listId, 1, false)
     handlePlayList(0)
     /* playSongListDetail(props.id, props.source as LX.OnlineSource, listDetailInfo.list, 0) */
   }
@@ -60,16 +58,15 @@ const play = async() => {
 
 const goTo = () => {
   const query = {
-    id: props.id,
+    id: props.listId,
     cover: props.cover,
   }
-
   if (props.isMyPlaylist) {
     Object.assign(query, {
       title: props.title,
       count: props.count,
     })
-    router.push({ path: '/library/playlist', query })
+    void router.push({ path: '/library/playlist', query })
   } else {
     Object.assign(query, {
       source: props.source,

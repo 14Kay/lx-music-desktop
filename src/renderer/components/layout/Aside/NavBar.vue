@@ -56,7 +56,7 @@ export default {
           enable: true,
         },
         {
-          to: '/list',
+          to: '/library',
           tips: t('my_list'),
           icon: '#icon-love',
           iconSize: '0 0 444.87 391.18',

@@ -3,8 +3,9 @@
     <common-playlist-info
 :author="appSetting['common.username']" :cover="cover" :list-id="listId" :title="title"
       :count="count" :show-collect="false" @play="handlePlay" @delete="handleDelete"
+      @search="handleSearch"
 />
-    <MusicList :class="$style.musicList" :list-id="listId" />
+    <MusicList :class="$style.musicList" :list-id="listId" :search="searchContent" />
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import { appSetting } from '@renderer/store/setting'
 const route = useRoute()
 const router = useRouter()
 
+const searchContent = ref('')
 const listId = ref('')
 const title = ref('')
 const count = ref('0')
@@ -34,6 +36,11 @@ const handleDelete = () => {
   removeUserListAction(listId.value, title.value, () => {
     router.replace('/library')
   })
+}
+
+const handleSearch = (content: string) => {
+  if (content.trim() === searchContent.value.trim()) return
+  searchContent.value = content.toLowerCase().trim()
 }
 </script>
 

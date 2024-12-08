@@ -18,6 +18,7 @@ import router from './router'
 
 
 import { getSetting, updateSetting } from './utils/ipc'
+import EventBus from './utils/eventBus'
 import { langList } from '@root/lang'
 import type { I18n } from '@root/lang/i18n'
 
@@ -70,6 +71,9 @@ void getSetting().then(setting => {
   initSetting(setting)
 
   const app = createApp(App)
+  const $bus = new EventBus()
+  app.provide('$bus', $bus)
+  app.config.globalProperties.$bus = $bus
   app
     .use(router)
     // .use(store)

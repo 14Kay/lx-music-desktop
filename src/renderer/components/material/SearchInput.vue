@@ -203,7 +203,7 @@ export default {
 
 .container {
   position: relative;
-  width: 200px;
+  width: 160px;
   height: @height-toolbar * 0.6;
   -webkit-app-region: no-drag;
 }
@@ -235,13 +235,15 @@ export default {
     }
   }
   .form {
-    display: flex;
     height: @height-toolbar * 0.52;
     position: relative;
     height: 100%;
+    width: 100%;
     input {
-      flex: auto;
+      width: calc(100% - 30px);
       // border: 1px solid;
+      height: 100%;
+
       border-top-left-radius: 3px;
       border-bottom-left-radius: 3px;
       background-color: transparent;
@@ -251,10 +253,10 @@ export default {
 
       outline: none;
       // height: @height-toolbar * .7;
-      padding: 0 8px;
+      text-indent: 8px;
       overflow: hidden;
       font-size: 13.5px;
-      line-height: @height-toolbar * 0.52 + 5px;
+      padding: 0;
       &::placeholder {
         color: var(--color-700);
         font-size: .98em;

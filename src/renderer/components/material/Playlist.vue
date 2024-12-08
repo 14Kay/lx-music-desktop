@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
   title: string
   subtitle?: string
   isMyPlaylist?: boolean
-  count?: number
+  count?: number | string
   source?: LX.OnlineSource | ''
   fromName?: string
 }>(), {
@@ -47,7 +47,7 @@ const router = useRouter()
 
 const play = async() => {
   if (!props.source) {
-    playList(props.listId, randomFrom(0, props.count - 1))
+    playList(props.listId, randomFrom(0, Number(props.count) - 1))
   } else {
     const { getListData, handlePlayList } = useList()
     await getListData(props.source, props.listId, 1, false)

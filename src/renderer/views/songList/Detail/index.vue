@@ -10,6 +10,7 @@
     :is-collected="isCollected"
     @play="playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list)"
     @collect="handleCollect"
+    @search="handleSearch"
     />
     <div :class="$style.list">
       <material-online-list
@@ -19,6 +20,7 @@
         :total="listDetailInfo.total"
         :list="listDetailInfo.list"
         :no-item="listDetailInfo.noItemLabel"
+        :search="searchContent"
         @play-list="handlePlayList"
         @toggle-page="togglePage"
       />
@@ -41,6 +43,7 @@ const page = ref<number>(1)
 const picUrl = ref<string>('')
 const refresh = ref<boolean>(false)
 const isCollected = ref<boolean>(false)
+const searchContent = ref<string>('')
 
 interface Query {
   source?: string
@@ -128,7 +131,10 @@ export default {
     }, {
       immediate: true,
     })
-
+    const handleSearch = (content: string) => {
+      if (content.trim() === searchContent.value.trim()) return
+      searchContent.value = content.toLowerCase().trim()
+    }
     return {
       source,
       id,
@@ -144,6 +150,8 @@ export default {
 
       isCollected,
       handleCollect,
+      searchContent,
+      handleSearch,
     }
   },
 }

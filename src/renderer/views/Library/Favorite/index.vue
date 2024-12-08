@@ -2,7 +2,7 @@
  * @Description: 我的最爱
  * @Author: 14K
  * @Date: 2024-12-03 15:39:40
- * @LastEditTime: 2024-12-07 17:50:43
+ * @LastEditTime: 2024-12-08 14:08:11
  * @LastEditors: 14K
 -->
 <template>
@@ -157,6 +157,7 @@ const goCollectList = () => {
   box-sizing: border-box;
   position: relative;
   background: var(--color-primary-alpha-900);
+  overflow: hidden;
   .audio{
     z-index: 1;
   }

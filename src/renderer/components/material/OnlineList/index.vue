@@ -3,8 +3,8 @@
     <!-- <transition enter-active-class="animated-fast fadeIn" leave-active-class="animated-fast fadeOut"> -->
     <div :class="$style.list">
       <div :class="$style.content">
-        <div v-show="!noItem" ref="dom_listContent" :class="$style.content">
-          <base-virtualized-list ref="listRef" :list="musicList" key-name="id" :item-height="listItemHeight" container-class="scroll" content-class="list" @contextmenu.capture="handleListRightClick">
+        <div v-show="!noItem && showMusicList.length > 0" ref="dom_listContent" :class="$style.content">
+          <base-virtualized-list ref="listRef" :list="showMusicList" key-name="id" :item-height="listItemHeight" container-class="scroll" content-class="list" @contextmenu.capture="handleListRightClick">
             <template #default="{ item, index }">
               <div
                 class="list-item" :class="[{ selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
@@ -42,8 +42,8 @@
           </base-virtualized-list>
         </div>
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div v-show="noItem" :class="$style.noitem">
-            <p v-text="noItem" />
+          <div v-show="noItem || showMusicList.length == 0" :class="$style.noitem">
+            <p>{{ $t('no_item') }}</p>
           </div>
         </transition>
       </div>
@@ -107,6 +107,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    search: {
+      type: String,
+      default: '',
+    },
   },
   emits: ['show-menu', 'play-list', 'togglePage'],
   setup(props, { emit }) {
@@ -114,7 +118,10 @@ export default {
     const rightClickSelectedIndex = ref(-1)
     const dom_listContent = ref(null)
     const listRef = ref(null)
+    // 源音乐列表
     const musicList = ref([])
+    // 页面展示的音乐列表
+    const showMusicList = ref([])
 
     const {
       selectedList,
@@ -241,14 +248,22 @@ export default {
 
     watch(() => props.list, async list => {
       musicList.value = []
+      showMusicList.value = []
       const promises = list.map(async item => {
         const ids = await getMusicExistListIds(item.id)
         item.isExist = ids.includes(loveList.id)
       })
       await Promise.all(promises)
       musicList.value = list
+      showMusicList.value = list
     }, {
       immediate: true,
+    })
+
+
+    watch(() => props.search, search => {
+      const list = musicList.value.filter(item => item.name.toLowerCase().includes(search) || item.singer.toLowerCase().includes(search))
+      showMusicList.value = list
     })
 
     return {
@@ -285,6 +300,7 @@ export default {
       getMusicExistListIds,
 
       musicList,
+      showMusicList,
       handleCollection,
       handleUnCollection,
     }
@@ -366,9 +382,6 @@ export default {
   // transform: translateX(-50%);
 }
 .noitem {
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
   width: 100%;
   display: flex;

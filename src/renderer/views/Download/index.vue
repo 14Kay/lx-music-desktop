@@ -1,5 +1,6 @@
 <template>
   <div :class="$style.download">
+    <h1 class="title">{{ $t('my_download') }}</h1>
     <div :class="$style.header">
       <base-tab v-model="activeTab" :class="$style.tab" :list="tabs" />
     </div>
@@ -25,7 +26,7 @@
         >
           <div
             class="list-item"
-            :class="[{[$style.active]: playTaskId == item.id }, { selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
+            :class="[$style.listItem,{[$style.active]: playTaskId == item.id }, { selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
             @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
           >
             <div class="list-item-cell no-select" :class="$style.num" style="flex: 0 0 5%;">
@@ -227,7 +228,15 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-
+.header{
+  margin-top: 24px;
+}
+table th{
+  padding: 0 !important;
+}
+.list-item{
+  padding: 0 !important;
+}
 .download {
   position: relative;
   overflow: hidden;
@@ -277,7 +286,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-
+  margin-top: 24px;
   p {
     font-size: 24px;
     color: var(--color-font-label);

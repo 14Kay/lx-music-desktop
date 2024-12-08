@@ -23,6 +23,13 @@ export default ({ props, onLoadedList }) => {
     immediate: true,
   })
 
+  watch(() => props.search, content => {
+    getListMusics(props.listId).then(l => {
+      const filterList = l.filter(item => item.name.toLowerCase().includes(content) || item.singer.toLowerCase().includes(content))
+      list.value = [...filterList]
+    })
+  })
+
   const playerInfo = computed(() => ({
     isPlayList: playMusicInfo.listId == props.listId,
     playIndex: playInfo.playIndex,

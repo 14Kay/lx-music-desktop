@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.song">
       <div :class="$style.cover">
-        <img :src="cover" alt="cover" />
+        <img :src="cover" alt="cover" loading="lazy" />
       </div>
       <div :class="$style.info">
         <div :class="$style.name">{{ name }}</div>

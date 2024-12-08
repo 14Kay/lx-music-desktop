@@ -78,6 +78,10 @@ export default {
       type: String,
       required: true,
     },
+    search: {
+      type: String,
+      default: '',
+    },
   },
   emits: ['show-menu'],
   setup(props, { emit }) {

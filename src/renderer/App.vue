@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="view-container">
+  <div id="container" class="view-container" @click="handleClick">
     <layout-top id="top" />
     <div id="main">
       <layout-view id="view" />
@@ -22,8 +22,14 @@ import { onMounted } from '@common/utils/vueTools'
 // import BubbleCursor from '@common/utils/effects/cursor-effects/bubbleCursor'
 // import '@common/utils/effects/snow.min'
 import useApp from '@renderer/core/useApp'
+import { inject } from 'vue'
+const $bus = inject('$bus')
 
 useApp()
+
+const handleClick = () => {
+  $bus.emit('click')
+}
 
 onMounted(() => {
   document.getElementById('root').style.display = 'block'

@@ -201,13 +201,12 @@ export default {
 // }
 
 .main {
-  flex: auto;
   min-height: 0;
   overflow: hidden;
   display: flex;
   margin: 0 30px;
   position: relative;
-
+  height: calc(100vh - 154px);
   &.showComment {
     :global {
       .left {
@@ -232,11 +231,11 @@ export default {
 .left {
   flex: 0 0 40%;
   display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
   padding: 13px;
   overflow: hidden;
   transition: flex-basis @transition-normal;
+  transition: all .3s ease;
+  position: relative;
 }
 
 .info {
@@ -245,6 +244,10 @@ export default {
   justify-content: flex-start;
   max-width: 300px;
   min-height: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .img {
   max-width: 100%;

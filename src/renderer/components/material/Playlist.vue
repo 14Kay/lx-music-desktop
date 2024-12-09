@@ -2,7 +2,7 @@
   <div>
     <div>
       <common-cover
-        :image-url="cover"
+        :image-url="resizeImage(cover, 224)"
         :is-my-playlist="isMyPlaylist"
         :play-button-size="playButtonSize"
         :source="source"
@@ -22,6 +22,7 @@
 import { useRouter } from 'vue-router'
 import { playList } from '@renderer/core/player'
 import useList from './../../views/songList/Detail/useList'
+import { resizeImage } from '@renderer/utils/resizeCover'
 
 const props = withDefaults(defineProps<{
   listId: string

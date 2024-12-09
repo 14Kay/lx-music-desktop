@@ -66,6 +66,7 @@ import useSearch from './useSearch'
 import useListScroll from './useListScroll'
 import useMusicToggle from './useMusicToggle'
 import { appSetting } from '@renderer/store/setting'
+import { resizeImage } from '@renderer/utils/resizeCover'
 export default {
   name: 'MusicList',
   components: {
@@ -247,12 +248,6 @@ export default {
     }
     const scrollToTop = () => {
       listRef.value.scrollTo(0, true)
-    }
-
-    const resizeImage = (imgUrl, size = 512) => {
-      if (!imgUrl) return ''
-      let httpsImgUrl = imgUrl
-      return `${httpsImgUrl}?param=${size}y${size}`
     }
 
     return {

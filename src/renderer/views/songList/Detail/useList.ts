@@ -20,7 +20,6 @@ export default () => {
     void playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list, index)
   }
 
-
   return {
     listRef,
     listDetailInfo,

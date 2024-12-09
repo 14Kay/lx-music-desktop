@@ -4,8 +4,8 @@
     :list-id="listDetailInfo.id"
     :author="listDetailInfo.info.author"
     :cover="picUrl || listDetailInfo.info.img"
-    :title="listDetailInfo.info.name"
     :description="listDetailInfo.info.desc"
+    :title="listDetailInfo.info.name"
     :count="listDetailInfo.total"
     :is-collected="isCollected"
     @play="playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list)"
@@ -30,12 +30,9 @@
 
 <script lang="ts">
 import { ref, watch } from '@common/utils/vueTools'
-import { listDetailInfo } from '@renderer/store/songList/state'
-import { setVisibleListDetail } from '@renderer/store/songList/action'
-import { useRouter } from '@common/utils/vueRouter'
+import { useRoute } from '@common/utils/vueRouter'
 import { addSongListDetail, playSongListDetail, isAlreadyExists, removeSongListDetail } from './action'
 import useList from './useList'
-import useKeyBack from './useKeyBack'
 
 const source = ref<LX.OnlineSource>('kw')
 const id = ref<string>('')
@@ -54,48 +51,22 @@ interface Query {
   fromName?: string
 }
 
-const verifyQueryParams = async function(this: any, to: { query: Query, path: string }, from: any, next: (route?: { path: string, query: Query }) => void) {
-  let _source = to.query.source
-  let _id = to.query.id
-  let _page: string | undefined = to.query.page
-  let _picUrl: string | undefined = to.query.picUrl
-  let _refresh: 'true' | undefined = to.query.refresh
-
-  if (_source == null || _id == null) {
-    if (listDetailInfo.key) {
-      _source = listDetailInfo.source
-      _id = listDetailInfo.id
-      _page = listDetailInfo.page.toString()
-      _picUrl = listDetailInfo.info.img
-    } else {
-      setVisibleListDetail(false)
-      next({ path: '/songList/list', query: {} })
-      return
-    }
-
-    next({
-      path: to.path,
-      query: { ...to.query, source: _source, id: _id, page: _page, picUrl: _picUrl, refresh: _refresh },
-    })
-    return
-  }
-  next()
-  setVisibleListDetail(true)
-  source.value = _source as LX.OnlineSource
-  id.value = _id
-  page.value = _page ? parseInt(_page) : 1
-  picUrl.value = _picUrl ?? ''
-  refresh.value = _refresh ? _refresh == 'true' : false
-  if (to.query.fromName) window.lx.songListInfo.fromName = to.query.fromName
-}
-
-
 export default {
-  beforeRouteEnter: verifyQueryParams,
-  beforeRouteUpdate: verifyQueryParams,
   setup() {
-    const router = useRouter()
+    const route = useRoute()
+    const queryParams = route.query as Query
+    let _source = queryParams.source
+    let _id = queryParams.id
+    let _page: string | undefined = queryParams.page
+    let _picUrl: string | undefined = queryParams.picUrl
+    let _refresh: 'true' | undefined = queryParams.refresh
 
+    source.value = _source as LX.OnlineSource
+    id.value = _id ?? ''
+    page.value = _page ? parseInt(_page) : 1
+    picUrl.value = _picUrl ?? ''
+    refresh.value = _refresh ? _refresh == 'true' : false
+    if (queryParams.fromName) window.lx.songListInfo.fromName = queryParams.fromName
     const {
       listRef,
       listDetailInfo,
@@ -103,15 +74,8 @@ export default {
       handlePlayList,
     } = useList()
 
-
     const togglePage = (page: number) => {
       void getListData(source.value, id.value, page, refresh.value)
-    }
-
-    const handleBack = () => {
-      setVisibleListDetail(false)
-      if (window.lx.songListInfo.fromName) void router.push({ name: window.lx.songListInfo.fromName })
-      else router.back()
     }
 
     const handleCollect = async() => {
@@ -123,9 +87,9 @@ export default {
         isCollected.value = false
       }
     }
-    useKeyBack(handleBack)
 
     watch([source, id, page, refresh], async([_source, _id, _page, _refresh]) => {
+      console.log(_source, _id, _page, _refresh)
       isCollected.value = isAlreadyExists(_id, _source)
       void getListData(_source, _id, _page, _refresh)
     }, {
@@ -146,7 +110,6 @@ export default {
       addSongListDetail,
       playSongListDetail,
       handlePlayList,
-      handleBack,
 
       isCollected,
       handleCollect,

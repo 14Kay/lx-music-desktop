@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.song">
       <div :class="$style.cover">
-        <img :src="cover" alt="cover" loading="lazy" />
+        <img :src="resizeImage(cover, 64)" alt="cover" loading="lazy" />
       </div>
       <div :class="$style.info">
         <div :class="$style.name">{{ name }}</div>
@@ -11,6 +11,8 @@
 </template>
 
 <script setup lang="ts">
+import { resizeImage } from '@renderer/utils/resizeCover'
+
 defineProps({
   cover: {
     type: String,
@@ -25,6 +27,7 @@ defineProps({
     required: true,
   },
 })
+
 </script>
 
   <style lang="less" module>

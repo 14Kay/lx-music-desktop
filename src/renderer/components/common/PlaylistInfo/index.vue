@@ -7,10 +7,10 @@
 />
         <div :class="$style.info">
             <div ref="input_dom">
-                <h3 v-show="!isRename" :class="$style.title">{{ refTitle }}</h3>
+                <h3 v-show="!isRename" :class="$style.title">{{ localTitle }}</h3>
                 <base-input
-v-show="isRename" v-model="refTitle" :class="$style.listsInput" type="text"
-                    :value="refTitle" :placeholder="refTitle" @keyup.enter="handleSaveListName"
+v-show="isRename" v-model="localTitle" :class="$style.listsInput" type="text"
+                    :value="localTitle" :placeholder="localTitle" @keyup.enter="handleSaveListName"
                     @blur="handleSaveListName" @click.stop
 />
             </div>
@@ -62,7 +62,7 @@ v-if="listId != LIST_IDS.LOVE && listId != LIST_IDS.DEFAULT && !showCollect"
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, ref, toRef } from 'vue'
+import { defineEmits, ref, toRef, watch } from 'vue'
 import { LIST_IDS } from '@common/constants'
 import useRename from './useRename'
 import useSearch from './useSearch'
@@ -94,9 +94,14 @@ const props = withDefaults(defineProps<{
   isCollected: false,
   showCollect: true,
 })
+const titleRef = toRef(props, 'title')
+const localTitle = ref(titleRef.value)
 
-const refTitle = toRef(props.title)
-const { handleSaveListName, handleRename } = useRename({ title: refTitle, listId: props.listId, input_dom, isRename })
+watch(() => props.title, (newVal) => {
+  localTitle.value = newVal
+})
+
+const { handleSaveListName, handleRename } = useRename({ title: localTitle, listId: props.listId, input_dom, isRename })
 
 const { handleSearch, handleSearchAction, handleSearchFocus } = useSearch({ content: searchContent, searchWidth, container_dom: search_dom, emit })
 

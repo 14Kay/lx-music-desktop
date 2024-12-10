@@ -10,7 +10,7 @@ transition(enter-active-class="animated slideInRight" leave-active-class="animat
       div.left(:class="$style.left")
         //- div(:class="$style.info")
         div(:class="$style.info")
-          img(v-if="musicInfo.pic" :class="$style.img" :src="musicInfo.pic")
+          img(v-if="musicInfo.pic" :class="$style.img" :src="resizeImage(musicInfo.pic, 512)")
           div.description(:class="['scroll', $style.description]")
             p {{ $t('player__music_name') }}{{ musicInfo.name }}
             p {{ $t('player__music_singer') }}{{ musicInfo.singer }}
@@ -29,6 +29,7 @@ transition(enter-active-class="animated slideInRight" leave-active-class="animat
 <script>
 import { ref, watch } from '@common/utils/vueTools'
 import { isFullscreen } from '@renderer/store'
+import { resizeImage } from '@renderer/utils/resizeCover'
 import {
   isShowPlayerDetail,
   isShowPlayComment,
@@ -111,6 +112,7 @@ export default {
       handleAfterLeave,
       visibled,
       isFullscreen,
+      resizeImage,
       fullscreenExit() {
         void setFullScreen(false).then((fullscreen) => {
           isFullscreen.value = fullscreen

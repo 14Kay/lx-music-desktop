@@ -89,7 +89,6 @@ export default {
     }
 
     watch([source, id, page, refresh], async([_source, _id, _page, _refresh]) => {
-      console.log(_source, _id, _page, _refresh)
       isCollected.value = isAlreadyExists(_id, _source)
       void getListData(_source, _id, _page, _refresh)
     }, {

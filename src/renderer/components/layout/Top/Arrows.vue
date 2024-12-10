@@ -6,10 +6,10 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from '@common/utils/vueRouter'
 const router = useRouter()
+
 const go = (where) => {
-  console.log(router)
   if (where === 'back') router.go(-1)
   else router.go(1)
 }

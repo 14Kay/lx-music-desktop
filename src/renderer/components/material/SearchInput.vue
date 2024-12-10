@@ -25,7 +25,7 @@
         </transition>
         <button type="button" @click="handleSearch">
           <slot>
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 30.239 30.239" space="preserve">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="80%" viewBox="0 0 30.239 30.239" space="preserve">
               <use xlink:href="#icon-search" />
             </svg>
           </slot>
@@ -57,7 +57,7 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: 'Search for something...',
+      default: 'search',
     },
     list: {
       type: Array,
@@ -240,7 +240,7 @@ export default {
     height: 100%;
     width: 100%;
     input {
-      width: calc(100% - 30px);
+      width: 100%;
       // border: 1px solid;
       height: 100%;
 

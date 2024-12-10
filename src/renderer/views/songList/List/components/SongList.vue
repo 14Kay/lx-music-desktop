@@ -85,11 +85,14 @@ defineExpose({
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 24px 24px;
+    width: 100%;
+    li{
+      width: 100%;
+    }
   }
 }
 .item {
   box-sizing: border-box;
-  display: flex;
   cursor: pointer;
   transition: opacity @transition-normal;
   &:hover {

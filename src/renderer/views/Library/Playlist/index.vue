@@ -13,7 +13,7 @@
 import MusicList from './MusicList/index.vue'
 import { removeUserListAction, playUserList } from './action'
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from '@common/utils/vueRouter'
 import { appSetting } from '@renderer/store/setting'
 const route = useRoute()
 const router = useRouter()

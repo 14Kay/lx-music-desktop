@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import List from './List.vue'
 import useListInfo from './useListInfo'
-import { useRouter } from 'vue-router'
+import { useRouter } from '@common/utils/vueRouter'
 import { loveList } from '@renderer/store/list/state'
 import { useI18n } from '@root/lang'
 import { computed } from 'vue'

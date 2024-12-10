@@ -17,8 +17,8 @@
             <base-svg-icon icon-class="play" />
           </button>
         </div>
-        <img v-if="imageUrl" :src="imageUrl" :style="imageStyles" loading="lazy" />
-        <div v-else class="noImage">这是封面</div>
+        <img v-if="imageUrl" :src="imageUrl" :style="imageStyles" loading="lazy" title="cover" alt="cover" />
+        <img v-else src="./../../assets/images/default_cover.jpg" alt="cover">
         <transition v-if="coverHover || alwaysShowShadow" name="fade">
           <div
             v-show="focus || alwaysShowShadow"
@@ -26,8 +26,8 @@
             :style="shadowStyles"
           ></div>
         </transition>
-      </div>
     </div>
+  </div>
   </template>
 
 <script setup>

@@ -12,7 +12,8 @@
               >
                 <!-- <div class="list-item-cell no-select num" style="flex: 0 0 5%;" @click.stop>{{ index + 1 }}</div> -->
                 <div :class="$style.songInfo" class="list-item-cell auto name">
-                  <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" alt="item.name" loading="lazy">
+                  <img v-if="item.meta.picUrl" :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" :alt="item.name" loading="lazy">
+                  <img v-else :class="$style.cover" src="./../../../assets/images/default_cover.jpg">
                   <div :class="$style.info">
                     <div :class="$style.title">
                       <span class="select name" :aria-label="item.name">{{ item.name }}</span>
@@ -224,17 +225,17 @@ export default {
     }
 
     const handleCollection = (index) => {
-      const item = musicList.value[index]
+      const item = showMusicList.value[index]
       addListMusics(loveList.id, [item])
-      musicList.value[index].isExist = true
-      musicList.value = [...musicList.value]
+      showMusicList.value[index].isExist = true
+      showMusicList.value = [...showMusicList.value]
     }
 
     const handleUnCollection = (index) => {
-      const item = musicList.value[index]
+      const item = showMusicList.value[index]
       removeListMusics({ listId: loveList.id, ids: [item.id] })
-      musicList.value[index].isExist = false
-      musicList.value = [...musicList.value]
+      showMusicList.value[index].isExist = false
+      showMusicList.value = [...showMusicList.value]
     }
 
     const resizeImage = (imgUrl, size = 512) => {

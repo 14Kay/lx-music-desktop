@@ -56,7 +56,7 @@ export default {
       source: 'kg',
       interval: formatPlayTime(rawData.Duration),
       _interval: rawData.Duration,
-      img: null,
+      img: rawData.Image.replace('{size}', 100),
       lrc: null,
       otherSource: null,
       hash: rawData.FileHash,
@@ -95,7 +95,6 @@ export default {
       this.total = result.data.total
       this.page = page
       this.allPage = Math.ceil(this.total / limit)
-
       return Promise.resolve({
         list,
         allPage: this.allPage,

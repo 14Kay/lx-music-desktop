@@ -2,7 +2,7 @@
   <div>
     <div>
       <common-cover
-        :image-url="resizeImage(cover, 224)"
+        :image-url="cover ? resizeImage(cover, 224) : ''"
         :is-my-playlist="isMyPlaylist"
         :play-button-size="playButtonSize"
         :source="source"
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from '@common/utils/vueRouter'
 import { playList } from '@renderer/core/player'
 import useList from './../../views/songList/Detail/useList'
 import { resizeImage } from '@renderer/utils/resizeCover'

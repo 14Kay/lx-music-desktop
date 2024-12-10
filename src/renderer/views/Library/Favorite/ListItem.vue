@@ -1,7 +1,8 @@
 <template>
     <div :class="$style.song">
       <div :class="$style.cover">
-        <img :src="resizeImage(cover, 64)" alt="cover" loading="lazy" />
+        <img v-if="cover" :src="resizeImage(cover, 64)" alt="cover" loading="lazy" />
+        <img v-else src="./../../../assets/images/default_cover.jpg" />
       </div>
       <div :class="$style.info">
         <div :class="$style.name">{{ name }}</div>

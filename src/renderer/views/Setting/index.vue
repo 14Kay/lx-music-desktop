@@ -182,12 +182,16 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   height: 100%;
-  border-top: var(--color-list-header-border-bottom);
+  // border-top: var(--color-list-header-border-bottom);
 }
-
 .toc {
-  flex: 0 0 16%;
-  overflow-y: scroll;
+  position: fixed;
+  width: 12%;
+  height: 100%;
+  background-color: var(--color-025);
+  ul{
+    padding: 12px;
+  }
 }
 .tocH2 {
   line-height: 1.5;
@@ -236,26 +240,17 @@ export default {
   height: 100%;
   position: relative;
   width: 100%;
-
+  margin-left: 20%;
   :global {
     dt {
-      border-left: 5px solid var(--color-primary-alpha-700);
-      padding: 3px 7px;
       margin: 15px 0;
-
+      font-size: 24px;
+      font-weight: 600;
       + dd h3 {
         margin-top: 0;
       }
     }
 
-    dd {
-      // margin-left: 15px;
-      // font-size: 13px;
-      > div {
-        padding: 0 15px;
-      }
-
-    }
     h3 {
       font-size: 12px;
       margin: 25px 0 15px;

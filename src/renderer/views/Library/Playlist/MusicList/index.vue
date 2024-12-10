@@ -12,7 +12,7 @@
           @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
         >
           <div :class="$style.songInfo" class="list-item-cell auto name">
-            <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" alt="item.name" loading="lazy">
+            <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" :alt="item.name" loading="lazy">
             <div :class="$style.info">
               <div :class="$style.title">
                 <span class="select name" :aria-label="item.name">{{ item.name }}</span>

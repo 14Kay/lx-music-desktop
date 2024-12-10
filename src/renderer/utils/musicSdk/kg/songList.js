@@ -388,7 +388,7 @@ export default {
       else return this.getUserListDetail4(songInfo, chain, page).catch(() => this.getUserListDetail5(chain))
     }
     let list = await this.getMusicInfos(songInfo.list)
-    // console.log(info, songInfo)
+    console.log(list, songInfo)
     return {
       list,
       page: 1,
@@ -812,6 +812,7 @@ export default {
           hash: item.audio_info.hash_high,
         }
       }
+      console.log(item)
       list.push({
         singer: decodeName(item.author_name),
         name: decodeName(item.songname),
@@ -820,7 +821,7 @@ export default {
         songmid: item.audio_info.audio_id,
         source: 'kg',
         interval: formatPlayTime(parseInt(item.audio_info.timelength) / 1000),
-        img: null,
+        img: item.audio_info.trans_param.union_cover.replace('{size}', 100),
         lrc: null,
         hash: item.audio_info.hash,
         otherSource: null,

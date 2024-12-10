@@ -153,7 +153,7 @@ export default {
       canvas.height = canvas.clientHeight
       WIDTH = canvas.width
       HEIGHT = canvas.height
-      MAX_HEIGHT = Math.round(HEIGHT * 0.4 / 255 * 10000) / 10000
+      MAX_HEIGHT = Math.round(HEIGHT * 0.8 / 255 * 10000) / 10000
       // console.log(MAX_HEIGHT)
       if (isPlay.value) handlePlay()
     })

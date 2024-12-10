@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
     z-index: 99;
   }
   .avatar-container{
-    margin-left: 16px;
+    margin-left: 10px;
     position: relative;
     -webkit-app-region: no-drag;
     img{

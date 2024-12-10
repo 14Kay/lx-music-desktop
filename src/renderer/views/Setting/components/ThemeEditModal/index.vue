@@ -478,7 +478,6 @@ export default {
       if (originBgName) void removeFile(joinPath(themeInfo.dataPath, originBgName))
       await removeTheme(props.themeId)
       const index = themeInfo.userThemes.findIndex(t => t.id == theme.id)
-      console.log(index)
       if (index > -1) themeInfo.userThemes.splice(index, 1)
       handlePreview(false)
       emit('submit')

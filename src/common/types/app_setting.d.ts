@@ -667,6 +667,28 @@ declare global {
        * 是否在离开搜索界面时自动清空搜索结果列表
        */
       'odc.isAutoClearSearchList': boolean
+
+      /**
+       * 是否启用last FM服务
+       */
+      'lastFM.enable': boolean
+
+      /**
+       * last FM 的 api key
+       */
+      'lastFM.api_key': string
+
+      /**
+       * last FM 的 secret
+       */
+      'lastFM.secret': string
+
+      /**
+       * last FM 的 sesion key
+       */
+      'lastFM.session.name': string
+      'lastFM.session.key': string
+      'lastFM.session.subscriber': 0 | 1
     }
   }
 

@@ -11,6 +11,9 @@ import {
 } from '@renderer/store/list/listManage'
 import { toRaw } from '@common/utils/vueTools'
 import { LIST_IDS } from '@common/constants'
+import { lastFMLove } from '@renderer/utils/ipc'
+
+const sleep = async(time: number) => new Promise(resolve => setTimeout(resolve, time))
 
 export const registerAction = (onListChanged: (listIds: string[]) => void) => {
   return registerListAction(appSetting, onListChanged)
@@ -36,11 +39,28 @@ export const setUpdateTime = (id: string, time: string) => {
 }
 
 export const addListMusics = async(id: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {
-  return addListMusicsAction({
+  addListMusicsAction({
     id,
     musicInfos: toRaw(musicInfos),
     addMusicLocationType: addMusicLocationType ?? appSetting['list.addMusicLocationType'],
   })
+  if (id === LIST_IDS.LOVE) {
+    const auth = {
+      api_key: appSetting['lastFM.api_key'],
+      secret: appSetting['lastFM.secret'],
+      session: appSetting['lastFM.session.key'],
+    }
+    for (const musicInfo of musicInfos) {
+      await lastFMLove({
+        auth,
+        data: {
+          track: musicInfo.name,
+          artist: musicInfo.singer,
+        },
+      })
+      sleep(500)
+    }
+  }
 }
 
 export const moveListMusics = async(fromId: string, toId: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {

@@ -5,6 +5,7 @@ import { appSetting } from '@renderer/store/setting'
 
 import useSync from './useSync'
 import useOpenAPI from './useOpenAPI'
+import useLastFM from './useLastFM'
 import useStatusbarLyric from './useStatusbarLyric'
 import useUpdate from './useUpdate'
 import useDataInit from './useDataInit'
@@ -63,6 +64,7 @@ export default () => {
     // 初始化我的列表、下载列表等数据
     void initData().then(() => {
       initPlayer()
+      useLastFM()
       handleEnvParams(envParams) // 处理传入的启动参数
       void initDeeplink(envParams)
       void initSyncService()

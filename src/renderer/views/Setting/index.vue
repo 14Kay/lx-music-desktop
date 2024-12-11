@@ -61,6 +61,7 @@ import SettingList from './components/SettingList.vue'
 import SettingDownload from './components/SettingDownload.vue'
 import SettingSync from './components/SettingSync/index.vue'
 import SettingOpenAPI from './components/SettingOpenAPI.vue'
+import SettingLastFM from './components/SettingLastFM.vue'
 import SettingHotKey from './components/SettingHotKey.vue'
 import SettingNetwork from './components/SettingNetwork.vue'
 import SettingOdc from './components/SettingOdc.vue'
@@ -87,6 +88,7 @@ export default {
     SettingBackup,
     SettingOther,
     SettingUpdate,
+    SettingLastFM,
     SettingAbout,
   },
   setup() {
@@ -112,6 +114,7 @@ export default {
         { id: 'SettingBackup', title: t('setting__backup') },
         { id: 'SettingOther', title: t('setting__other') },
         { id: 'SettingUpdate', title: t('setting__update') },
+        { id: 'SettingLastFM', title: 'Last FM' },
         { id: 'SettingAbout', title: t('setting__about') },
       ]
     })

@@ -31,6 +31,6 @@
 
 同原项目 [lx-music-desktop Apache License 2.0](https://github.com/lyswhut/lx-music-desktop/blob/master/LICENSE)
 
-## 💡 项目UI灵感来源(抄的这个)
+## 💡 项目UI灵感来源(抄的这个 XD)
 
 - [YesPlayMusic](https://github.com/qier222/YesPlayMusic)

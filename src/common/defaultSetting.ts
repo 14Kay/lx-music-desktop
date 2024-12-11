@@ -175,6 +175,12 @@ const defaultSetting: LX.AppSetting = {
   'odc.isAutoClearSearchInput': false,
   'odc.isAutoClearSearchList': false,
 
+  'lastFM.enable': false,
+  'lastFM.api_key': '',
+  'lastFM.secret': '',
+  'lastFM.session.key': '',
+  'lastFM.session.name': '',
+  'lastFM.session.subscriber': 0,
 }
 
 

@@ -182,7 +182,6 @@
     "bufferutil": "^4.0.8",
     "comlink": "~4.3.1",
     "crypto-js": "^4.2.0",
-    "electron": "^32.2.7",
     "electron-icon-builder": "^2.0.1",
     "electron-log": "^5.2.4",
     "font-list": "^1.5.1",

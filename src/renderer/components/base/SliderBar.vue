@@ -3,6 +3,7 @@
     <div :class="[$style.slider]">
       <div ref="dom_sliderBar" :class="$style.sliderBar" :style="{ transform: `scaleX(${(value - min) / (max - min) || 0})` }" />
     </div>
+    <div v-show="showText" :class="$style.value" :style="{ left: `${Math.trunc(value * 100) + '%'}`}">{{ Math.trunc(value * 100) }}%</div>
     <div :class="$style.sliderMask" @mousedown="handleSliderMsDown" />
   </div>
 </template>
@@ -46,6 +47,7 @@ export default {
       msDownValue: 0,
     }
     const dom_sliderBar = ref(null)
+    const showText = ref(false)
 
     const handleSliderMsDown = event => {
       if (props.disabled) return
@@ -58,11 +60,12 @@ export default {
       if (val < props.min) val = props.min
       if (val > props.max) val = props.max
       emit('change', val)
-
+      showText.value = true
       // if (isMute.value) window.app_event.setSliderIsMute(false)
     }
     const handleSliderMsUp = () => {
       sliderEvent.isMsDown = false
+      showText.value = false
     }
     const handleSliderMsMove = event => {
       if (!sliderEvent.isMsDown || props.disabled) return
@@ -82,6 +85,7 @@ export default {
     return {
       handleSliderMsDown,
       dom_sliderBar,
+      showText,
     }
   },
 }
@@ -89,7 +93,14 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-
+.value{
+  position: absolute;
+  left: 0%;
+  top: -150%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  text-align: left;
+}
 .sliderContent {
   flex: none;
   position: relative;

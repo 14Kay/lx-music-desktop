@@ -5,6 +5,7 @@
       <img :src="appSetting['common.avatar']" @click="showMenu = !showMenu" @click.stop>
       <div :class="[$style.menuContainer, { [$style.show]: showMenu }]">
           <div @click="goDownload">{{ $t('download') }}</div>
+          <div @click="openGitHub">GitHub</div>
       </div>
     </div>
   </div>
@@ -24,7 +25,6 @@ import { appSetting } from '@renderer/store/setting'
 import { searchText as _searchText } from '@renderer/store/search/state'
 import { setSearchText } from '@renderer/store/search/action'
 import { getSearchSetting } from '@renderer/utils/data'
-
 
 const searchText = ref('')
 const visibleList = ref(false)
@@ -59,6 +59,9 @@ const handleOnPageClick = () => {
   }
 }
 
+const openGitHub = () => {
+  window.open('https://github.com/14Kay/lx-music-desktop')
+}
 
 const tipSearch = debounce(async() => {
   if (searchText.value === '' && prevTempSearchSource) {
@@ -162,7 +165,7 @@ onBeforeUnmount(() => {
       z-index: 10;
       overflow: hidden;
       padding: 8px;
-      width: 80px;
+      min-width: 80px;
       font-size: 14px;
       opacity: 0;
       transform: scale(0);

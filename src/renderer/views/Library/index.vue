@@ -86,7 +86,6 @@ export default {
   }
 
   .container {
-    overflow: hidden;
     height: 100%;
     position: relative;
   }

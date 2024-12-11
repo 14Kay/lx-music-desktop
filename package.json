@@ -1,6 +1,6 @@
 {
   "name": "lx-music-desktop",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "一个免费的音乐查找助手",
   "main": "./dist/main.js",
   "scripts": {
@@ -182,6 +182,7 @@
     "bufferutil": "^4.0.8",
     "comlink": "~4.3.1",
     "crypto-js": "^4.2.0",
+    "electron": "^32.2.7",
     "electron-icon-builder": "^2.0.1",
     "electron-log": "^5.2.4",
     "font-list": "^1.5.1",

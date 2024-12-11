@@ -19,7 +19,7 @@
         <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
           <button v-show="text" :class="$style.close" type="button" @click="handleClearList">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 24 24" space="preserve">
-              <use xlink:href="#icon-window-close" />
+              <use xlink:href="#icon-close" />
             </svg>
           </button>
         </transition>

@@ -14,11 +14,6 @@ import { addTrackMusic } from '@renderer/utils/ipc'
 import { playProgress } from '@renderer/store/player/playProgress'
 
 export default () => {
-  const auth = {
-    api_key: appSetting['lastFM.api_key'],
-    secret: appSetting['lastFM.secret'],
-    session: appSetting['lastFM.session.key'],
-  }
   let currentMusicInfo!: PlayerMusicInfo
   let times = 0
   let timestamp = 0
@@ -42,6 +37,11 @@ export default () => {
 
   const rOnEnded = onEnded(async() => {
     if (appSetting['lastFM.enable'] && times > 60) {
+      const auth = {
+        api_key: appSetting['lastFM.api_key'],
+        secret: appSetting['lastFM.secret'],
+        session: appSetting['lastFM.session.key'],
+      }
       const { name, album, singer } = currentMusicInfo
       addTrackMusic({
         auth,
@@ -53,7 +53,7 @@ export default () => {
           timestamp,
         },
       }).then((trackResponse) => {
-        console.log(`scrobble ${name} to last.fm accepted result:`, trackResponse.scrobbles['@attr'].accepted)
+        console.log(`scrobble ${name} to last.fm accepted result:`, trackResponse.scrobbles['@attr'].accepted == 1 ? 'success' : 'failed')
       })
       resetTrackInfo()
     }

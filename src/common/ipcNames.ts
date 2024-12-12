@@ -141,6 +141,7 @@ const modules = {
     last_fm_add_track: 'last_fm_add_track',
     last_fm_track_love: 'last_fm_track_love',
     last_fm_track_unlove: 'last_fm_track_unlove',
+    last_fm_track_update_now_playing: 'last_fm_track_update_now_playing',
     sync_action: 'sync_action',
     sync_get_server_devices: 'sync_get_server_devices',
     sync_remove_server_device: 'sync_remove_server_device',

@@ -2,7 +2,7 @@ import {
   LastFMAuth,
   LastFMTrack,
 } from 'lastfm-ts-api'
-import type { LastFMAuthGetSessionParams, LastFMAuthSessionResponse, LastFMTrackScrobbleParams, LastFMTrackParams } from 'lastfm-ts-api'
+import type { LastFMAuthGetSessionParams, LastFMAuthSessionResponse, LastFMTrackScrobbleParams, LastFMTrackParams, LastFMTrackUpdateNowPlayingParams } from 'lastfm-ts-api'
 
 interface Base {
   api_key: string
@@ -31,4 +31,9 @@ export async function trackLove(auth: Base & { session: string }, data: LastFMTr
 export async function trackUnlove(auth: Base & { session: string }, data: LastFMTrackParams) {
   const track = new LastFMTrack(auth.api_key, auth.secret, auth.session)
   return track.unlove(data)
+}
+
+export async function trackUpdateNowPlaying(auth: Base & { session: string }, data: LastFMTrackUpdateNowPlayingParams) {
+  const track = new LastFMTrack(auth.api_key, auth.secret, auth.session)
+  return track.updateNowPlaying(data)
 }

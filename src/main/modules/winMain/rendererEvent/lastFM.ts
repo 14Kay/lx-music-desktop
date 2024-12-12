@@ -1,7 +1,7 @@
 import { mainHandle } from '@common/mainIpc'
 import { WIN_MAIN_RENDERER_EVENT_NAME } from '@common/ipcNames'
-import { getToken, getSession, trackScrobble, trackLove, trackUnlove } from '@main/modules/lastFM'
-import type { LastFMTrackScrobbleParams, LastFMTrackScroblleResponse, LastFMTrackParams } from 'lastfm-ts-api'
+import { getToken, getSession, trackScrobble, trackLove, trackUnlove, trackUpdateNowPlaying } from '@main/modules/lastFM'
+import type { LastFMTrackScrobbleParams, LastFMTrackScroblleResponse, LastFMTrackParams, LastFMTrackUpdateNowPlayingParams, LastFMUpdateNowPlayingResponse } from 'lastfm-ts-api'
 
 export default () => {
   mainHandle<LX.LastFM.Base, LX.LastFM.Token>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_get_token, async({ params: data }) => {
@@ -22,5 +22,9 @@ export default () => {
 
   mainHandle<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackParams }>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_unlove, async({ params: data }) => {
     return trackUnlove(data.auth, data.data)
+  })
+
+  mainHandle<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackUpdateNowPlayingParams }, LastFMUpdateNowPlayingResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_update_now_playing, async({ params: data }) => {
+    return trackUpdateNowPlaying(data.auth, data.data)
   })
 }

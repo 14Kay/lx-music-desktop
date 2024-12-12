@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.playlistInfo" @click.stop="handleClose">
         <common-cover
-:list-id="listId" :class="$style.cover" :image-url="cover" :play-button-size="playButtonSize"
+:list-id="listId" :class="$style.cover" :image-url="resizeImage(cover, 512)" :play-button-size="playButtonSize"
             :show-play-button="true" :always-show-shadow="true" :click-cover-to-play="false" :fixed-size="288"
             type="playlist" :cover-hover="false" @play="emit('play')"
 />
@@ -66,6 +66,7 @@ import { defineEmits, ref, toRef, watch } from 'vue'
 import { LIST_IDS } from '@common/constants'
 import useRename from './useRename'
 import useSearch from './useSearch'
+import { resizeImage } from '@renderer/utils/resizeCover'
 
 const emit = defineEmits(['play', 'collect', 'delete', 'search'])
 const showMenu = ref(false)

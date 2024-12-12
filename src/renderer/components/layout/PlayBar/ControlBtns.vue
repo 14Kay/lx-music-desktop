@@ -1,6 +1,15 @@
 <template>
   <div :class="$style.controlBtn">
     <!-- <common-volume-bar /> -->
+    <div v-if="appSetting['lastFM.enable']" :class="[$style.lastFm]">
+      <base-svg-icon v-show="lastFMTrackResult === 'normal'" :class="$style.lastFmSvg" style="height: 18px" icon-class="last-fm" />
+      <base-svg-icon v-show="lastFMTrackResult === 'tracking'" :class="[$style.lastFmSvg, $style.loader]" style="height: 18px" icon-class="loader" />
+      <base-svg-icon v-show="lastFMTrackResult === 'success'" :class="$style.lastFmSvg" style="height: 18px" icon-class="check" />
+      <base-svg-icon v-show="lastFMTrackResult === 'error'" :class="$style.lastFmSvg" style="height: 18px" icon-class="error" />
+      <div :class="$style.username">
+        {{ appSetting['lastFM.session.name'] }}
+      </div>
+    </div>
     <button :class="$style.titleBtn" :aria-label="$t('player__add_music_to')" @click="addMusicTo">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="75%" viewBox="0 0 512 512" space="preserve">
         <use xlink:href="#icon-heart" />
@@ -25,6 +34,7 @@ import { ref } from '@common/utils/vueTools'
 import useToggleDesktopLyric from '@renderer/utils/compositions/useToggleDesktopLyric'
 import { musicInfo, playMusicInfo } from '@renderer/store/player/state'
 import { appSetting } from '@renderer/store/setting'
+import { lastFMTrackResult } from '@renderer/store'
 
 export default {
   setup() {
@@ -46,6 +56,7 @@ export default {
       toggleLockDesktopLyric,
       addMusicTo,
       playMusicInfo,
+      lastFMTrackResult,
     }
   },
 }
@@ -53,7 +64,37 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+.last-fm{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  padding: 8px 6px;
+  border-radius: 10px;
+  transition: all .15s ease;
+  &:hover{
+    background-color: var(--color-primary-alpha-900);
+  }
+  .lastFmSvg{
+    color: var(--color-primary)
+  }
+  .username{
+    margin-left: 6px;
+  }
 
+  .loader{
+    animation: spin 1.25s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .controlBtn {
   padding-left: 20px;
   flex: none;

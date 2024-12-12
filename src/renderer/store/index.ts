@@ -78,11 +78,7 @@ export const openAPI = reactive({
   message: '',
 })
 
-export const lastFM = reactive({
-  message: '',
-  token: '',
-})
-
+export const lastFMTrackResult = ref<'tracking' | 'error' | 'success' | 'normal'>('normal')
 
 export const windowSizeActive = computed(() => {
   return windowSizeList.find(i => i.id === appSetting['common.windowSizeId']) ?? windowSizeList[0]

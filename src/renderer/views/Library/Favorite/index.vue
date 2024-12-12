@@ -35,11 +35,15 @@
 
         <div :class="$style.favoriteList">
             <List
+                v-if="list.length !== 0"
                 :list-id="listId"
                 :list="list"
                 :player-info="playerInfo"
                 :playing="playing"
             />
+            <div v-else :class="$style.empty">
+              这里还没有东西，去添加一些吧~ <router-link to="/list"> 这就去</router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -103,6 +107,13 @@ const goCollectList = () => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+.empty{
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
 .music{
   line-height: 1.5;
   font-size: 14px;
@@ -144,6 +155,7 @@ const goCollectList = () => {
 .favorite{
     display: flex;
     margin-top: 24px;
+    min-height: 220px;
 }
 .favoriteCount {
   flex: 3;

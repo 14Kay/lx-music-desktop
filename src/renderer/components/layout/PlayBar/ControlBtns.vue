@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.controlBtn">
     <!-- <common-volume-bar /> -->
-    <div v-if="appSetting['lastFM.enable']" :class="[$style.lastFm]">
+    <div v-if="appSetting['lastFM.enable']" :class="[$style.lastFm]" @click="openLastFM">
       <base-svg-icon v-show="lastFMTrackResult === 'normal'" :class="$style.lastFmSvg" style="height: 18px" icon-class="last-fm" />
       <base-svg-icon v-show="lastFMTrackResult === 'tracking'" :class="[$style.lastFmSvg, $style.loader]" style="height: 18px" icon-class="loader" />
       <base-svg-icon v-show="lastFMTrackResult === 'success'" :class="$style.lastFmSvg" style="height: 18px" icon-class="check" />
@@ -48,6 +48,9 @@ export default {
       if (!musicInfo.id) return
       isShowAddMusicTo.value = true
     }
+    const openLastFM = () => {
+      window.open('https://www.last.fm/user/' + appSetting['lastFM.session.name'])
+    }
     return {
       appSetting,
       isShowAddMusicTo,
@@ -57,6 +60,7 @@ export default {
       addMusicTo,
       playMusicInfo,
       lastFMTrackResult,
+      openLastFM,
     }
   },
 }

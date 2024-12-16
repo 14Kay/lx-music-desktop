@@ -118,7 +118,7 @@ const goCollectList = () => {
   line-height: 1.5;
   font-size: 14px;
   width: 300px;
-  color: var(--color-primary-alpha-200);
+  color: var(--color-700);
   .cover{
     img{
       width: 45px;
@@ -127,14 +127,14 @@ const goCollectList = () => {
     }
 
     .emptyPic {
-      background-color: var(--color-primary-light-900-alpha-200);
+      background-color: var(--color-primary-light-400-alpha-200);
       border-radius: @radius-border;
-      width: 100%;
-      height: 100%;
+      width: 45px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--color-primary-light-400-alpha-200);
+      color: var(--color-primary-light-200-alpha-200);
       user-select: none;
       font-size: 20px;
       font-family: Consolas, "Courier New", monospace;

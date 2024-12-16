@@ -22,7 +22,7 @@ dd.gap-top
       base-btn.btn(:disabled="!appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" @click="openAuthUrl") {{ appSetting['lastFM.session.key'] ? '重新获取授权' : '获取授权' }}
     div(v-if="appSetting['lastFM.api_key'] && appSetting['lastFM.secret']")
     .p
-      base-checkbox( id="setting_last_fm_enable" :disabled="!appSetting['lastFM.session.key']" :model-value="appSetting['lastFM.enable']" label="启用 Last FM" @update:model-value="updateSetting({ 'lastFM.enable': $event })")
+      base-checkbox( id="setting_last_fm_enable" :disabled="!appSetting['lastFM.session.key'] || !appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" :model-value="appSetting['lastFM.enable']" label="启用 Last FM" @update:model-value="updateSetting({ 'lastFM.enable': $event })")
 </template>
 
 <script lang="ts">
@@ -31,13 +31,10 @@ import { appSetting, updateSetting } from '@renderer/store/setting'
 import { debounce } from '@common/utils'
 import { dialog } from '@renderer/plugins/Dialog'
 import { getLastFMToken, getLastFMSession } from '@renderer/utils/ipc'
-import { ref, watch } from 'vue'
 
 export default {
   name: 'SettingLastFM',
   setup() {
-    const api_key = ref(appSetting['lastFM.api_key'])
-    const secret = ref(appSetting['lastFM.secret'])
     const setApiKey = debounce(api_key => {
       updateSetting({ 'lastFM.api_key': api_key.trim() })
     }, 500)
@@ -50,18 +47,10 @@ export default {
       updateSetting({ 'lastFM.session.key': session.trim() })
     }, 500)
 
-    watch(() => appSetting['lastFM.api_key'], (new_api_key) => {
-      api_key.value = new_api_key
-    })
-
-    watch(() => appSetting['lastFM.secret'], (new_secret) => {
-      secret.value = new_secret
-    })
-
     const openAuthUrl = async() => {
       const base = {
-        api_key: api_key.value,
-        secret: secret.value,
+        api_key: appSetting['lastFM.api_key'],
+        secret: appSetting['lastFM.secret'],
       }
       const { token } = await getLastFMToken(base)
       window.open(`http://www.last.fm/api/auth/?api_key=${appSetting['lastFM.api_key']}&token=${token}`)

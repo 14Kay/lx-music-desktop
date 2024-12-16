@@ -1,5 +1,5 @@
 import { onBeforeUnmount } from '@common/utils/vueTools'
-import { appSetting } from '@renderer/store/setting'
+import { appSetting, updateSetting } from '@renderer/store/setting'
 import { lastFMTrackResult } from '@renderer/store'
 import {
   onEnded,
@@ -15,11 +15,12 @@ import { addTrackMusic, lastFMUpdateNowPlaying } from '@renderer/utils/ipc'
 import { playProgress } from '@renderer/store/player/playProgress'
 
 export default () => {
+  const MAX_ERROR_TIMES = 3
   let currentMusicInfo!: PlayerMusicInfo
   let times = 0
   let timestamp = 0
   let duration = 0
-
+  let errorTimes = 0
   const getAuth = () => ({
     api_key: appSetting['lastFM.api_key'],
     secret: appSetting['lastFM.secret'],
@@ -50,7 +51,6 @@ export default () => {
     times = 0
     timestamp = 0
     duration = 0
-    lastFMTrackResult.value = 'normal'
   }
 
   const rOnTimeupdate = onTimeupdate(() => {
@@ -71,6 +71,7 @@ export default () => {
           timestamp,
         },
       }).then((trackResponse) => {
+        errorTimes = 0
         lastFMTrackResult.value = trackResponse.scrobbles['@attr'].accepted == 1 ? 'success' : 'error'
         setTimeout(() => {
           lastFMTrackResult.value = 'normal'
@@ -78,9 +79,16 @@ export default () => {
         console.log(`scrobble ${name} to last.fm accepted result:`, trackResponse.scrobbles['@attr'].accepted == 1 ? 'success' : 'failed')
       }).catch((e) => {
         lastFMTrackResult.value = 'error'
+        errorTimes++
         setTimeout(() => {
           lastFMTrackResult.value = 'normal'
         }, 2500)
+
+        if (errorTimes > MAX_ERROR_TIMES) {
+          updateSetting({ 'lastFM.enable': false })
+          errorTimes = 0
+        }
+
         console.error('scrobble to last.fm error:', e)
       })
       resetTrackInfo()

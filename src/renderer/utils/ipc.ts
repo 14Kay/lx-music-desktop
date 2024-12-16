@@ -4,7 +4,6 @@ import { type ProgressInfo, type UpdateDownloadedEvent, type UpdateInfo } from '
 import { markRaw } from '@common/utils/vueTools'
 import * as hotKeys from '@common/hotKey'
 import { APP_EVENT_NAMES, DATA_KEYS, DEFAULT_SETTING } from '@common/constants'
-import type { LastFMTrackScrobbleParams, LastFMTrackScroblleResponse, LastFMTrackParams, LastFMTrackUpdateNowPlayingParams, LastFMUpdateNowPlayingResponse } from 'lastfm-ts-api'
 
 type RemoveListener = () => void
 
@@ -187,23 +186,23 @@ export const getLastFMToken = async(action: LX.LastFM.Base) => {
 }
 
 export const getLastFMSession = async(action: LX.LastFM.SessionParams) => {
-  return rendererInvoke<LX.LastFM.SessionParams, LX.LastFM.SessionResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_get_session, action)
+  return rendererInvoke<LX.LastFM.SessionParams, LX.LastFM.AuthSessionResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_get_session, action)
 }
 
-export const addTrackMusic = async(data: { auth: LX.LastFM.Base & { session: string }, data: LastFMTrackScrobbleParams }) => {
-  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackScrobbleParams }, LastFMTrackScroblleResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_add_track, data)
+export const addTrackMusic = async(data: { auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackScrobbleParams }) => {
+  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackScrobbleParams }, LX.LastFM.TrackScroblleResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_add_track, data)
 }
 
-export const lastFMUpdateNowPlaying = async(data: { auth: LX.LastFM.Base & { session: string }, data: LastFMTrackUpdateNowPlayingParams }) => {
-  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackUpdateNowPlayingParams }, LastFMUpdateNowPlayingResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_update_now_playing, data)
+export const lastFMUpdateNowPlaying = async(data: { auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackUpdateNowPlayingParams }) => {
+  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackUpdateNowPlayingParams }, LX.LastFM.UpdateNowPlayingResponse>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_update_now_playing, data)
 }
 
-export const lastFMLove = async(data: { auth: LX.LastFM.Base & { session: string }, data: LastFMTrackParams }) => {
-  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackParams }>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_love, data)
+export const lastFMLove = async(data: { auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackParams }) => {
+  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackParams }>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_love, data)
 }
 
-export const lastFMUnlove = async(data: { auth: LX.LastFM.Base & { session: string }, data: LastFMTrackParams }) => {
-  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LastFMTrackParams }>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_unlove, data)
+export const lastFMUnlove = async(data: { auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackParams }) => {
+  return rendererInvoke<{ auth: LX.LastFM.Base & { session: string }, data: LX.LastFM.TrackParams }>(WIN_MAIN_RENDERER_EVENT_NAME.last_fm_track_unlove, data)
 }
 
 export const saveLastStartInfo = (version: string) => {

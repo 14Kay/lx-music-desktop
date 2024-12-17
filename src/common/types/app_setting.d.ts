@@ -493,6 +493,11 @@ declare global {
       'download.enable': boolean
 
       /**
+       * 按列表名分组保存
+       */
+      'download.isSavePathGroupByListName': boolean
+
+      /**
        * 下载路径
        */
       'download.savePath': string

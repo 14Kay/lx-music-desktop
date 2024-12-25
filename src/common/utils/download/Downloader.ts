@@ -5,6 +5,7 @@ import { performance } from 'perf_hooks'
 import { STATUS } from './util'
 import type http from 'http'
 import { request, type Options as RequestOptions } from './request'
+import audioType from './audioType'
 
 export interface Options {
   forceResume: boolean
@@ -40,6 +41,8 @@ class Task extends EventEmitter {
   statsEstimate = { time: 0, bytes: 0, prevBytes: 0 }
   requestInstance: http.ClientRequest | null = null
   maxRedirectNum = 2
+  extension: string | null = null
+
   private redirectNum = 0
   private dataWriteQueueLength = 0
   private closeWaiting = false
@@ -48,7 +51,6 @@ class Task extends EventEmitter {
 
   constructor(url: string, savePath: string, filename: string, options: Partial<Options> = {}) {
     super()
-
     this.resumeLastChunk = null
     this.downloadUrl = url
     this.chunkInfo = Object.assign({}, defaultChunkInfo, {
@@ -56,7 +58,6 @@ class Task extends EventEmitter {
       startByte: '0',
     })
     // if (!this.chunkInfo.endByte) this.chunkInfo.endByte = ''
-
     this.options = Object.assign({}, defaultOptions, options)
     this.requestOptions = Object.assign({}, defaultRequestOptions, this.options.requestOptions || {})
     this.requestOptions.headers = this.requestOptions.headers ? { ...this.requestOptions.headers } : {}
@@ -93,25 +94,34 @@ class Task extends EventEmitter {
               reject(errOpen)
               return
             }
-            fs.read(fd, Buffer.alloc(10), 0, 10, stats.size - 10, (errRead, bytesRead, buffer) => {
-              if (errRead) {
-                this.__handleError(errRead)
-                reject(errRead)
+            fs.read(fd, Buffer.alloc(12), 0, 12, 0, (errReadFront, bytesReadFront, frontBuffer) => {
+              if (errReadFront) {
+                this.__handleError(errReadFront)
+                reject(errReadFront)
                 return
               }
-              fs.close(fd, errClose => {
-                if (errClose) {
-                  this.__handleError(errClose)
-                  reject(errClose)
+              this.extension = audioType(frontBuffer) ?? 'mp3'
+
+              fs.read(fd, Buffer.alloc(10), 0, 10, stats.size - 10, (errRead, bytesRead, buffer) => {
+                if (errRead) {
+                  this.__handleError(errRead)
+                  reject(errRead)
                   return
                 }
+                fs.close(fd, errClose => {
+                  if (errClose) {
+                    this.__handleError(errClose)
+                    reject(errClose)
+                    return
+                  }
 
-                // resume download
-                // console.log(buffer)
-                this.resumeLastChunk = buffer
-                this.progress.downloaded = stats.size
-                this.requestOptions.headers!.range = `bytes=${stats.size - 10}-${endByte || ''}`
-                resolve()
+                  // resume download
+                  // console.log(buffer)
+                  this.resumeLastChunk = buffer
+                  this.progress.downloaded = stats.size
+                  this.requestOptions.headers!.range = `bytes=${stats.size - 10}-${endByte || ''}`
+                  resolve()
+                })
               })
             })
           })
@@ -233,7 +243,12 @@ class Task extends EventEmitter {
     void this.__closeWriteStream().then(() => {
       if (this.progress.downloaded == this.progress.total) {
         this.status = STATUS.completed
-        this.emit('completed')
+        this.__checkAndRenameFile()
+        this.emit('completed', {
+          ext: this.extension,
+          fileName: path.basename(this.chunkInfo.path),
+          filePath: this.chunkInfo.path,
+        })
       } else {
         this.status = STATUS.stopped
         this.emit('stop')
@@ -285,6 +300,10 @@ class Task extends EventEmitter {
   }
 
   __handleWriteData(chunk: Buffer) {
+    if (!this.extension) {
+      const typeChunk = chunk.slice(0, 12)
+      this.extension = audioType(typeChunk) ?? 'mp3'
+    }
     if (this.resumeLastChunk) {
       const result = this.__handleDiffChunk(chunk)
       if (result) chunk = result
@@ -411,6 +430,31 @@ class Task extends EventEmitter {
 
   updateSaveInfo(filePath: string, fileName: string) {
     this.chunkInfo.path = path.join(filePath, fileName)
+  }
+
+  __checkAndRenameFile() {
+    const actualExtension = this.__getFileExtension(this.chunkInfo.path)
+    if (this.extension !== this.__getFileExtension(this.chunkInfo.path)) {
+      const newFilePath = this.chunkInfo.path.replace(
+        new RegExp(`\\.${actualExtension}$`),
+            `.${this.extension}`,
+      )
+      console.log(`rename file ${this.chunkInfo.path} to ${newFilePath}`)
+      fs.rename(this.chunkInfo.path, newFilePath, err => {
+        if (err) {
+          this.__handleError(err)
+          return
+        }
+        this.chunkInfo.path = newFilePath
+      },
+      )
+    }
+  }
+
+  __getFileExtension(filePath: string) {
+    const lastDotIndex = filePath.lastIndexOf('.')
+    if (lastDotIndex === -1) return null
+    return filePath.substring(lastDotIndex + 1)
   }
 }
 

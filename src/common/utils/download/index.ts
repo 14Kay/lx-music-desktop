@@ -23,7 +23,7 @@ export interface Options {
   headers?: DownloaderOptions['requestOptions']['headers']
   forceResume?: boolean
   proxy?: { host: string, port: number }
-  onCompleted?: () => void
+  onCompleted?: (result: LX.Download.CompletedInfo) => void
   onError?: (error: Error) => void
   onFail?: (response: http.IncomingMessage) => void
   onStart?: () => void
@@ -59,8 +59,8 @@ export const createDownload = ({
     forceResume,
   })
 
-  dl.on('completed', () => {
-    onCompleted()
+  dl.on('completed', (result) => {
+    onCompleted(result)
   }).on('error', (err: any) => {
     if (err.message === 'socket hang up') return
     onError(err)

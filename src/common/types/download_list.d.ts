@@ -23,7 +23,11 @@ declare global {
         total: number
         writeQueue: number
       }
-
+      interface CompletedInfo {
+        ext: FileExt
+        filePath: string
+        fileName: string
+      }
       interface DownloadTaskActionBase <A> {
         action: A
       }

@@ -104,13 +104,17 @@ const createTask = async(downloadInfo: LX.Download.ListItem, savePath: string, s
     fileName: downloadInfo.metadata.fileName,
     method: 'get',
     proxy,
-    onCompleted() {
+    onCompleted(result) {
       // if (downloadInfo.progress.progress != '100.00') {
       //   delete.get(downloadInfo.id)?
       //   return dispatch('startTask', downloadInfo)
       // }
       downloadInfo.isComplate = true
       downloadInfo.status = DOWNLOAD_STATUS.COMPLETED
+      downloadInfo.metadata = {
+        ...downloadInfo.metadata,
+        ...result,
+      }
       sendAction(downloadInfo.id, { action: 'complete' })
       console.log('on complate')
     },

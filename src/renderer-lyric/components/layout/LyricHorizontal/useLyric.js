@@ -2,7 +2,8 @@ import { ref, onMounted, onBeforeUnmount, watch, nextTick } from '@common/utils/
 import { scrollTo } from '@common/utils/renderer'
 import { lyric } from '@lyric/store/lyric'
 import { isPlay, setting } from '@lyric/store/state'
-import { setWindowBounds } from '@lyric/utils/ipc'
+import { setWindowBounds, setWindowResizeable } from '@lyric/utils/ipc'
+import { isWin } from '@common/utils'
 
 const getOffsetTop = (contentHeight, lineHeight) => {
   switch (setting['desktopLyric.scrollAlign']) {
@@ -21,6 +22,8 @@ export default (isComputeHeight) => {
     isMsDown: false,
     msDownX: 0,
     msDownY: 0,
+    windowW: 0,
+    windowH: 0,
   }
 
   let msDownY = 0
@@ -82,6 +85,10 @@ export default (isComputeHeight) => {
       winEvent.isMsDown = true
       winEvent.msDownX = x
       winEvent.msDownY = y
+      winEvent.windowW = window.innerWidth
+      winEvent.windowH = window.innerHeight
+      // https://github.com/lyswhut/lx-music-desktop/issues/2244
+      if (isWin) setWindowResizeable(false)
     }
   }
   const handleLyricMouseDown = event => {
@@ -96,6 +103,7 @@ export default (isComputeHeight) => {
   const handleMouseMsUp = () => {
     isMsDown.value = false
     winEvent.isMsDown = false
+    if (isWin) setWindowResizeable(true)
   }
 
   const handleMove = (x, y) => {
@@ -108,12 +116,22 @@ export default (isComputeHeight) => {
       dom_lyric.value.scrollTop = msDownScrollY + msDownY - y
       startLyricScrollTimeout()
     } else if (winEvent.isMsDown) {
-      setWindowBounds({
-        x: x - winEvent.msDownX,
-        y: y - winEvent.msDownY,
-        w: window.innerWidth,
-        h: window.innerHeight,
-      })
+      // https://github.com/lyswhut/lx-music-desktop/issues/2244
+      if (isWin) {
+        setWindowBounds({
+          x: x - winEvent.msDownX,
+          y: y - winEvent.msDownY,
+          w: winEvent.windowW,
+          h: winEvent.windowH,
+        })
+      } else {
+        setWindowBounds({
+          x: x - winEvent.msDownX,
+          y: y - winEvent.msDownY,
+          w: window.innerWidth,
+          h: window.innerHeight,
+        })
+      }
     }
   }
   const handleMouseMsMove = event => {

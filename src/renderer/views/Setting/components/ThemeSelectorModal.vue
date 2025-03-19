@@ -170,10 +170,10 @@ export default {
     align-items: center;
     cursor: pointer;
     // color: var(--color-primary);
-    margin-right: 30px;
+    margin-right: 4px;
     transition: color .3s ease;
     margin-bottom: 15px;
-    width: 56px;
+    width: 86px;
 
     &:last-child {
       margin-right: 0;
@@ -214,7 +214,6 @@ export default {
       text-align: center;
       height: 1.2em;
       font-size: 14px;
-      .mixin-ellipsis-1;
     }
   }
 }

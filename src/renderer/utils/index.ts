@@ -38,7 +38,7 @@ export const dateFormat2 = (time: number): string => {
  */
 let dom_title = document.getElementsByTagName('title')[0]
 export const setTitle = (title: string | null) => {
-  title ||= '洛雪音乐助手'
+  title ||= 'LX Music'
   dom_title.innerText = title
 }
 
@@ -74,4 +74,9 @@ export const deduplicationList = <T extends LX.Music.MusicInfo>(list: T[]): T[] 
 
 export const langS2T = async(str: string) => {
   return window.lx.worker.main.langS2t(Buffer.from(str).toString('base64')).then(b64 => Buffer.from(b64, 'base64').toString())
+}
+
+export const decodeName = (str: string | null = '') => {
+  if (!str) return ''
+  return new window.DOMParser().parseFromString(str, 'text/html').body.textContent
 }

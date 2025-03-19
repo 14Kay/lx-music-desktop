@@ -22,6 +22,17 @@ dd
   base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
 .p.gap-top
   base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
+  div
+    .gap-top
+      base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({'common.isShowAnimation': $event})")
+    .gap-top
+      base-checkbox(id="setting_animate" :disabled="!appSetting['common.isShowAnimation']" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({'common.randomAnimate': $event})")
+    .gap-top
+      base-checkbox(id="setting_start_in_fullscreen" :model-value="appSetting['common.startInFullscreen']" :label="$t('setting__basic_start_in_fullscreen')" @update:model-value="updateSetting({'common.startInFullscreen': $event})")
+    .gap-top
+      base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
+    .p.gap-top
+      base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
 
 dd
   h3#basic_theme {{ $t('setting__basic_theme') }}
@@ -385,11 +396,11 @@ export default {
     align-items: center;
     cursor: pointer;
     // color: var(--color-primary);
-    margin-right: 30px;
+    margin-right: 8px;
     transition: .3s ease;
     transition-property: color, opacity;
     margin-bottom: 18px;
-    width: 56px;
+    width: 86px;
 
     &:hover {
       opacity: .7;
@@ -437,7 +448,6 @@ export default {
       width: 100%;
       text-align: center;
       height: 1.2em;
-      .mixin-ellipsis-1;
     }
 
     &.auto {

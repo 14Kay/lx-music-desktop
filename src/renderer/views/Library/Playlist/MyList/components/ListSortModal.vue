@@ -1,6 +1,6 @@
 <template>
   <material-modal :show="visible" teleport="#view" bg-close @close="closeModal" @after-leave="handleAfterLeave">
-    <main :class="$style.main">
+    <main class="scroll" :class="$style.main">
       <div :class="$style.header">
         <h2>{{ listName }}</h2>
       </div>
@@ -164,7 +164,7 @@ export default {
 
 .main {
   padding: 0 15px;
-  width: 320px;
+  width: 360px;
   display: flex;
   flex-flow: column nowrap;
   min-height: 0;
@@ -182,7 +182,7 @@ export default {
   font-size: 14px;
 }
 .listItem {
-  width: (100% / 3);
+  width: (100% / 2);
   padding-left: 10px;
   margin-bottom: 8px;
   box-sizing: border-box;

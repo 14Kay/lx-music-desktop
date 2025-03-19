@@ -31,17 +31,18 @@ export default () => {
     currentMusicInfo = { ...musicInfo }
     timestamp = Math.floor(Date.now() / 1000)
     duration = Math.floor(playProgress.maxPlayTime)
-
-    lastFMUpdateNowPlaying({
-      auth: getAuth(),
-      data: {
-        duration,
-        track: currentMusicInfo.name,
-        album: currentMusicInfo.album,
-        artist: currentMusicInfo.singer,
-        timestamp,
-      },
-    })
+    if (appSetting['lastFM.enable']) {
+      lastFMUpdateNowPlaying({
+        auth: getAuth(),
+        data: {
+          duration,
+          track: currentMusicInfo.name,
+          album: currentMusicInfo.album,
+          artist: currentMusicInfo.singer,
+          timestamp,
+        },
+      })
+    }
   }
   const rOnPlaying = onPlaying(() => {
     setTimeout(updateNowPlaying, 2000)

@@ -39,6 +39,11 @@ export default ({ props, onLoadedList }) => {
     selectedIndex.value = index
   }
 
+  const getSearchIndex = async(index) => {
+    const l = await getListMusics(props.listId)
+    return l.findIndex(item => item.id === list.value[index].id)
+  }
+
   const isShowSource = computed(() => appSetting['list.isShowSource'])
 
   const handleMyListUpdate = (ids) => {
@@ -64,5 +69,6 @@ export default ({ props, onLoadedList }) => {
     setSelectedIndex,
     isShowSource,
     excludeListIds,
+    getSearchIndex,
   }
 }

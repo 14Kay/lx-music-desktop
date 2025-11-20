@@ -107,6 +107,7 @@ export default {
       dom_listContent,
       listRef,
       list,
+      getSearchIndex,
       playerInfo,
       setSelectedIndex,
       isShowSource,
@@ -203,11 +204,17 @@ export default {
     const { saveListPosition, restoreScroll } = useListScroll({ props, listRef, list, handleRestoreScroll })
 
 
-    const handleListItemClick = (event, index) => {
+    const handleListItemClick = async(event, index) => {
+      // 如果正在右键选择状态，直接返回
       if (rightClickSelectedIndex.value > -1) return
-      handleSelectData(index)
-      doubleClickPlay(index)
+
+      const hasSearch = props.search.trim().length > 0
+      const targetIndex = hasSearch ? await getSearchIndex(index) : index
+
+      handleSelectData(targetIndex)
+      doubleClickPlay(targetIndex)
     }
+
     const handleListItemRightClick = (event, index) => {
       rightClickSelectedIndex.value = index
       showMenu(event, list.value[index], index)

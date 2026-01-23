@@ -2,7 +2,8 @@ import http from 'node:http'
 import querystring from 'node:querystring'
 import type { Socket } from 'node:net'
 import { getAddress } from '@common/utils/nodejs'
-import { sendTaskbarButtonClick } from '@main/modules/winMain'
+import { sendTaskbarButtonClick, sendPlayTargetMusic } from '@main/modules/winMain'
+export type SearchSource = LX.OnlineSource | 'all'
 
 const sendResponse = (res: http.ServerResponse, code = 200, msg: string | Record<any, unknown> = 'OK', contentType = 'text/plain; charset=utf-8') => {
   res.writeHead(code, {
@@ -73,6 +74,13 @@ const handleSubscribePlayerStatus = (req: http.IncomingMessage, res: http.Server
   }
 }
 
+const handlePlayTargetMusic = async(query: string) => {
+  const params = querystring.parse(query)
+  const keyword = (params.name as string) || ''
+  const source: SearchSource = (params.source as SearchSource) || 'tx'
+  sendPlayTargetMusic(keyword, source)
+}
+
 const handleStartServer = async(port: number, ip: string) => new Promise<void>((resolve, reject) => {
   playerStatusKeys = Object.keys(global.lx.player_status) as SubscribeKeys[]
   httpServer = http.createServer((req, res): void => {
@@ -129,6 +137,15 @@ const handleStartServer = async(port: number, ip: string) => new Promise<void>((
       //   break
       case '/lyric':
         msg = global.lx.player_status.lyric
+        break
+      case '/play-target-music':
+        try {
+          handlePlayTargetMusic(query)
+        } catch (err) {
+          console.log(err)
+          code = 500
+          msg = 'Error'
+        }
         break
       case '/play':
         sendTaskbarButtonClick('play')

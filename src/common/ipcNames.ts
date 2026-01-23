@@ -151,6 +151,7 @@ const modules = {
     player_action_set_buttons: 'player_action_set_buttons',
     // player_action_set_thumbnail_clip: 'player_action_set_thumbnail_clip',
     player_action_on_button_click: 'player_action_on_button_click',
+    player_action_on_play_target_music: 'player_action_on_play_target_music',
 
     get_themes: 'get_themes',
     save_theme: 'save_theme',

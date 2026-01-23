@@ -861,6 +861,17 @@ export const onNewDesktopLyricProcess = (listener: LX.IpcRendererEventListener):
   }
 }
 
+/**
+ * 搜索
+ * @param listener
+ * @returns
+ */
+export const onPlayTargetMusic = (listener: LX.IpcRendererEventListenerParams<{ name: string, source: string }>): RemoveListener => {
+  rendererOn(WIN_MAIN_RENDERER_EVENT_NAME.player_action_on_play_target_music, listener)
+  return () => {
+    rendererOff(WIN_MAIN_RENDERER_EVENT_NAME.player_action_on_play_target_music, listener)
+  }
+}
 
 export const downloadTasksGet = async() => {
   return rendererInvoke<LX.Download.ListItem[]>(WIN_MAIN_RENDERER_EVENT_NAME.download_list_get)

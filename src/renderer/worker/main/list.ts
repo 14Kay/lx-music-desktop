@@ -5,7 +5,6 @@ import { filterFileName, sortInsert, similar, arrPushByPosition, arrShuffle } fr
 import { joinPath, saveStrToFile } from '@common/utils/nodejs'
 import { createLocalMusicInfo } from '@renderer/utils/music'
 
-
 /**
  * 过滤列表中已播放的歌曲
  */
@@ -338,10 +337,10 @@ export const exportPlayListToCSV = async(savePath: string,
   }
 
   if (isMerge) {
-    await saveStrToFile(savePath, iconv.encode(header + lists.map(l => l.list.map(m => `${filterStr(m.name)},${filterStr(m.singer)},${filterStr(m.meta.albumName ?? '')}`).join('\n')).join('\n'), 'utf8', { addBOM: true }))
+    await saveStrToFile(savePath, iconv.encode(header + lists.map(l => l.list.map(m => `${filterStr(m.name)},${filterStr(m.singer)},${filterStr(m.meta.albumName ?? '')},${filterStr(m.id)},${filterStr(m.source)},${filterStr(m.meta.picUrl ?? '')},${filterStr(m.interval ?? '')}`).join('\n')).join('\n'), 'utf8', { addBOM: true }))
   } else {
     for await (const list of lists) {
-      await saveStrToFile(joinPath(savePath, `lx_list_${filterFileName(list.name)}.csv`), iconv.encode(header + list.list.map(m => `${filterStr(m.name)},${filterStr(m.singer)},${filterStr(m.meta.albumName ?? '')}`).join('\n'), 'utf8', { addBOM: true }))
+      await saveStrToFile(joinPath(savePath, `lx_list_${filterFileName(list.name)}.csv`), iconv.encode(header + list.list.map(m => `${filterStr(m.name)},${filterStr(m.singer)},${filterStr(m.meta.albumName ?? '')},${filterStr(m.id)},${filterStr(m.source)},${filterStr(m.meta.picUrl ?? '')},${filterStr(m.interval ?? '')}`).join('\n'), 'utf8', { addBOM: true }))
     }
   }
 }

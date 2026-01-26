@@ -333,7 +333,7 @@ export default {
 
     const exportPlayListToCsv = async(savePath, isMerge) => {
       const lists = await getAllLists()
-      await window.lx.worker.main.exportPlayListToCSV(savePath, lists, isMerge, `${t('music_name')},${t('music_singer')},${t('music_album')}\n`)
+      await window.lx.worker.main.exportPlayListToCSV(savePath, lists, isMerge, `${t('music_name')},${t('music_singer')},${t('music_album')},id,${t('setting__basic_sourcename')},封面,${t('music_time')}\n`)
     }
     const handleExportPlayListToCsv = async() => {
       const confirm = await dialog.confirm({

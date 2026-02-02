@@ -3,14 +3,20 @@
     <div class="player__sound_effect_title" :class="$style.header">
       <h3>
         {{ $t('player__sound_effect_pitch_shifter') }}
-        <svg-icon class="help-icon" name="information-slab-circle-outline" :aria-label="$t('player__sound_effect_pitch_shifter_tip')" />
+        <svg-icon
+class="help-icon" name="information-slab-circle-outline"
+          :aria-label="$t('player__sound_effect_pitch_shifter_tip')"
+/>
       </h3>
       <base-btn min @click="handleSetPreset(1)">{{ $t('player__sound_effect_pitch_shifter_reset_btn') }}</base-btn>
     </div>
     <div :class="$style.eqList">
       <div :class="$style.eqItem">
         <span :class="$style.label">{{ playbackRate.toFixed(2) }}x</span>
-        <base-slider-bar :class="$style.slider" :value="playbackRate * 100" :min="50" :max="150" @change="handleUpdatePlaybackRate" />
+        <base-slider-bar
+:class="$style.slider" :value="playbackRate * 100" :min="50" :max="150"
+          @change="handleUpdatePlaybackRate"
+/>
       </div>
     </div>
     <!-- <div :class="$style.saveList">
@@ -74,6 +80,7 @@ const handleUpdatePlaybackRate = (value) => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .contnet {
   padding-top: 15px;
   position: relative;
@@ -82,6 +89,7 @@ const handleUpdatePlaybackRate = (value) => {
   gap: 8px;
   min-height: 0;
   flex: none;
+
   &:before {
     .mixin-after;
     position: absolute;
@@ -91,6 +99,7 @@ const handleUpdatePlaybackRate = (value) => {
     border-top: 1px dashed var(--color-primary-light-100-alpha-700);
   }
 }
+
 .header {
   display: flex;
   flex-flow: row nowrap;
@@ -99,22 +108,26 @@ const handleUpdatePlaybackRate = (value) => {
   padding-bottom: 5px;
   // padding-top: 5px;
 }
+
 .eqList {
   display: flex;
   flex-flow: column nowrap;
   gap: 15px;
   width: 100%;
 }
+
 .eqItem {
   display: flex;
   flex-flow: row nowrap;
   gap: 8px;
 }
+
 .label {
   flex: none;
-  // width: 50px;
+ // width : 50px;
   font-size: 12px;
 }
+
 .value {
   flex: none;
   width: 40px;
@@ -132,6 +145,7 @@ const handleUpdatePlaybackRate = (value) => {
   // justify-content: space-between;
   justify-content: center;
   align-items: center;
+
   // font-size: 13px;
   span {
     line-height: 1.2;
@@ -153,5 +167,4 @@ const handleUpdatePlaybackRate = (value) => {
   margin-top: 10px;
   gap: 10px;
 }
-
 </style>

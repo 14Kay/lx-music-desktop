@@ -1,16 +1,13 @@
 <template>
   <div :class="$style.list">
     <div v-show="list.length" ref="dom_listContent" :class="$style.content">
-      <base-virtualized-list
-        ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
-        :item-height="listItemHeight" container-class="scroll" content-class="list"
-        @scroll="saveListPosition" @contextmenu.capture="handleListRightClick"
-      >
-        <div
-          class="list-item"
+      <base-virtualized-list ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
+        :item-height="listItemHeight" container-class="scroll" content-class="list" @scroll="saveListPosition"
+        @contextmenu.capture="handleListRightClick">
+        <div class="list-item"
           :class="[{ [$style.active]: playerInfo.isPlayList && playerInfo.playIndex === index }, { selected: selectedIndex == index || rightClickSelectedIndex == index }, { active: selectedList.includes(item) }, { disabled: !assertApiSupport(item.source) }]"
-          @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
-        >
+          @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)">
+          <div style="flex: 0 0 4%;" class="my__number">{{ formatIndex(index) }}</div>
           <div :class="$style.songInfo" class="list-item-cell auto name">
             <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" :alt="item.name" loading="lazy">
             <div :class="$style.info">
@@ -23,28 +20,34 @@
               </div>
             </div>
           </div>
-          <div class="list-item-cell" style="flex: 0 0 40%;"><span class="select" :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
-          <div :class="$style.textRight" class="list-item-cell" style="flex: 0 0 8%;"><span class="no-select">{{ item.interval || '--/--' }}</span></div>
+
+          <div class="list-item-cell" style="flex: 0 0 40%;"><span class="select" :aria-label="item.meta.albumName">{{
+            item.meta.albumName }}</span></div>
+
+          <div :class="$style.textRight" class="list-item-cell" style="flex: 0 0 8%;"><span class="no-select">{{
+            item.interval || '--/--' }}</span></div>
         </div>
       </base-virtualized-list>
     </div>
     <div v-show="!list.length" :class="$style.noItem">
       <p v-text="$t('no_item')" />
     </div>
-    <common-list-add-modal
-      v-model:show="isShowListAdd" :is-move="isMove" :from-list-id="listId"
-      :music-info="selectedAddMusicInfo" :exclude-list-id="excludeListIds" teleport="#view"
-    />
-    <common-list-add-multiple-modal
-      v-model:show="isShowListAddMultiple" :from-list-id="listId"
-      :is-move="isMoveMultiple" :music-list="selectedList" :exclude-list-id="excludeListIds" teleport="#view" @confirm="removeAllSelect"
-    />
-    <common-download-modal v-model:show="isShowDownload" :music-info="selectedDownloadMusicInfo" teleport="#view" :list-id="listId" />
-    <common-download-multiple-modal v-model:show="isShowDownloadMultiple" :list="selectedList" teleport="#view" :list-id="listId" @confirm="removeAllSelect" />
+    <common-list-add-modal v-model:show="isShowListAdd" :is-move="isMove" :from-list-id="listId"
+      :music-info="selectedAddMusicInfo" :exclude-list-id="excludeListIds" teleport="#view" />
+    <common-list-add-multiple-modal v-model:show="isShowListAddMultiple" :from-list-id="listId"
+      :is-move="isMoveMultiple" :music-list="selectedList" :exclude-list-id="excludeListIds" teleport="#view"
+      @confirm="removeAllSelect" />
+    <common-download-modal v-model:show="isShowDownload" :music-info="selectedDownloadMusicInfo" teleport="#view"
+      :list-id="listId" />
+    <common-download-multiple-modal v-model:show="isShowDownloadMultiple" :list="selectedList" teleport="#view"
+      :list-id="listId" @confirm="removeAllSelect" />
     <search-list :list="list" :visible="isShowSearchBar" @action="handleMusicSearchAction" />
-    <music-sort-modal v-model:show="isShowMusicSortModal" :music-info="selectedSortMusicInfo" :selected-num="selectedNum" @confirm="sortMusic" />
-    <music-toggle-modal v-model:show="isShowMusicToggleModal" :music-info="selectedToggleMusicInfo" @toggle="toggleSource" />
-    <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name" @menu-click="handleMenuClick" />
+    <music-sort-modal v-model:show="isShowMusicSortModal" :music-info="selectedSortMusicInfo"
+      :selected-num="selectedNum" @confirm="sortMusic" />
+    <music-toggle-modal v-model:show="isShowMusicToggleModal" :music-info="selectedToggleMusicInfo"
+      @toggle="toggleSource" />
+    <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name"
+      @menu-click="handleMenuClick" />
   </div>
 </template>
 
@@ -99,6 +102,13 @@ export default {
     const onLoadedList = () => {
       // console.log('restoreScroll', scrollIndex, isAnimation)
       void restoreScroll(scrollIndex, isAnimation)
+    }
+
+    const formatIndex = (index) => {
+      const num = index + 1
+      const total = list.value.length
+      const digits = total.toString().length
+      return num.toString().padStart(digits, '0')
     }
 
     const {
@@ -204,7 +214,7 @@ export default {
     const { saveListPosition, restoreScroll } = useListScroll({ props, listRef, list, handleRestoreScroll })
 
 
-    const handleListItemClick = async(event, index) => {
+    const handleListItemClick = async (event, index) => {
       // 如果正在右键选择状态，直接返回
       if (rightClickSelectedIndex.value > -1) return
 
@@ -313,6 +323,7 @@ export default {
       toggleSource,
 
       resizeImage,
+      formatIndex,
     }
   },
 }
@@ -321,23 +332,27 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.textRight{
+
+.textRight {
   text-align: right;
 }
-.songInfo{
+
+.songInfo {
   display: flex;
   align-items: center;
+
   .info {
     margin-left: 10px;
   }
-  .cover{
-      height: 38px;
-      width: 38px;
-      border-radius: 4px;
-      object-fit: cover;
+
+  .cover {
+    height: 38px;
+    width: 38px;
+    object-fit: cover;
   }
+
   .title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -345,6 +360,7 @@ export default {
     overflow: hidden;
     word-break: break-all;
   }
+
   .subtitle {
     font-size: 12px;
     opacity: 0.68;
@@ -366,9 +382,14 @@ export default {
   :global(.list-item) {
     &.active {
       color: var(--color-button-font);
-      background-color: var(--color-primary-alpha-900);
+      background-color: var(--color-aside-background);
+    }
+
+    &:hover:not(.active) {
+      background-color: var(--color-aside-background);
     }
   }
+
   :global {
     .label-source {
       color: var(--color-primary);
@@ -380,6 +401,7 @@ export default {
     }
   }
 }
+
 .num {
   height: 100%;
   display: flex;
@@ -387,6 +409,7 @@ export default {
   justify-content: center;
   position: relative;
 }
+
 .playIcon {
   position: absolute;
   left: 0;
@@ -400,6 +423,7 @@ export default {
   color: var(--color-button-font);
   opacity: .7;
 }
+
 .content {
   min-height: 0;
   font-size: 14px;
@@ -421,5 +445,4 @@ export default {
     color: var(--color-font-label);
   }
 }
-
 </style>

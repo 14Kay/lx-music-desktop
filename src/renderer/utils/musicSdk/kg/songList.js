@@ -812,7 +812,6 @@ export default {
           hash: item.audio_info.hash_high,
         }
       }
-      console.log(item)
       list.push({
         singer: decodeName(item.author_name),
         name: decodeName(item.songname),

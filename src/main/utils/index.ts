@@ -7,7 +7,6 @@ import defaultHotKey from '@common/defaultHotKey'
 import { migrateDataJson, migrateHotKey, migrateUserApi, parseDataFile } from './migrate'
 import { nativeTheme, powerSaveBlocker } from 'electron'
 import { joinPath } from '@common/utils/nodejs'
-import themes from '@common/theme/index.json'
 
 export const parseEnvParams = (): { cmdParams: LX.CmdParams, deeplink: string | null } => {
   const cmdParams: LX.CmdParams = {}
@@ -128,7 +127,7 @@ export const updateSetting = (setting?: Partial<LX.AppSetting>, isInit: boolean 
 /**
  * 初始化设置
  */
-export const initSetting = async() => {
+export const initSetting = async () => {
   const electronStore_config = getStore(STORE_NAMES.APP_SETTINGS)
 
   let setting = electronStore_config.get('setting') as LX.AppSetting | undefined
@@ -148,7 +147,7 @@ export const initSetting = async() => {
 /**
  * 初始化快捷键设置
  */
-export const initHotKey = async() => {
+export const initHotKey = async () => {
   const electronStore_hotKey = getStore(STORE_NAMES.HOTKEY)
 
   let localConfig = electronStore_hotKey.get('local') as LX.HotKeyConfig | null
@@ -206,7 +205,7 @@ let userThemes: LX.Theme[]
 export const getAllThemes = () => {
   userThemes ??= getStore(STORE_NAMES.THEME).get('themes') as (LX.Theme[] | null) ?? []
   return {
-    themes,
+    themes: [], // 不再使用内置主题
     userThemes,
     dataPath: joinPath(global.lxDataPath, 'theme_images'),
   }
@@ -237,31 +236,25 @@ const copyTheme = (theme: LX.Theme): LX.Theme => {
   }
 }
 export const getTheme = () => {
-  // fs.promises.readdir()
+  // 现在主题完全由 CSS 变量管理，此函数保留用于兼容性
   const shouldUseDarkColors = nativeTheme.shouldUseDarkColors
   let themeId = global.lx.appSetting['theme.id'] == 'auto'
     ? shouldUseDarkColors
       ? global.lx.appSetting['theme.darkId']
       : global.lx.appSetting['theme.lightId']
     : global.lx.appSetting['theme.id']
-  // themeId = 'naruto'
-  // themeId = 'pink'
-  // themeId = 'black'
-  let theme: any = themes.find(theme => theme.id == themeId)
-  if (!theme) {
-    userThemes = getStore(STORE_NAMES.THEME).get('themes') as LX.Theme[] | null ?? []
-    theme = userThemes.find(theme => theme.id == themeId)
-    if (theme) {
-      if (theme.config.extInfo['--background-image'] != 'none') {
-        theme = copyTheme(theme)
-        theme.config.extInfo['--background-image'] =
-          isUrl(theme.config.extInfo['--background-image'])
-            ? `url(${theme.config.extInfo['--background-image']})`
-            : `url(file:///${encodePath(joinPath(global.lxDataPath, 'theme_images', theme.config.extInfo['--background-image']))})`
-      }
-    } else {
-      themeId = global.lx.appSetting['theme.id'] == 'auto' && shouldUseDarkColors ? 'black' : 'green'
-      theme = themes.find(theme => theme.id == themeId) as LX.Theme
+
+  // 检查用户自定义主题
+  userThemes = getStore(STORE_NAMES.THEME).get('themes') as LX.Theme[] | null ?? []
+  let theme = userThemes.find(theme => theme.id == themeId)
+
+  if (theme) {
+    if (theme.config.extInfo['--background-image'] != 'none') {
+      theme = copyTheme(theme)
+      theme.config.extInfo['--background-image'] =
+        isUrl(theme.config.extInfo['--background-image'])
+          ? `url(${theme.config.extInfo['--background-image']})`
+          : `url(file:///${encodePath(joinPath(global.lxDataPath, 'theme_images', theme.config.extInfo['--background-image']))})`
     }
   }
 

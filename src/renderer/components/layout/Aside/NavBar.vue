@@ -2,10 +2,9 @@
   <div ref="dom_menu" :class="$style.menu">
     <ul :class="$style.list" role="toolbar">
       <li v-for="item in menus" :key="item.to" :class="$style.navItem" role="presentation">
-        <router-link :class="[$style.link, {[$style.active]: $route.meta.name == item.name}]" role="tab" :aria-selected="$route.meta.name == item.name" :to="item.to" :aria-label="item.tips">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" :viewBox="item.iconSize" :height="item.size" :width="item.size" space="preserve">
-            <use :xlink:href="item.icon" />
-          </svg>
+        <router-link :class="[$style.link, { [$style.active]: $route.meta.name == item.name }]" role="tab"
+          :aria-selected="$route.meta.name == item.name" :to="item.to" :aria-label="item.tips">
+          <component :is="item.icon" :size="item.size" weight="regular" />
         </router-link>
       </li>
     </ul>
@@ -17,31 +16,30 @@ import { appSetting } from '@renderer/store/setting'
 import { useI18n } from '@root/lang'
 import { ref, computed } from '@common/utils/vueTools'
 import { useIconSize } from '@renderer/utils/compositions/useIconSize'
+import { PhHouseSimple, PhRanking, PhGear, PhDownload, PhSquaresFour } from '@phosphor-icons/vue'
 
 export default {
   name: 'NavBar',
   setup() {
     const t = useI18n()
     const dom_menu = ref<HTMLElement>()
-    const iconSize = useIconSize(dom_menu, 0.32)
+    const iconSize = useIconSize(dom_menu, 0.35)
 
     const menus = computed(() => {
       const size = iconSize.value
       return [
         {
-          to: '/search',
-          tips: t('search'),
-          icon: '#icon-search-2',
-          iconSize: '0 0 425.2 425.2',
+          to: '/library',
+          tips: t('my_list'),
+          icon: PhHouseSimple,
           size,
-          name: 'Search',
+          name: 'Library',
           enable: true,
         },
         {
           to: '/songList/list',
           tips: t('song_list'),
-          icon: '#icon-album',
-          iconSize: '0 0 425.2 425.2',
+          icon: PhSquaresFour,
           size,
           name: 'SongList',
           enable: true,
@@ -49,26 +47,16 @@ export default {
         {
           to: '/leaderboard',
           tips: t('leaderboard'),
-          icon: '#icon-leaderboard',
-          iconSize: '0 0 425.22 425.2',
+          icon: PhRanking,
           size,
           name: 'Leaderboard',
           enable: true,
         },
-        {
-          to: '/library',
-          tips: t('my_list'),
-          icon: '#icon-love',
-          iconSize: '0 0 444.87 391.18',
-          size,
-          name: 'List',
-          enable: true,
-        },
+
         {
           to: '/download',
           tips: t('download'),
-          icon: '#icon-download-2',
-          iconSize: '0 0 425.2 425.2',
+          icon: PhDownload,
           size,
           enable: appSetting['download.enable'],
           name: 'Download',
@@ -76,8 +64,7 @@ export default {
         {
           to: '/setting',
           tips: t('setting'),
-          icon: '#icon-setting',
-          iconSize: '0 0 493.23 436.47',
+          icon: PhGear,
           size,
           enable: true,
           name: 'Setting',
@@ -98,6 +85,7 @@ export default {
 
 .menu {
   flex: auto;
+
   // &.controlBtnLeft {
   //   display: flex;
   //   flex-flow: column nowrap;
@@ -106,12 +94,15 @@ export default {
   // }
   // padding: 5px;
 }
+
 .list {
   -webkit-app-region: no-drag;
+
   // margin-bottom: 15px;
   &:last-child {
     margin-bottom: 0;
   }
+
   // background-color: pink;
   // dt {
   //   padding-left: 5px;
@@ -122,8 +113,11 @@ export default {
   //   .mixin-ellipsis-1;
   // }
 }
+
 .navItem {
   position: relative;
+  height: 60px;
+
   &:before {
     content: '';
     display: block;
@@ -131,6 +125,7 @@ export default {
     padding-bottom: 84%;
   }
 }
+
 .link {
   position: absolute;
   left: 0%;
@@ -151,7 +146,6 @@ export default {
   // border-left: 5px solid transparent;
   transition: @transition-fast;
   transition-property: background-color, opacity;
-  color: var(--color-nav-font);
   cursor: pointer;
   // font-size: 11.5px;
   text-align: center;
@@ -162,6 +156,7 @@ export default {
 
   // border-radius: @radius-border;
   .mixin-ellipsis-1;
+
   &:before {
     .mixin-after;
     left: 0;
@@ -177,6 +172,7 @@ export default {
   &.active {
     // border-left-color: @color-theme-active;
     background-color: var(--color-primary-light-300-alpha-700);
+    color: var(--color-nav-font);
 
     &:before {
       transform: translateX(0);
@@ -196,6 +192,7 @@ export default {
       background-color: var(--color-primary-light-400-alpha-700);
     }
   }
+
   &:active:not(.active) {
     opacity: .6;
     background-color: var(--color-primary-light-300-alpha-600);
@@ -207,6 +204,4 @@ export default {
 //   &> svg {
 //     width: 32%;
 //   }
-// }
-
-</style>
+// }</style>

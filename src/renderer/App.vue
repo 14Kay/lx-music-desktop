@@ -1,6 +1,7 @@
 <template>
   <div id="container" class="view-container" @click="handleClick">
     <layout-top id="top" />
+    <layout-aside id="left" />
     <div id="main">
       <layout-view id="view" />
     </div>
@@ -51,26 +52,44 @@ onMounted(() => {
 <style lang="less">
 @import './assets/styles/index.less';
 @import './assets/styles/layout.less';
-.title{
-  font-size: 42px;
+
+.title {
+  font-size: 32px;
   color: var(--color-text);
   font-weight: 600;
-  padding-top: 24px;
+  padding-top: @gap;
 }
+
+* {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 html {
   height: 100vh;
 }
-html, body {
+
+html,
+body {
   // overflow: hidden;
   box-sizing: border-box;
 }
+
 main::-webkit-scrollbar {
   width: 0px;
 }
+
 body {
   user-select: none;
   height: 100%;
 }
+
 #root {
   height: 100%;
   position: relative;
@@ -90,6 +109,7 @@ body {
 
 .transparent {
   background: transparent;
+
   // padding: @shadow-app;
   // #waiting-mask {
   //   border-radius: @radius-border;
@@ -101,15 +121,18 @@ body {
   #body {
     border-radius: @radius-border;
   }
+
   #root {
     box-shadow: 0 0 @shadow-app rgba(0, 0, 0, 0.5);
     border-radius: @radius-border;
   }
+
   // #container {
-    // border-radius: @radius-border;
-    // background-color: transparent;
+  // border-radius: @radius-border;
+  // background-color: transparent;
   // }
 }
+
 .disableTransparent {
   background-color: var(--color-content-background);
 
@@ -126,6 +149,7 @@ body {
   //   margin-right: 5Px;
   // }
 }
+
 .fullscreen {
   background-color: var(--color-content-background);
 
@@ -145,7 +169,14 @@ body {
 #left {
   flex: none;
   width: @width-app-left;
+  position: fixed;
+  top: 0;
+  bottom: 84px;
+  width: 60px;
+  z-index: 9;
+  background-color: var(--color-aside-background, transparent);
 }
+
 #right {
   flex: auto;
   display: flex;
@@ -159,9 +190,11 @@ body {
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
 }
 
-#toolbar, #player {
+#toolbar,
+#player {
   flex: none;
 }
+
 #view {
   position: relative;
   flex: auto;
@@ -173,48 +206,50 @@ body {
   transition: opacity @transition-normal;
 }
 
-#root.show-modal > .view-container {
+#root.show-modal>.view-container {
   opacity: .9;
 }
-#view.show-modal > .view-container {
+
+#view.show-modal>.view-container {
   opacity: .2;
 }
 
-#top{
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 84px;
-    backdrop-filter: saturate(180%) blur(20px);
-    background-color: var(--color-primary-light-1000-alpha-150);
-    z-index: 9;
-    -webkit-app-region: drag;
-    padding-right: 10vw;
-    padding-left: 10vw;
+#top {
+  position: fixed;
+  padding-top: @gap-md;
+  padding-right: @gap;
+  top: 0;
+  right: 0;
+  left: 60px;
+  height: 54px;
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: var(--color-top-background);
+  z-index: 9;
+  -webkit-app-region: drag;
 }
 
-#main{
+#main {
   position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
-  left: 0;
+  left: 60px;
   overflow: auto;
-  padding: 0 10vw 96px 10vw;
+  padding: @gap-md @gap 84px @gap;
   box-sizing: border-box;
   scrollbar-width: none; // firefox
+  background-color: var(--color-main-background, #fafafa);
 }
 
-#player-container{
+#player-container {
   position: fixed;
   right: 0;
   left: 0;
   bottom: 0;
-  height: 64px;
+  height: 84px;
   backdrop-filter: saturate(180%) blur(20px);
-  background-color: var(--color-primary-light-1000-alpha-150);
+  background-color: var(--color-player-background, var(--color-primary-light-1000-alpha-150));
   z-index: 9;
+  overflow: visible;
 }
 </style>
-

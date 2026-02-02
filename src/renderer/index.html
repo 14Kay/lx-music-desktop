@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html style="background-color: transparent;">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LX Music</title>
 </head>
+
 <body id="body" style="background-color: transparent;">
   <!-- <div id="waiting-mask">
     <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" height="50%" viewbox="0 0 447.942 447.943">
@@ -29,17 +31,7 @@
     window.dt = /dt=true/.test(window.location.search)
     document.documentElement.classList.add(window.dt ? 'disableTransparent' : 'transparent')
 
-    window.dom_style = document.createElement('style')
-
-    window.setTheme = colors => {
-      window.dom_style.innerText = `:root {${(Object.entries(colors)).map(([key, value]) => `${key}:${value};`).join('')}}`
-    }
-    const applyThemeColor = (theme) => {
-      theme = JSON.parse(decodeURIComponent(theme))
-      window.setTheme(theme.colors)
-      document.body.appendChild(window.dom_style)
-    }
-    if (/theme=(.+)(#|$)/.test(window.location.search)) applyThemeColor(RegExp.$1)
   </script>
 </body>
+
 </html>

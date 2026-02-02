@@ -35,6 +35,19 @@ const migrateV1 = (db: Database.Database) => {
   }
 }
 
+const migrateV2 = (db: Database.Database) => {
+  // 添加播放历史表
+  const existsTable = db.prepare('SELECT name FROM "main".sqlite_master WHERE type=\'table\' AND name=\'play_history\';').get()
+  if (!existsTable) {
+    const playHistoryTable = tables.get('play_history')!
+    const indexMusicId = tables.get('index_play_history_musicId')!
+    const indexPlayedAt = tables.get('index_play_history_playedAt')!
+    db.exec(playHistoryTable)
+    db.exec(indexMusicId)
+    db.exec(indexPlayedAt)
+  }
+}
+
 export default (db: Database.Database) => {
   // PRAGMA user_version = x
   // console.log(db.prepare('PRAGMA user_version').get().user_version)
@@ -43,6 +56,10 @@ export default (db: Database.Database) => {
   switch (version) {
     case '1':
       migrateV1(db)
+      db.prepare('UPDATE "main"."db_info" SET "field_value"=@value WHERE "field_name"=@name').run({ name: 'version', value: DB_VERSION })
+      break
+    case '2':
+      migrateV2(db)
       db.prepare('UPDATE "main"."db_info" SET "field_value"=@value WHERE "field_name"=@name').run({ name: 'version', value: DB_VERSION })
       break
   }

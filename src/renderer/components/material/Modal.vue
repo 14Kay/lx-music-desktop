@@ -2,14 +2,14 @@
   <teleport :to="teleport">
     <div v-if="showModal" ref="dom_container" :class="$style.container">
       <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <div v-show="showContent" :class="[$style.modal, {[$style.filter]: filter}]" @click="bgClose && close()">
-          <transition :enter-active-class="inClass" :leave-active-class="outClass" @after-enter="$emit('after-enter', $event)" @after-leave="handleAfterLeave">
+        <div v-show="showContent" :class="[$style.modal, { [$style.filter]: filter }]" @click="bgClose && close()">
+          <transition :enter-active-class="inClass" :leave-active-class="outClass"
+            @after-enter="$emit('after-enter', $event)" @after-leave="handleAfterLeave">
             <div v-show="showContent" :class="$style.content" :style="contentStyle" @click.stop>
-              <header :class="$style.header">
-                <button v-if="closeBtn" type="button" @click="close">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 212.982 212.982" space="preserve">
-                    <use xlink:href="#icon-close" />
-                  </svg>
+              <header :class="[$style.header]">
+                <span :class="$style.title">{{ title }}</span>
+                <button v-if="closeBtn" class="my__button" type="button" @click="close">
+                  <PhX size="60%" />
                 </button>
               </header>
               <slot />
@@ -25,9 +25,13 @@
 import { getRandom } from '@common/utils/common'
 import { nextTick } from '@common/utils/vueTools'
 import { appSetting } from '@renderer/store/setting'
+import { PhX } from '@phosphor-icons/vue'
 
 let modalCount = 0
 export default {
+  components: {
+    PhX,
+  },
   props: {
     show: {
       type: Boolean,
@@ -47,7 +51,7 @@ export default {
     },
     maxWidth: {
       type: String,
-      default: '76%',
+      default: '45%',
     },
     minWidth: {
       type: String,
@@ -55,7 +59,7 @@ export default {
     },
     maxHeight: {
       type: String,
-      default: '76%',
+      default: '72%',
     },
     width: {
       type: String,
@@ -64,6 +68,10 @@ export default {
     height: {
       type: String,
       default: 'auto',
+    },
+    title: {
+      type: String,
+      default: '',
     },
   },
   emits: ['after-enter', 'after-leave', 'close'],
@@ -269,7 +277,6 @@ export default {
 
 .content {
   position: relative;
-  border-radius: 4px;
   box-shadow: 0 0 4px rgba(0, 0, 0, .25);
   overflow: hidden;
   // max-height: 80%;
@@ -279,6 +286,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   z-index: 100;
+  padding: @gap-sm;
   background-color: var(--color-content-background);
 }
 
@@ -287,31 +295,10 @@ export default {
   background-color: var(--color-primary-light-100-alpha-100);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 18px;
+  justify-content: space-between;
 
-  button {
-    border: none;
-    cursor: pointer;
-    padding: 4px 7px;
-    background-color: transparent;
-    color: var(--color-primary-dark-500-alpha-500);
-    outline: none;
-    transition: background-color 0.2s ease;
-    line-height: 0;
-
-    svg {
-      height: .7em;
-      color: #fff
-    }
-
-    &:hover {
-      background-color: var(--color-primary-dark-100-alpha-600);
-    }
-    &:active {
-      background-color: var(--color-primary-dark-200-alpha-600);
-    }
+  .title {
+    font-size: 24px;
   }
 }
-
 </style>

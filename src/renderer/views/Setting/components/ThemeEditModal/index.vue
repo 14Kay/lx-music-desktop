@@ -26,11 +26,13 @@
               <div :class="$style.label">{{ $t('theme_edit_modal__main_bg') }}</div>
             </div>
             <div :class="[$style.item, $style.bg]">
-              <div :class="[$style.bgImg, {[$style.hasBg]: !!bgImg}]" @click="selectBgImg">
-                <img v-if="bgImg" loading="lazy" decoding="async" :class="$style.img" :src="bgImg" alt="Background Image">
+              <div :class="[$style.bgImg, { [$style.hasBg]: !!bgImg }]" @click="selectBgImg">
+                <img v-if="bgImg" loading="lazy" decoding="async" :class="$style.img" :src="bgImg"
+                  alt="Background Image">
                 <svg-icon v-else :class="$style.icon" name="plus" />
                 <button :class="$style.removeBtn" type="button" @click.stop="removeBgImg">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 212.982 212.982" space="preserve">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+                    height="100%" viewBox="0 0 212.982 212.982" space="preserve">
                     <use xlink:href="#icon-delete" />
                   </svg>
                 </button>
@@ -67,17 +69,20 @@
               <span>{{ $t('theme_edit_modal__control_btn') }}</span>
               <div :class="$style.controlBtn">
                 <button type="button" :class="$style.hide">
-                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="80%" viewBox="0 0 30.727 30.727" space="preserve">
+                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xlink="http://www.w3.org/1999/xlink" width="80%" viewBox="0 0 30.727 30.727" space="preserve">
                     <use xlink:href="#icon-window-hide" />
                   </svg>
                 </button>
                 <button type="button" :class="$style.min">
-                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
+                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
                     <use xlink:href="#icon-window-minimize" />
                   </svg>
                 </button>
                 <button type="button" :class="$style.close">
-                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
+                  <svg :class="$style.controlBtnIcon" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                    xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
                     <use xlink:href="#icon-window-close" />
                   </svg>
                 </button>
@@ -104,16 +109,21 @@
         <div :class="$style.subContent" style="flex-wrap: wrap;">
           <base-input v-model="themeName" :class="$style.input" :placeholder="$t('theme_selector_modal__theme_name')" />
           <div :class="$style.subContent" style="flex-wrap: wrap;">
-            <base-checkbox id="theme_edit_modal__dark" v-model="isDark" :class="$style.checkbox" :label="$t('theme_edit_modal__dark')" @change="handleDark" />
+            <base-checkbox id="theme_edit_modal__dark" v-model="isDark" :class="$style.checkbox"
+              :label="$t('theme_edit_modal__dark')" @change="handleDark" />
             <div :class="$style.subContent" style="flex-wrap: wrap;">
-              <base-checkbox id="theme_edit_modal__dark_font" v-model="isDarkFont" :class="$style.checkbox" :label="$t('theme_edit_modal__dark_font')" @change="handleDarkFont" />
-              <base-checkbox id="theme_edit_modal__preview" v-model="preview" :class="$style.checkbox" :label="$t('theme_edit_modal__preview')" @change="handlePreview" />
+              <base-checkbox id="theme_edit_modal__dark_font" v-model="isDarkFont" :class="$style.checkbox"
+                :label="$t('theme_edit_modal__dark_font')" @change="handleDarkFont" />
+              <base-checkbox id="theme_edit_modal__preview" v-model="preview" :class="$style.checkbox"
+                :label="$t('theme_edit_modal__preview')" @change="handlePreview" />
             </div>
           </div>
         </div>
         <div :class="$style.subContent" style="flex: none;">
-          <base-btn v-if="themeId" :class="$style.btn" @click="handleRemove">{{ $t('theme_edit_modal__remove') }}</base-btn>
-          <base-btn v-if="themeId" :class="$style.btn" @click="handleSaveNew">{{ $t('theme_edit_modal__save_new') }}</base-btn>
+          <base-btn v-if="themeId" :class="$style.btn" @click="handleRemove">{{ $t('theme_edit_modal__remove')
+          }}</base-btn>
+          <base-btn v-if="themeId" :class="$style.btn" @click="handleSaveNew">{{ $t('theme_edit_modal__save_new')
+          }}</base-btn>
           <!-- <base-btn :class="$style.btn" @click="handleCancel">{{ $t('btn_cancel') }}</base-btn> -->
           <base-btn :class="$style.btn" @click="handleSubmit">{{ $t('btn_save') }}</base-btn>
         </div>
@@ -128,7 +138,6 @@ import { nextTick, ref, watch } from '@common/utils/vueTools'
 import { applyTheme, buildThemeColors, getThemes, copyTheme } from '@renderer/store/utils'
 import { isUrl, encodePath } from '@common/utils/common'
 // import { appSetting, updateSetting } from '@renderer/store/setting'
-// import { applyTheme, getThemes } from '@renderer/store/utils'
 import { createThemeColors } from '@common/theme/utils'
 import useMainColor from './useMainColor'
 import useFontColor from './useFontColor'
@@ -367,7 +376,7 @@ export default {
       })
     })
 
-    const selectBgImg = async() => {
+    const selectBgImg = async () => {
       const result = await showSelectDialog({
         title: window.i18n.t('theme_edit_modal__select_bg_file'),
         properties: ['openFile'],
@@ -394,7 +403,7 @@ export default {
 
       createPreview()
     }
-    const removeBgImg = async() => {
+    const removeBgImg = async () => {
       if (currentBgPath) {
         void removeFile(currentBgPath)
         currentBgPath = ''
@@ -428,7 +437,7 @@ export default {
       emit('update:modelValue', false)
     }
     // 保存
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
       if (!themeName.value) return
       theme.name = themeName.value.substring(0, 20)
       // 保存新背景
@@ -451,7 +460,7 @@ export default {
       emit('update:modelValue', false)
     }
     // 删除
-    const handleRemove = async() => {
+    const handleRemove = async () => {
       const confirm = await dialog.confirm({
         message: window.i18n.t('theme_edit_modal__remove_tip'),
         cancelButtonText: window.i18n.t('cancel_button_text'),
@@ -485,7 +494,7 @@ export default {
       emit('update:modelValue', false)
     }
     // 另存为
-    const handleSaveNew = async() => {
+    const handleSaveNew = async () => {
       if (!themeName.value) return
       theme.name = themeName.value.substring(0, 20)
       theme.id = 'user_theme_' + Date.now()
@@ -542,6 +551,7 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .main {
   // padding: 15px;
   // max-width: 400px;
@@ -553,6 +563,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
   min-height: 0;
+
   h2 {
     flex: none;
     font-size: 16px;
@@ -561,6 +572,7 @@ export default {
     text-align: center;
     padding: 15px;
   }
+
   h3 {
     font-size: 16px;
     color: var(--color-font);
@@ -569,6 +581,7 @@ export default {
     font-size: 15px;
   }
 }
+
 .content {
   flex: auto;
   // padding: 15px 0;
@@ -577,9 +590,9 @@ export default {
   display: flex;
   flex-flow: column nowrap;
 }
-.group {
 
-}
+.group {}
+
 .groupTitle {
   padding: 20px 20px 0;
   display: flex;
@@ -589,10 +602,12 @@ export default {
     margin-right: 5px;
   }
 }
+
 .groupContent {
   display: flex;
   flex-flow: row wrap;
 }
+
 .item {
   padding: 15px 20px 0;
   width: 74px;
@@ -600,11 +615,13 @@ export default {
   flex-flow: column nowrap;
   align-items: center;
 }
+
 .base {
   .color {
     width: 100%;
   }
 }
+
 .color {
   width: 80%;
   aspect-ratio: 1 / 1;
@@ -614,10 +631,12 @@ export default {
   transition: @transition-fast !important;
   transition-property: background-color, opacity !important;
   box-shadow: 0 0 3px var(--color-primary-light-100-alpha-300);
+
   &:hover {
     opacity: .7;
   }
 }
+
 .label {
   padding-top: 10px;
   text-align: center;
@@ -630,6 +649,7 @@ export default {
   // min-width: 60px;
   // max-width: 200px;
 }
+
 .bgImg {
   width: 100%;
   height: 60px;
@@ -648,6 +668,7 @@ export default {
   transition: @transition-fast !important;
   transition-property: background-color, opacity !important;
   overflow: hidden;
+
   &:hover {
     opacity: .7;
   }
@@ -665,6 +686,7 @@ export default {
     height: 100%;
     object-fit: cover;
   }
+
   .removeBtn {
     position: absolute;
     right: 0;
@@ -686,10 +708,12 @@ export default {
     &:hover {
       background-color: rgba(0, 0, 0, 0.7);
     }
+
     &:active {
       background-color: rgba(0, 0, 0, 0.8);
     }
   }
+
   .icon {
     // position: absolute;
     // font-size: 16px;
@@ -699,6 +723,7 @@ export default {
 }
 
 @control-btn-width: @height-toolbar * .26;
+
 .controlBtn {
   display: flex;
   -webkit-app-region: no-drag;
@@ -708,8 +733,10 @@ export default {
   // height: @height-toolbar * .7;
   transition: opacity @transition-normal;
   opacity: .5;
+
   &:hover {
     opacity: .8;
+
     .controlBtnIcon {
       opacity: 1;
     }
@@ -730,16 +757,20 @@ export default {
     height: @control-btn-width;
     border-radius: 50%;
     color: var(--color-font);
-    + button {
+
+    +button {
       margin-right: (@control-btn-width / 2);
     }
 
     &.hide {
       background-color: var(--color-btn-hide);
     }
-    &.min, &.fullscreenExit {
+
+    &.min,
+    &.fullscreenExit {
       background-color: var(--color-btn-min);
     }
+
     // &.max {
     //   background-color: var(--color-btn-max);
     // }
@@ -765,6 +796,7 @@ export default {
   //   }
   // }
 }
+
 .footer {
   padding: 15px;
   display: flex;
@@ -773,6 +805,7 @@ export default {
   justify-content: space-between;
   gap: 15px;
   font-size: 14px;
+
   .subContent {
     display: flex;
     flex-flow: row nowrap;
@@ -783,6 +816,7 @@ export default {
   .checkbox {
     flex: none;
   }
+
   .input {
     max-width: 150px;
     flex: 0 1 auto;
@@ -800,5 +834,4 @@ export default {
   min-width: 70px;
   // .mixin-ellipsis-1;
 }
-
 </style>

@@ -1,18 +1,10 @@
 <template>
   <teleport to="#root">
     <ul ref="dom_menu" :class="$style.list" :style="menuStyles" role="toolbar" :aria-hidden="!modelValue">
-      <li
-        v-for="item in menus"
-        v-show="!item.hide && (item.action == 'download' ? appSetting['download.enable'] : true)"
-        :key="item.action"
-        :class="$style.listItem"
-        role="tab"
-        tabindex="0"
-        :aria-label="item[itemName]"
-        ignore-tip
-        :disabled="item.disabled ? true : null"
-        @click="menuClick(item)"
-      >
+      <li v-for="item in menus"
+        v-show="!item.hide && (item.action == 'download' ? appSetting['download.enable'] : true)" :key="item.action"
+        :class="$style.listItem" role="tab" tabindex="0" :aria-label="item[itemName]" ignore-tip
+        :disabled="item.disabled ? true : null" @click="menuClick(item)">
         {{ item[itemName] }}
       </li>
     </ul>
@@ -93,17 +85,18 @@ export default {
   transition-property: transform, opacity;
   border-radius: @radius-border * 1.5;
   background-color: var(--color-content-background);
-  box-shadow: 0 1px 8px 0 rgba(0,0,0,.2);
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, .2);
   z-index: 10;
   overflow: hidden;
   padding: 8px;
   // will-change: transform;
 }
+
 .listItem {
   cursor: pointer;
   min-width: 96px;
   line-height: 40px;
-  border-radius: 5px;
+  border-radius: 3px;
   // color: var(--color-button-font);
   padding: 0 10px;
   text-align: center;
@@ -117,6 +110,7 @@ export default {
   &:hover {
     background-color: var(--color-primary-background-hover);
   }
+
   &:active {
     background-color: var(--color-primary-background-active);
   }
@@ -124,10 +118,10 @@ export default {
   &[disabled] {
     cursor: default;
     opacity: .4;
+
     &:hover {
       background: none !important;
     }
   }
 }
-
 </style>

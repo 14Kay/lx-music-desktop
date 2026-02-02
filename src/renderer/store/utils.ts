@@ -63,20 +63,3 @@ export const findTheme = (themeInfo: LX.ThemeInfo, id: string): LX.Theme | undef
   theme = themeInfo.userThemes.find(theme => theme.id == id)
   return theme
 }
-
-export const applyTheme = (id: string, lightId: string, darkId: string, dataPath: string) => {
-  getThemes((themeInfo) => {
-    let themeId = id == 'auto'
-      ? themeShouldUseDarkColors.value
-        ? darkId
-        : lightId
-      : id
-
-    let theme = findTheme(themeInfo, themeId)
-    if (!theme) {
-      themeId = id == 'auto' && themeShouldUseDarkColors.value ? 'black' : 'green'
-      theme = themeInfo.themes.find(theme => theme.id == themeId)!
-    }
-    window.setTheme(buildThemeColors(theme, dataPath))
-  })
-}

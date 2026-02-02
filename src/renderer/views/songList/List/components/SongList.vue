@@ -3,19 +3,15 @@
     <div v-show="!props.listInfo.noItemLabel" ref="dom_list_ref" :class="$style.listContent" class="scroll">
       <ul>
         <li v-for="item in props.listInfo.list" :key="item.id" :class="$style.item">
-          <material-playlist
-          :list-id="item.id"
-          :cover="item.img"
-          :title="item.name"
-          :subtitle="`${item.author} - ${item.time}`"
-          :source="item.source"
-          :from-name="route.name as string"
-          ></material-playlist>
+          <material-playlist :list-id="item.id" :cover="item.img" :title="item.name"
+            :subtitle="`${item.author} - ${item.time}`" :source="item.source"
+            :from-name="route.name as string"></material-playlist>
         </li>
         <li v-for="(i, index) in 6" :key="index" :class="$style.item" style="margin-bottom: 0;height: 0;" />
       </ul>
       <div :class="$style.pagination">
-        <material-pagination :count="props.listInfo.total" :limit="props.listInfo.limit" :page="props.listInfo.page" @btn-click="togglePage" />
+        <material-pagination :count="props.listInfo.total" :limit="props.listInfo.limit" :page="props.listInfo.page"
+          @btn-click="togglePage" />
       </div>
     </div>
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
@@ -66,6 +62,7 @@ defineExpose({
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .container {
   display: flex;
   flex-flow: column nowrap;
@@ -78,27 +75,32 @@ defineExpose({
   font-size: 14px;
   box-sizing: border-box;
   overflow: hidden;
-  > ul {
+
+  >ul {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 24px 24px;
+    gap: @gap @gap;
     width: 100%;
-    li{
+
+    li {
       width: 100%;
     }
   }
 }
+
 .item {
   box-sizing: border-box;
   cursor: pointer;
   transition: opacity @transition-normal;
+
   &:hover {
     opacity: .7;
   }
 }
+
 .image {
   flex: none;
   width: 40%;
@@ -110,8 +112,9 @@ defineExpose({
   opacity: .9;
   aspect-ratio: 1 / 1;
 
-  box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, .2);
 }
+
 .img {
   width: 100%;
   height: 100%;
@@ -122,6 +125,7 @@ defineExpose({
   flex: auto;
   padding: 2px 15px 2px 7px;
   overflow: hidden;
+
   h4 {
     font-size: 14px;
     // height: 2.6em;
@@ -130,6 +134,7 @@ defineExpose({
     .mixin-ellipsis-2;
   }
 }
+
 .songlist_info {
   display: flex;
   flex-flow: row nowrap;
@@ -141,10 +146,12 @@ defineExpose({
   line-height: 1.2;
   // text-indent: 24px;
   color: var(--color-font-label);
+
   svg {
     margin-right: 2px;
   }
 }
+
 .author {
   margin-top: 6px;
   font-size: 12px;
@@ -154,6 +161,7 @@ defineExpose({
   // text-indent: 24px;
   color: var(--color-font-label);
 }
+
 .time {
   margin-top: 3px;
   font-size: 12px;
@@ -163,12 +171,14 @@ defineExpose({
   // text-indent: 24px;
   color: var(--color-font-label);
 }
+
 .pagination {
   text-align: center;
   padding: 15px 0;
   // left: 50%;
   // transform: translateX(-50%);
 }
+
 .noitem {
   position: absolute;
   top: 0;
@@ -186,5 +196,4 @@ defineExpose({
     color: var(--color-font-label);
   }
 }
-
 </style>

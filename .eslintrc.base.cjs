@@ -75,25 +75,36 @@ exports.typescript = {
 
 exports.vue = {
   files: ['*.vue'],
-  rules: vueRule,
+  // 🔴 核心修复 1：最外层必须是 vue-eslint-parser
   parser: 'vue-eslint-parser',
-  extends: [
-    // 'plugin:vue/vue3-essential',
-    'plugin:vue/base',
-    'plugin:vue/vue3-recommended',
-    'plugin:vue-pug/vue3-recommended',
-    // "plugin:vue/strongly-recommended"
-    'standard-with-typescript',
-  ],
-  parserOptions: {
-    sourceType: 'module',
-    parser: {
-      // Script parser for `<script>`
-      js: '@typescript-eslint/parser',
 
-      // Script parser for `<script lang="ts">`
-      ts: '@typescript-eslint/parser',
+  parserOptions: {
+    // 🔴 核心修复 2：TS 解析器必须放在 parserOptions 里
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module',
+    ecmaVersion: 'latest',
+    ecmaFeatures: {
+      jsx: true
     },
     extraFileExtensions: ['.vue'],
   },
+
+  extends: [
+    'plugin:vue/vue3-recommended',
+    // 'standard-with-typescript' // ⚠️ 建议先注释掉这个，因为它包含了很多过时规则
+    'plugin:@typescript-eslint/recommended' // 改用这个更稳定的推荐配置
+  ],R
+
+  rules: {
+    // 这里放你的自定义规则
+    // ...vueRule, 
+
+    // 🔴 核心修复 3：手动关闭找不到的规则（或者直接删掉这些配置）
+    '@typescript-eslint/type-annotation-spacing': 'off',
+    '@typescript-eslint/indent': 'off',
+    '@typescript-eslint/member-delimiter-style': 'off',
+
+    // Vue 特有规则
+    'vue/multi-word-component-names': 'off',
+  }
 }

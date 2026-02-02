@@ -1,15 +1,9 @@
 <template>
   <div>
     <div>
-      <common-cover
-        :image-url="cover ? resizeImage(cover, 224) : ''"
-        :is-my-playlist="isMyPlaylist"
-        :play-button-size="playButtonSize"
-        :source="source"
-        :from-name="fromName"
-        @play="play"
-        @goto="goTo"
-      />
+      <common-cover :image-url="cover ? resizeImage(cover, 224) : ''" :is-my-playlist="isMyPlaylist"
+        :play-button-size="playButtonSize" :source="source" :from-name="fromName" :is-playing="isPlayingCurrentPlaylist"
+        @play="handlePlayPause" @goto="goTo" />
     </div>
     <div :class="$style.text">
       <div :class="$style.title">{{ title }}</div>
@@ -20,9 +14,14 @@
 
 <script lang="ts" setup>
 import { useRouter } from '@common/utils/vueRouter'
-import { playList } from '@renderer/core/player'
+import { playList, pause } from '@renderer/core/player'
 import useList from './../../views/songList/Detail/useList'
 import { resizeImage } from '@renderer/utils/resizeCover'
+import { appSetting } from '@renderer/store/setting'
+import { playMusicInfo, isPlay } from '@renderer/store/player/state'
+import { tempListMeta } from '@renderer/store/list/state'
+import { LIST_IDS } from '@common/constants'
+import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
   listId: string
@@ -46,14 +45,39 @@ const props = withDefaults(defineProps<{
 const randomFrom = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min)
 const router = useRouter()
 
-const play = async() => {
+// 生成完整的 listId 格式
+const fullListId = computed(() => {
+  if (!props.source) {
+    return props.listId
+  }
+  return `${props.source}__${props.listId}`
+})
+
+// 检查是否正在播放当前歌单
+const isPlayingCurrentPlaylist = computed(() => {
+  const isDirectMatch = playMusicInfo.listId === fullListId.value
+  const isTempMatch = playMusicInfo.listId === LIST_IDS.TEMP && tempListMeta.id === fullListId.value
+  return (isDirectMatch || isTempMatch) && isPlay.value
+})
+
+const play = async () => {
   if (!props.source) {
     playList(props.listId, randomFrom(0, Number(props.count) - 1))
   } else {
-    const { getListData, handlePlayList } = useList()
+    const { getListData, handlePlayList, listDetailInfo } = useList()
     await getListData(props.source, props.listId, 1, false)
-    handlePlayList(0)
-    /* playSongListDetail(props.id, props.source as LX.OnlineSource, listDetailInfo.list, 0) */
+    const index = appSetting['player.togglePlayMethod'] === 'random'
+      ? randomFrom(0, listDetailInfo.list.length - 1)
+      : 0
+    handlePlayList(index)
+  }
+}
+
+const handlePlayPause = () => {
+  if (isPlayingCurrentPlaylist.value) {
+    pause()
+  } else {
+    void play()
   }
 }
 
@@ -82,6 +106,7 @@ const goTo = () => {
 <style lang="less" module>
 .text {
   margin-top: 8px;
+
   .title {
     font-size: 16px;
     font-weight: 600;
@@ -92,6 +117,7 @@ const goTo = () => {
     overflow: hidden;
     word-break: break-all;
   }
+
   .info {
     font-size: 12px;
     opacity: 0.68;
@@ -101,6 +127,7 @@ const goTo = () => {
     -webkit-line-clamp: 1;
     overflow: hidden;
     word-break: break-word;
+    margin-top: 4px;
   }
 }
 </style>

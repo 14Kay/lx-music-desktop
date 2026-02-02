@@ -1,28 +1,28 @@
 <template lang="pug">
 dt#sync Last FM
 dd.gap-top
+  div
+  .p(:class="$style.inputContainer")
+    .p.small(:class="$style.title") API key
     div
-    .p(:class="$style.inputContainer")
-        .p.small(:class="$style.title") API key
-        div
-        base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.api_key']" type="string" placeholder="API key" @update:model-value="setApiKey")
+    base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.api_key']" type="string" placeholder="API key" @update:model-value="setApiKey")
 
-    .p(:class="$style.inputContainer")
-        .p.small(:class="$style.title") secret
-        div
-        base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.secret']" type="string" placeholder="secret" @update:model-value="setSecret")
+  .p(:class="$style.inputContainer")
+    .p.small(:class="$style.title") secret
+    div
+    base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.secret']" type="string" placeholder="secret" @update:model-value="setSecret")
 
-    .p(:class="$style.inputContainer")
-      .p.small(:class="$style.title") session
-      div
-      base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.session.key']" type="string" placeholder="session" @update:model-value="setSession")
-    .p(:class="$style.desc") 如果没有 session 就填写 API key 和 secret，点击获取授权后会打开一个网页，请登录 Last FM 并授权，授权成功后点击下方的启用 Last FM 即可
-    .p(:class="$style.desc") 如果已经有 session 就直接填写 session，点击启用 Last FM 即可
-    .p
-      base-btn.btn(:disabled="!appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" @click="openAuthUrl") {{ appSetting['lastFM.session.key'] ? '重新获取授权' : '获取授权' }}
-    div(v-if="appSetting['lastFM.api_key'] && appSetting['lastFM.secret']")
-    .p
-      base-checkbox( id="setting_last_fm_enable" :disabled="!appSetting['lastFM.session.key'] || !appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" :model-value="appSetting['lastFM.enable']" label="启用 Last FM" @update:model-value="updateSetting({ 'lastFM.enable': $event })")
+  .p(:class="$style.inputContainer")
+    .p.small(:class="$style.title") session
+    div
+    base-input.gap-left(:class="$style.content" :model-value="appSetting['lastFM.session.key']" type="string" placeholder="session" @update:model-value="setSession")
+  .p(:class="$style.desc") 如果没有 session 就填写 API key 和 secret，点击获取授权后会打开一个网页，请登录 Last FM 并授权，授权成功后点击下方的启用 Last FM 即可
+  .p(:class="$style.desc") 如果已经有 session 就直接填写 session，点击启用 Last FM 即可
+  .p
+    base-btn.btn(:disabled="!appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" @click="openAuthUrl") {{ appSetting['lastFM.session.key'] ? '重新获取授权' : '获取授权' }}
+  div(v-if="appSetting['lastFM.api_key'] && appSetting['lastFM.secret']")
+  .p
+    base-checkbox( id="setting_last_fm_enable" :disabled="!appSetting['lastFM.session.key'] || !appSetting['lastFM.api_key'] || !appSetting['lastFM.secret']" :model-value="appSetting['lastFM.enable']" label="启用 Last FM" @update:model-value="updateSetting({ 'lastFM.enable': $event })")
 </template>
 
 <script lang="ts">
@@ -47,7 +47,7 @@ export default {
       updateSetting({ 'lastFM.session.key': session.trim() })
     }, 500)
 
-    const openAuthUrl = async() => {
+    const openAuthUrl = async () => {
       const base = {
         api_key: appSetting['lastFM.api_key'],
         secret: appSetting['lastFM.secret'],
@@ -61,6 +61,7 @@ export default {
         if (!isAuth) return
         updateSetting({ 'lastFM.enable': true })
         const data = await getLastFMSession({ ...base, token })
+        console.log(data)
         updateSetting({ 'lastFM.session.key': data.session.key })
         updateSetting({ 'lastFM.session.name': data.session.name })
         updateSetting({ 'lastFM.session.subscriber': data.session.subscriber })
@@ -87,23 +88,28 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.portInput[disabled], .hostInput[disabled] {
-    opacity: .8 !important;
+
+.portInput[disabled],
+.hostInput[disabled] {
+  opacity: .8 !important;
 }
-.desc{
+
+.desc {
   font-size: 13px;
   color: var(--color-400);
   margin-top: 5px;
 }
-.inputContainer{
+
+.inputContainer {
   display: flex;
   align-items: center;
-  .title{
+
+  .title {
     width: 50px;
   }
 }
 
-.content{
+.content {
   width: 250px;
 }
 </style>

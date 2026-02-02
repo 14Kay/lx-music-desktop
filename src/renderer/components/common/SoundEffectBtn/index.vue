@@ -1,6 +1,9 @@
 <template>
   <button :class="$style.btn" :aria-label="$t('player__sound_effect')" @click="visible = true">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="90%" viewBox="0 0 24 24" space="preserve">
+    <svg
+version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="90%"
+      viewBox="0 0 24 24" space="preserve"
+>
       <use xlink:href="#icon-tune-variant" />
     </svg>
   </button>
@@ -56,6 +59,7 @@ watch(visible, (visible) => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .btn {
   position: relative;
   // color: var(--color-button-font);
@@ -75,11 +79,13 @@ watch(visible, (visible) => {
     opacity: .6;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
   }
+
   &:hover {
     svg {
       opacity: .9;
     }
   }
+
   &:active {
     svg {
       opacity: 1;
@@ -96,6 +102,7 @@ watch(visible, (visible) => {
   justify-content: center;
   min-height: 0;
 }
+
 // .title {
 //   flex: none;
 //   font-size: 16px;
@@ -120,9 +127,11 @@ watch(visible, (visible) => {
     height: 100%;
     border-left: 1px dashed var(--color-primary-light-100-alpha-700);
   }
+
   // width: 400px;
 
   :global {
+
     // .player__sound_effect_contnet {
     //   display: flex;
     // }
@@ -149,5 +158,4 @@ watch(visible, (visible) => {
   line-height: 1.25;
   color: var(--color-font);
 }
-
 </style>

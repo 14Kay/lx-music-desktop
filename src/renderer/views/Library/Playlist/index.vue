@@ -1,10 +1,8 @@
 <template>
   <div :class="$style.container">
-    <common-playlist-info
-:author="appSetting['common.username']" :cover="cover" :list-id="listId" :title="title"
-      :count="count" :show-collect="false" @play="handlePlay" @delete="handleDelete"
-      @search="handleSearch"
-/>
+    <common-playlist-info :class="$style.info" :author="appSetting['common.username']" :cover="cover" :list-id="listId"
+      :title="title" :count="count" :show-collect="false" vertical @play="handlePlay" @delete="handleDelete"
+      @search="handleSearch" />
     <MusicList :class="$style.musicList" :list-id="listId" :search="searchContent" />
   </div>
 </template>
@@ -48,10 +46,26 @@ const handleSearch = (content: string) => {
 @import '@renderer/assets/styles/layout.less';
 
 .musicList {
-  margin-top: 32px;
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  padding-left: @gap;
+  padding-bottom: @gap;
 }
 
 .container {
-  padding-top: 24px
+  padding-top: @gap;
+  display: flex;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  .info {
+    width: 200px;
+    position: fixed;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+  }
 }
 </style>

@@ -1,16 +1,19 @@
 <template>
-  <material-modal :show="props.modelValue" teleport="#view" width="60%" @close="emit('update:model-value', $event)" @after-enter="$refs.input.focus()">
+  <material-modal
+:show="props.modelValue" teleport="#view" width="60%" @close="emit('update:model-value', $event)"
+    @after-enter="$refs.input.focus()"
+>
     <main class="scroll" :class="$style.main">
       <h2>{{ $t('songlist__import_input_title') }}</h2>
       <div :class="$style.inputContent">
-        <base-selection v-model="source" :class="$style.select" :list="props.sourceList" item-key="id" item-name="name" />
+        <base-selection
+v-model="source" :class="$style.select" :list="props.sourceList" item-key="id"
+          item-name="name"
+/>
         <base-input
-          ref="input"
-          v-model.trim="text"
-          :class="$style.input"
-          :placeholder="$t('songlist__import_input_tip')"
-          @submit="handleSubmit"
-        />
+ref="input" v-model.trim="text" :class="$style.input"
+          :placeholder="$t('songlist__import_input_tip')" @submit="handleSubmit"
+/>
       </div>
       <div :class="$style.footer">
         <div :class="$style.tips">
@@ -21,10 +24,10 @@
             <li>
               {{ $t('songlist__import_input_tip_4') }}
               <span
-                class="hover underline"
+class="hover underline"
                 aria-label="https://lyswhut.github.io/lx-music-doc/desktop/faq/cannot-open-songlist"
                 @click="openUrl('https://lyswhut.github.io/lx-music-doc/desktop/faq/cannot-open-songlist')"
-              >FAQ</span>
+>FAQ</span>
             </li>
           </ul>
         </div>
@@ -88,6 +91,7 @@ const handleSubmit = () => {
   display: flex;
   flex-flow: column nowrap;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
@@ -99,12 +103,15 @@ const handleSubmit = () => {
     padding: 15px 0 8px;
   }
 }
+
 .inputContent {
   display: flex;
   flex-flow: row nowrap;
 }
+
 .select {
   width: auto;
+
   :global {
     .label-content {
       height: 100%;
@@ -118,9 +125,11 @@ const handleSubmit = () => {
         text-align: center;
         line-height: 32px;
         font-size: 13px;
+
         &:hover {
           background-color: var(--color-button-background-hover);
         }
+
         &:active {
           background-color: var(--color-button-background-active);
         }
@@ -128,6 +137,7 @@ const handleSubmit = () => {
     }
   }
 }
+
 .input {
   flex: auto;
   border-top-left-radius: 0;
@@ -137,6 +147,7 @@ const handleSubmit = () => {
   padding: 8px 8px;
   color: var(--color-font);
 }
+
 .footer {
   margin: 50px 0 15px;
   display: flex;
@@ -149,6 +160,7 @@ const handleSubmit = () => {
   font-size: 12px;
   color: var(--color-font);
   line-height: 1.5;
+
   ul {
     list-style: decimal;
     padding-left: 15px;
@@ -165,6 +177,4 @@ const handleSubmit = () => {
   min-width: 80px;
   // .mixin-ellipsis-1;
 }
-
-
 </style>

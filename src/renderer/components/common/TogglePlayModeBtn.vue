@@ -1,72 +1,30 @@
 <template>
   <material-popup-btn ref="btn_ref" :class="$style.btnContent">
-    <button :class="$style.btn" :aria-label="nextTogglePlayName">
-      <svg
-        v-if="appSetting['player.togglePlayMethod'] == 'listLoop'"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xlink="http://www.w3.org/1999/xlink"
-        height="80%" viewBox="0 0 24 24" space="preserve"
-      >
-        <use xlink:href="#icon-list-loop" />
-      </svg>
-      <svg
-        v-else-if="appSetting['player.togglePlayMethod'] == 'random'"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xlink="http://www.w3.org/1999/xlink"
-        width="100%" viewBox="0 0 24 24" space="preserve"
-      >
-        <use xlink:href="#icon-list-random" />
-      </svg>
-      <svg
-        v-else-if="appSetting['player.togglePlayMethod'] == 'list'"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xlink="http://www.w3.org/1999/xlink"
-        width="100%" viewBox="0 0 32 32" space="preserve"
-      >
-        <use xlink:href="#icon-list-order" />
-      </svg>
-      <svg
-        v-else-if="appSetting['player.togglePlayMethod'] == 'singleLoop'"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-        xlink="http://www.w3.org/1999/xlink"
-        width="100%" viewBox="0 0 24 24" space="preserve"
-      >
-        <use xlink:href="#icon-single-loop" />
-      </svg>
-      <svg v-else version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 32 32" space="preserve">
-        <use xlink:href="#icon-single" />
-      </svg>
-    </button>
+    <div class="my__button" :aria-label="nextTogglePlayName">
+      <PhShuffle size="55%" v-if="appSetting['player.togglePlayMethod'] == 'random'" weight="bold" />
+      <PhQueue size="55%" v-else-if="appSetting['player.togglePlayMethod'] == 'list'" weight="bold" />
+      <PhRepeatOnce size="58%" v-else-if="appSetting['player.togglePlayMethod'] == 'singleLoop'" weight="bold" />
+      <PhRepeat size="55%" v-else-if="appSetting['player.togglePlayMethod'] == 'listLoop'" weight="bold" />
+      <PhLock size="55%" v-else weight="bold" />
+    </div>
     <template #content>
       <div :class="$style.setting">
-        <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_list_loop')" @click="toggleMode('listLoop')">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 24 24" space="preserve">
-            <use xlink:href="#icon-list-loop" />
-          </svg>
+        <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_list_loop')"
+          @click="toggleMode('listLoop')">
+          <PhRepeat size="80%" weight="bold" />
         </button>
         <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_random')" @click="toggleMode('random')">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
-            <use xlink:href="#icon-list-random" />
-          </svg>
+          <PhShuffle size="80%" weight="bold" />
         </button>
         <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_list')" @click="toggleMode('list')">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 32 32" space="preserve">
-            <use xlink:href="#icon-list-order" />
-          </svg>
+          <PhQueue size="80%" weight="bold" />
         </button>
-        <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_single_loop')" @click="toggleMode('singleLoop')">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 24 24" space="preserve">
-            <use xlink:href="#icon-single-loop" />
-          </svg>
+        <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_single_loop')"
+          @click="toggleMode('singleLoop')">
+          <PhRepeatOnce size="80%" weight="bold" />
         </button>
         <button :class="$style.btn" :aria-label="$t('player__play_toggle_mode_off')" @click="toggleMode('none')">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="100%" viewBox="0 0 32 32" space="preserve">
-            <use xlink:href="#icon-single" />
-          </svg>
+          <PhLock size="80%" weight="bold" />
         </button>
       </div>
     </template>
@@ -80,6 +38,7 @@ import { ref } from '@common/utils/vueTools'
 // import { musicInfo, playMusicInfo } from '@renderer/store/player/state'
 import { appSetting } from '@renderer/store/setting'
 import useNextTogglePlay from '@renderer/utils/compositions/useNextTogglePlay'
+import { PhShuffle, PhQueue, PhRepeatOnce, PhRepeat, PhLock } from '@phosphor-icons/vue'
 
 const btn_ref = ref(null)
 
@@ -97,6 +56,7 @@ const toggleMode = (mode) => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .btnContent {
   flex: none;
   height: 100%;
@@ -121,11 +81,13 @@ const toggleMode = (mode) => {
     opacity: .6;
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
   }
+
   &:hover {
     svg {
       opacity: .9;
     }
   }
+
   &:active {
     svg {
       opacity: 1;
@@ -138,7 +100,9 @@ const toggleMode = (mode) => {
   flex-flow: row nowrap;
   font-size: 14px;
   gap: 10px;
+
+  button {
+    height: 24px;
+  }
 }
-
-
 </style>

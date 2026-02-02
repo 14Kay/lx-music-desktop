@@ -1,38 +1,16 @@
-<!--
- * @Description: 我的最爱
- * @Author: 14K
- * @Date: 2024-12-03 15:39:40
- * @LastEditTime: 2024-12-08 18:25:03
- * @LastEditors: 14K
--->
 <template>
   <div :class="$style.lists" :style="rowStyles">
     <div>
-      <material-playlist
-        :list-id="loveList.id"
-        :cover="_loveLists.cover || ''"
-        :title="$t(loveList.name)"
-        :is-my-playlist="true"
-        :count="_loveLists.count"
-        ></material-playlist>
+      <material-playlist :list-id="loveList.id" :cover="_loveLists.cover || ''" :title="$t(loveList.name)"
+        :is-my-playlist="true" :count="_loveLists.count"></material-playlist>
     </div>
     <div>
-      <material-playlist
-        :list-id="defaultList.id"
-        :cover="_defaultLists.cover || ''"
-        :title="$t(defaultList.name)"
-        :is-my-playlist="true"
-        :count="_defaultLists.count"
-        ></material-playlist>
+      <material-playlist :list-id="defaultList.id" :cover="_defaultLists.cover || ''" :title="$t(defaultList.name)"
+        :is-my-playlist="true" :count="_defaultLists.count"></material-playlist>
     </div>
     <div v-for="item in _userLists" :key="item.id">
-      <material-playlist
-        :list-id="item.id"
-        :cover="item.cover || ''"
-        :title="item.name"
-        :is-my-playlist="true"
-        :count="item.count"
-        ></material-playlist>
+      <material-playlist :list-id="item.id" :cover="item.cover || ''" :title="item.name" :is-my-playlist="true"
+        :count="item.count"></material-playlist>
     </div>
   </div>
 </template>
@@ -52,7 +30,7 @@ interface List {
 const props = defineProps({
   columnNumber: {
     type: Number,
-    default: 5,
+    default: 4,
   },
   gap: {
     type: String,
@@ -120,11 +98,14 @@ onBeforeUnmount(() => {
 </script>
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.lists{
+
+.lists {
   display: grid;
-  > div{
+
+  >div {
     .text {
       margin-top: 8px;
+
       .title {
         font-size: 16px;
         font-weight: 600;
@@ -135,6 +116,7 @@ onBeforeUnmount(() => {
         overflow: hidden;
         word-break: break-all;
       }
+
       .info {
         font-size: 12px;
         opacity: 0.68;

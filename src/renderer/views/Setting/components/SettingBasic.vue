@@ -1,60 +1,14 @@
 <template lang="pug">
 dt#basic {{ $t('setting__basic') }}
 dd
-.div(:class="$style.usename")
-  .div {{ $t('setting__username') }}
-  .div
-    base-input.gap-left(:class="$style.portInput" :model-value="appSetting['common.username']" type="string" :placeholder="$t('setting__username_tip')" @update:model-value="setUsername")
-
-.div(:class="$style.avatarContainer")
-  .div 头像
-  .div(:class="$style.avatar")
-    base-image(:radius="5" :src="appSetting['common.avatar'] || 'https://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=60y60'")
-    base-upload(@uploaded="setAvatar")
-
-h3#basic_theme
-dd
-.gap-top
-  base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({'common.isShowAnimation': $event})")
-.gap-top
-  base-checkbox(id="setting_animate" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({'common.randomAnimate': $event})")
-.gap-top
-  base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
-.p.gap-top
-  base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
-  div
-    .gap-top
-      base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({'common.isShowAnimation': $event})")
-    .gap-top
-      base-checkbox(id="setting_animate" :disabled="!appSetting['common.isShowAnimation']" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({'common.randomAnimate': $event})")
-    .gap-top
-      base-checkbox(id="setting_start_in_fullscreen" :model-value="appSetting['common.startInFullscreen']" :label="$t('setting__basic_start_in_fullscreen')" @update:model-value="updateSetting({'common.startInFullscreen': $event})")
-    .gap-top
-      base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({'tray.enable': $event})")
-    .p.gap-top
-      base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout')}} {{ timeLabel ? ` (${timeLabel})` : '' }}
-
-dd
-  h3#basic_theme {{ $t('setting__basic_theme') }}
-  div
-    ul(:class="$style.theme")
-      li(v-for="theme in themeList" :key="theme.id" :aria-label="theme.name" :style="theme.styles" :class="[$style.themeItem, {[$style.active]: themeId == theme.id}]" @click="toggleTheme(theme)" @contextmenu="handleEditTheme(theme)")
-        div(:class="$style.bg")
-        span(:class="$style.label") {{ theme.name }}
-      li(v-if="showAllTheme || themeId == 'auto'" :aria-label="$t('theme_auto_tip')" :style="autoTheme" :class="[$style.themeItem, $style.auto, {[$style.active]: themeId == 'auto'}]" @click="handleSetThemeAuto" @contextmenu="isShowThemeSelectorModal = true")
-        div(:class="$style.bg")
-          div(:class="$style.bgContent")
-            div(:class="$style.light")
-            div(:class="$style.dark")
-        span(:class="$style.label") {{ $t('theme_auto') }}
-      li(v-if="showAllTheme" :aria-label="$t('theme_add')" :class="[$style.themeItem, $style.add]" @click="handleEditTheme()")
-        div(:class="$style.bg")
-          div(:class="$style.bgContent")
-            svg-icon(:class="$style.icon" name="plus")
-        span(:class="$style.label") {{ $t('theme_add') }}
-      li(v-if="!showAllTheme" :aria-label="$t('theme_more_btn_show')" :class="[$style.themeItem, $style.moreThme]" @click="showAllTheme = true")
-        span(:class="$style.label") {{ $t('theme_more_btn_show') }}
-        svg-icon(name="angle-right-solid" :class="$style.activeIcon")
+  .gap-top
+    base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({ 'common.isShowAnimation': $event })")
+  .gap-top
+    base-checkbox(id="setting_animate" :model-value="appSetting['common.randomAnimate']" :label="$t('setting__basic_animation')" @update:model-value="updateSetting({ 'common.randomAnimate': $event })")
+  .gap-top
+    base-checkbox(id="setting_to_tray" :model-value="appSetting['tray.enable']" :label="$t('setting__basic_to_tray')" @update:model-value="updateSetting({ 'tray.enable': $event })")
+  .gap-top
+    base-btn.btn(min @click="isShowPlayTimeoutModal = true") {{ $t('setting__play_timeout') }} {{ timeLabel ? ` (${timeLabel})` : '' }}
 
 dd
   h3#basic_source {{ $t('setting__basic_source') }}
@@ -62,7 +16,7 @@ dd
     .gap-top(v-for="item in apiSources" :key="item.id")
       base-checkbox(
         :id="`setting_api_source_${item.id}`" name="setting_api_source"
-        need :model-value="appSetting['common.apiSource']" :disabled="item.disabled" :value="item.id" :aria-label="item.label" @update:model-value="updateSetting({'common.apiSource': $event})")
+        need :model-value="appSetting['common.apiSource']" :disabled="item.disabled" :value="item.id" :aria-label="item.label" @update:model-value="updateSetting({ 'common.apiSource': $event })")
         span(:class="$style.sourceLabel")
           | {{ item.name }}
           span(v-if="item.desc" :class="$style.desc") {{ item.desc }}
@@ -76,7 +30,7 @@ dd
     base-checkbox.gap-left(
       v-for="item in windowSizeList" :id="`setting_window_size_${item.id}`" :key="item.id"
       name="setting_window_size" need :model-value="appSetting['common.windowSizeId']" :disabled="isFullscreen" :value="item.id" :label="$t('setting__basic_window_size_' + item.name)"
-      @update:model-value="updateSetting({'common.windowSizeId': $event})")
+      @update:model-value="updateSetting({ 'common.windowSizeId': $event })")
 
 dd
   h3#basic_font_size {{ $t('setting__basic_font_size') }}
@@ -85,174 +39,51 @@ dd
     base-checkbox.gap-left(
       v-for="item in fontSizeList" :id="`setting_basic_font_size_${item.id}`" :key="item.id"
       name="setting_basic_font_size" need :model-value="appSetting['common.fontSize']" :value="item.id"
-      :label="item.label" :disabled="isFullscreen" @update:model-value="updateSetting({'common.fontSize': $event})")
+      :label="item.label" :disabled="isFullscreen" @update:model-value="updateSetting({ 'common.fontSize': $event })")
 
 dd
   h3#basic_font {{ $t('setting__basic_font') }}
   div
-    base-selection.gap-teft(:list="fontList" :model-value="appSetting['common.font']" item-key="id" item-name="label" @update:model-value="updateSetting({'common.font': $event})")
+    base-selection.gap-teft(:list="fontList" :model-value="appSetting['common.font']" item-key="id" item-name="label" @update:model-value="updateSetting({ 'common.font': $event })")
 
 dd
   h3#basic_lang {{ $t('setting__basic_lang') }}
   div
     base-checkbox.gap-left(
       v-for="item in langList" :id="`setting_lang_${item.locale}`" :key="item.locale" name="setting_lang"
-      need :model-value="appSetting['common.langId']" :value="item.locale" :label="item.name" @update:model-value="updateSetting({'common.langId': $event})")
+      need :model-value="appSetting['common.langId']" :value="item.locale" :label="item.name" @update:model-value="updateSetting({ 'common.langId': $event })")
 
 dd
   h3#basic_sourcename {{ $t('setting__basic_sourcename') }}
   div
     base-checkbox.gap-left(
       v-for="item in sourceNameTypes" :id="`setting_abasic_sourcename_${item.id}`" :key="item.id"
-      name="setting_basic_sourcename" need :model-value="appSetting['common.sourceNameType']" :value="item.id" :label="item.label" @update:model-value="updateSetting({'common.sourceNameType': $event})")
-dd
-  h3#basic_control_btn_position {{ $t('setting__basic_control_btn_position') }}
-  div
-    base-checkbox.gap-left(
-      v-for="item in controlBtnPositionList" :id="`setting_basic_control_btn_position_${item.id}`" :key="item.id"
-      name="setting_basic_control_btn_position" need :model-value="appSetting['common.controlBtnPosition']" :value="item.id" :label="item.name" @update:model-value="updateSetting({'common.controlBtnPosition': $event})")
+      name="setting_basic_sourcename" need :model-value="appSetting['common.sourceNameType']" :value="item.id" :label="item.label" @update:model-value="updateSetting({ 'common.sourceNameType': $event })")
 
-ThemeSelectorModal(v-model="isShowThemeSelectorModal")
-ThemeEditModal(v-model="isShowThemeEditModal" :theme-id="editThemeId" @submit="handleRefreshTheme")
-play-timeout-modal(v-model="isShowPlayTimeoutModal")
-user-api-modal(v-model="isShowUserApiModal")
 </template>
 
 <script>
-import { computed, ref, watch, reactive, shallowReactive } from '@common/utils/vueTools'
+import { computed, ref } from '@common/utils/vueTools'
 import { windowSizeList, userApi, isFullscreen, themeId } from '@renderer/store'
 import { langList, useI18n } from '@root/lang'
 import { getSystemFonts } from '@renderer/utils/ipc'
 import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 import { useTimeout } from '@renderer/core/player/timeoutStop'
-import { dialog } from '@renderer/plugins/Dialog'
 
-import ThemeSelectorModal from './ThemeSelectorModal.vue'
-import ThemeEditModal from './ThemeEditModal/index.vue'
 import PlayTimeoutModal from './PlayTimeoutModal.vue'
 import UserApiModal from './UserApiModal.vue'
 import { appSetting, updateSetting } from '@renderer/store/setting'
-import { getThemes, applyTheme, findTheme, buildBgUrl } from '@renderer/store/utils'
 import { debounce } from '@common/utils'
 
 export default {
   name: 'SettingBasic',
   components: {
-    ThemeSelectorModal,
-    ThemeEditModal,
     PlayTimeoutModal,
     UserApiModal,
   },
   setup() {
     const t = useI18n()
 
-    const showAllTheme = ref(false)
-    const defaultThemesRaw = shallowReactive([])
-    const defaultThemes = computed(() => {
-      return defaultThemesRaw.map(theme => ({ ...theme, isDefault: true, name: t('theme_' + theme.id) }))
-    })
-    const userThemes = shallowReactive([])
-    const allThemes = computed(() => {
-      return [...defaultThemes.value, ...userThemes]
-    })
-    const themeList = computed(() => {
-      if (!allThemes.value.length) return []
-      return showAllTheme.value
-        ? allThemes.value
-        : themeId.value == 'auto'
-          ? []
-          : [allThemes.value.find(t => t.id == themeId.value) ?? allThemes.value[0]]
-    })
-    const autoTheme = reactive({})
-    const updateAutoTheme = (info) => {
-      let light = findTheme(info, appSetting['theme.lightId'])
-      light ??= info.themes.find(theme => theme.id == 'green')
-      let dark = findTheme(info, appSetting['theme.darkId'])
-      dark ??= info.themes.find(theme => theme.id == 'black')
-      autoTheme['--color-primary-theme-light'] = light.config.themeColors['--color-theme']
-      autoTheme['--background-image-theme-light'] = light.isCustom
-        ? light.config.extInfo['--background-image'] == 'none'
-          ? 'none'
-          : buildBgUrl(light.config.extInfo['--background-image'], info.dataPath)
-        : light.config.extInfo['--background-image']
-      autoTheme['--color-primary-theme-dark'] = dark.config.themeColors['--color-theme']
-      autoTheme['--background-image-theme-dark'] = dark.isCustom
-        ? dark.config.extInfo['--background-image'] == 'none'
-          ? 'none'
-          : buildBgUrl(dark.config.extInfo['--background-image'], info.dataPath)
-        : dark.config.extInfo['--background-image']
-    }
-
-    let dataPath = ''
-    const init = () => {
-      getThemes((info) => {
-        // console.log(info)
-        dataPath = info.dataPath
-        defaultThemesRaw.splice(0, defaultThemesRaw.length, ...info.themes.map(t => {
-          return {
-            id: t.id,
-            styles: {
-              '--color-primary-theme': t.config.themeColors['--color-theme'],
-              '--background-image-theme': t.config.extInfo['--background-image'],
-            },
-          }
-        }))
-        userThemes.splice(0, userThemes.length, ...info.userThemes.map(t => {
-          return {
-            id: t.id,
-            name: t.name,
-            styles: {
-              '--color-primary-theme': t.config.themeColors['--color-theme'],
-              '--background-image-theme': t.config.extInfo['--background-image'] == 'none'
-                ? 'none'
-                : buildBgUrl(t.config.extInfo['--background-image'], info.dataPath),
-            },
-          }
-        }))
-        updateAutoTheme(info)
-      })
-    }
-    const editThemeId = ref('')
-    const handleEditTheme = (theme) => {
-      // console.log(theme)
-      if (theme?.isDefault) return
-      if (!theme && userThemes.length >= 10) {
-        void dialog({
-          message: t('theme_max_tip'),
-          confirmButtonText: t('alert_button_text'),
-        })
-        return
-      }
-      editThemeId.value = theme ? theme.id : ''
-      isShowThemeEditModal.value = true
-    }
-    const handleRefreshTheme = () => {
-      init()
-    }
-    init()
-    const toggleTheme = (theme) => {
-      if (themeId.value == theme.id) return
-      themeId.value = theme.id
-      applyTheme(theme.id, appSetting['theme.lightId'], appSetting['theme.darkId'], dataPath)
-      updateSetting({ 'theme.id': theme.id })
-    }
-
-    watch(() => [appSetting['theme.lightId'], appSetting['theme.darkId']], () => {
-      getThemes(updateAutoTheme)
-    })
-    const isShowThemeSelectorModal = ref(false)
-    const handleSetThemeAuto = () => {
-      if (themeId.value == 'auto') return
-      if (window.localStorage.getItem('theme-auto-tip') != 'true') {
-        window.localStorage.setItem('theme-auto-tip', 'true')
-        void dialog({
-          message: t('setting__basic_theme_auto_tip'),
-          confirmButtonText: t('ok'),
-        })
-      }
-      toggleTheme({ id: 'auto' })
-    }
-    const isShowThemeEditModal = ref(false)
 
     const isShowPlayTimeoutModal = ref(false)
     const { timeLabel } = useTimeout()
@@ -330,16 +161,6 @@ export default {
     return {
       appSetting,
       updateSetting,
-      userThemes,
-      autoTheme,
-      showAllTheme,
-      themeList,
-      // currentStting,
-      // themes,
-      // themeClassName,
-      isShowThemeSelectorModal,
-      isShowThemeEditModal,
-      handleSetThemeAuto,
       isShowPlayTimeoutModal,
       timeLabel,
       apiSources,
@@ -350,13 +171,7 @@ export default {
       controlBtnPositionList,
       fontList,
       isFullscreen,
-      toggleTheme,
-      themeId,
-      handleRefreshTheme,
-      editThemeId,
-      handleEditTheme,
       fontSizeList,
-
       setUsername,
       setAvatar,
     }
@@ -366,18 +181,20 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.avatar{
-  display: grid;
-  align-items: center;
-  grid-template-columns: 60px 1fr;
-}
-.usename{
+
+.avatar {
   display: grid;
   align-items: center;
   grid-template-columns: 60px 1fr;
 }
 
-.avatarContainer{
+.usename {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 60px 1fr;
+}
+
+.avatarContainer {
   display: grid;
   align-items: center;
   grid-template-columns: 60px 1fr;
@@ -412,6 +229,7 @@ export default {
 
     &.active {
       color: var(--color-primary-font-active);
+
       .bg {
         border-color: var(--color-primary-font-active);
       }
@@ -430,6 +248,7 @@ export default {
       padding: 2Px;
       transition: border-color .3s ease;
       border-radius: 5px;
+
       &:after {
         display: block;
         content: ' ';
@@ -454,6 +273,7 @@ export default {
 
       &.active {
         color: var(--color-primary-font-active);
+
         .bg {
           border-color: var(--color-primary-font-active);
         }
@@ -464,18 +284,22 @@ export default {
           content: none;
         }
       }
+
       .bgContent {
         position: relative;
         height: 100%;
         overflow: hidden;
         border-radius: 5px;
       }
-      .light, .dark {
+
+      .light,
+      .dark {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
+
         &:after {
           display: block;
           content: ' ';
@@ -486,25 +310,31 @@ export default {
           background-repeat: no-repeat;
         }
       }
+
       .light {
         &:after {
           clip-path: polygon(0 0, 100% 0, 0 100%);
         }
+
         svg {
           fill: var(--color-primary-theme-light);
         }
+
         &:after {
           background-color: var(--color-primary-theme-light);
           background-image: var(--background-image-theme-light);
         }
       }
+
       .dark {
         &:after {
           clip-path: polygon(0 100%, 100% 0, 100% 100%);
         }
+
         svg {
           fill: var(--color-primary-theme-dark);
         }
+
         &:after {
           background-color: var(--color-primary-theme-dark);
           background-image: var(--background-image-theme-dark);
@@ -517,6 +347,7 @@ export default {
         &:after {
           content: none;
         }
+
         .bgContent {
           transition: .3s ease;
           transition-property: border, color;
@@ -531,6 +362,7 @@ export default {
           align-items: center;
           justify-content: center;
         }
+
         .icon {
           // position: absolute;
           // font-size: 16px;
@@ -538,6 +370,7 @@ export default {
           height: auto;
         }
       }
+
       .label {
         color: var(--color-primary-dark-100-alpha-300);
       }
@@ -548,6 +381,7 @@ export default {
       width: auto;
       gap: 5px;
       color: var(--color-primary-font-active);
+
       .label {
         height: auto;
       }
@@ -571,5 +405,4 @@ export default {
     margin-left: 5px;
   }
 }
-
 </style>

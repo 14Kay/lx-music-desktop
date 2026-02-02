@@ -13,7 +13,7 @@ import { toRaw } from '@common/utils/vueTools'
 import { LIST_IDS } from '@common/constants'
 import { lastFMLove } from '@renderer/utils/ipc'
 
-const sleep = async(time: number) => new Promise(resolve => setTimeout(resolve, time))
+const sleep = async (time: number) => new Promise(resolve => setTimeout(resolve, time))
 
 export const registerAction = (onListChanged: (listIds: string[]) => void) => {
   return registerListAction(appSetting, onListChanged)
@@ -38,32 +38,44 @@ export const setUpdateTime = (id: string, time: string) => {
   listUpdateTimes[id] = time
 }
 
-export const addListMusics = async(id: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {
+export const addListMusics = async (id: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {
   addListMusicsAction({
     id,
     musicInfos: toRaw(musicInfos),
     addMusicLocationType: addMusicLocationType ?? appSetting['list.addMusicLocationType'],
   })
   if (id === LIST_IDS.LOVE) {
+    // 检查 LastFM 是否启用以及必要的参数是否存在
+    if (!appSetting['lastFM.enable']) return
+    if (!appSetting['lastFM.api_key'] || !appSetting['lastFM.secret'] || !appSetting['lastFM.session.key']) {
+      console.warn('LastFM: Missing required authentication parameters')
+      return
+    }
+
     const auth = {
       api_key: appSetting['lastFM.api_key'],
       secret: appSetting['lastFM.secret'],
       session: appSetting['lastFM.session.key'],
     }
     for (const musicInfo of musicInfos) {
-      await lastFMLove({
-        auth,
-        data: {
-          track: musicInfo.name,
-          artist: musicInfo.singer,
-        },
-      })
-      sleep(500)
+      try {
+        await lastFMLove({
+          auth,
+          data: {
+            track: musicInfo.name,
+            artist: musicInfo.singer,
+          },
+        })
+        await sleep(500)
+      } catch (error) {
+        console.error('LastFM love track error:', error)
+        // 继续处理下一首歌曲，不中断整个流程
+      }
     }
   }
 }
 
-export const moveListMusics = async(fromId: string, toId: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {
+export const moveListMusics = async (fromId: string, toId: string, musicInfos: LX.Music.MusicInfo[], addMusicLocationType?: LX.AddMusicLocationType) => {
   return moveListMusicsAction({
     fromId,
     toId,
@@ -72,7 +84,7 @@ export const moveListMusics = async(fromId: string, toId: string, musicInfos: LX
   })
 }
 
-export const createUserList = async({ name, id = `userlist_${Date.now()}`, list = [], source, cover, sourceListId, position = -1 }: {
+export const createUserList = async ({ name, id = `userlist_${Date.now()}`, list = [], source, cover, sourceListId, position = -1 }: {
   name?: string
   id?: string
   cover?: string
@@ -98,7 +110,7 @@ export const createUserList = async({ name, id = `userlist_${Date.now()}`, list 
 }
 
 
-export const setTempList = async(id: string, list: LX.Music.MusicInfoOnline[]) => {
+export const setTempList = async (id: string, list: LX.Music.MusicInfoOnline[]) => {
   tempListMeta.id = id
   await overwriteListMusics({
     listId: LIST_IDS.TEMP,

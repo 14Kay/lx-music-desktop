@@ -5,8 +5,10 @@
         <tag-list :source="source" :tag-id="tagId" :sort-id="sortId" />
         <sort-tab :source="source" :tag-id="tagId" :sort-id="sortId" />
       </div>
-      <base-button :class="$style.btn" @click="visibleOpenSongListModal = true">{{ $t('songlist__import_input_show_btn') }}</base-button>
-      <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name" @update:model-value="handleToggleSource" />
+      <base-button :class="$style.btn" @click="visibleOpenSongListModal = true">{{ $t('songlist__import_input_show_btn')
+      }}</base-button>
+      <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name"
+        @update:model-value="handleToggleSource" />
     </div>
     <list-view :source="source" :tag-id="tagId" :sort-id="sortId" :page="page" />
     <open-list-modal v-model="visibleOpenSongListModal" :source-list="sourceList" />
@@ -36,7 +38,7 @@ interface Query {
   page?: string
 }
 
-const verifyQueryParams = async function(this: any, to: { query: Query, path: string }, from: any, next: (route?: { path: string, query: Query }) => void) {
+const verifyQueryParams = async function (this: any, to: { query: Query, path: string }, from: any, next: (route?: { path: string, query: Query }) => void) {
   let _source = to.query.source
   let _tagId = to.query.tagId
   let _sortId = to.query.sortId
@@ -121,17 +123,19 @@ export default {
 .container {
   flex-flow: column nowrap;
   position: relative;
+  padding-top: @gap;
 }
+
 .header {
   flex: none;
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
-  margin-bottom: 12px;
+  margin-bottom: @gap;
   // padding-right: 5px;
   // box-sizing: border-box;
-  padding-bottom: 5px;
 }
+
 .left {
   flex: auto;
   display: flex;
@@ -147,6 +151,7 @@ export default {
   font-size: 12px;
   width: auto;
   flex: none;
+
   &:hover {
     :global(.icon) {
       opacity: 1;
@@ -162,15 +167,18 @@ export default {
       // line-height: 38px;
       // height: 38px;
       border-radius: 0;
+
       &:hover {
         // background: none !important;
         color: var(--color-primary-font-hover);
+
         .icon {
           opacity: 1;
           // color: var(--color-primary-font-hover);
         }
       }
     }
+
     // .label {
     //   color: var(--color-font) !important;
     // }
@@ -178,6 +186,7 @@ export default {
       svg {
         width: .8em;
       }
+
       // opacity: .6;
       // transition: color @transition-fast;
       // color: var(--color-font-label);
@@ -185,15 +194,18 @@ export default {
 
     .selection-list {
       max-height: 500px;
-      box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .2);
+
       li {
         // background-color: var(--color-main-background);
         text-align: center;
         line-height: 38px;
         font-size: 13px;
+
         &:hover {
           background-color: var(--color-button-background-hover);
         }
+
         &:active {
           background-color: var(--color-button-background-active);
         }
@@ -201,5 +213,4 @@ export default {
     }
   }
 }
-
 </style>

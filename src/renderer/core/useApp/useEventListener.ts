@@ -27,7 +27,6 @@ import {
 // import { isLinux, isProd } from '@common/utils'
 import { openUrl } from '@common/utils/electron'
 import { HOTKEY_COMMON } from '@common/hotKey'
-import { applyTheme, getThemes } from '@renderer/store/utils'
 import { clearDownKeys } from '@renderer/event'
 
 const handle_key_down = ({ event, type, key }: LX.KeyDownEevent) => {
@@ -43,7 +42,7 @@ const handle_key_down = ({ event, type, key }: LX.KeyDownEevent) => {
     return
   }
   (event.target as HTMLInputElement).value = ''
-  ;(event.target as HTMLInputElement).blur()
+    ; (event.target as HTMLInputElement).blur()
   event.lx_handled = true
 }
 
@@ -108,19 +107,6 @@ export default () => {
     clearDownKeys()
   })
 
-  const rThemeChange = onThemeChange(({ params: setting }) => {
-    // console.log(setting)
-    if (themeShouldUseDarkColors.value == setting.shouldUseDarkColors) {
-      if (themeId.value == setting.theme.id) return
-      themeId.value = setting.theme.id
-    } else {
-      themeShouldUseDarkColors.value = setting.shouldUseDarkColors
-      if (themeId.value != 'auto') return
-    }
-    getThemes(({ dataPath }) => {
-      applyTheme('auto', appSetting['theme.lightId'], appSetting['theme.darkId'], dataPath)
-    })
-  })
 
   window.key_event.on(HOTKEY_COMMON.min.action, minWindow)
   window.key_event.on(HOTKEY_COMMON.hide_toggle.action, showHideWindowToggle)
@@ -144,6 +130,6 @@ export default () => {
     document.body.removeEventListener('click', handleBodyClick)
     rSetConfig()
     rFocus()
-    rThemeChange()
+    // rThemeChange() // Disabled old theme system
   })
 }

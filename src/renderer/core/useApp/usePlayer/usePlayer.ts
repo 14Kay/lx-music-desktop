@@ -92,6 +92,15 @@ export default () => {
       console.log('played stop')
       return
     }
+    // 保存播放记录
+    if (playMusicInfo.musicInfo && !playMusicInfo.isTempPlay) {
+      const musicToSave = 'progress' in playMusicInfo.musicInfo
+        ? playMusicInfo.musicInfo.metadata.musicInfo
+        : playMusicInfo.musicInfo
+      void import('@renderer/store/playHistory/action').then(({ savePlayRecord }) => {
+        void savePlayRecord(musicToSave)
+      })
+    }
     // resetPlayerMusicInfo()
     // window.app_event.stop()
     setAllStatus(t('player__end'))
@@ -156,7 +165,7 @@ export default () => {
 
 
   onBeforeUnmount(() => {
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.key_event.off(HOTKEY_PLAYER.next.action, handlePlayNext)
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     window.key_event.off(HOTKEY_PLAYER.prev.action, handlePlayPrev)

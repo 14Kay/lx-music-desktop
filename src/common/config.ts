@@ -21,8 +21,8 @@ export const windowSizeList: WindowSize[] = [
   {
     id: 2,
     name: 'big',
-    width: 1385,
-    height: 896,
+    width: 1280,
+    height: 800,
   },
 ]
 

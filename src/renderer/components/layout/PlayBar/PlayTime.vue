@@ -29,13 +29,14 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .content {
   position: relative;
   height: 24px;
   line-height: 24px;
 }
+
 .timeContent {
-  // width: 30%;
   position: relative;
   // flex: none;
   color: var(--color-550);

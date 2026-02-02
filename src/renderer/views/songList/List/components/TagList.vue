@@ -1,10 +1,11 @@
 <template>
-  <div :class="[$style.tagList, {[$style.active]: popupVisible}]">
+  <div :class="[$style.tagList, { [$style.active]: popupVisible }]">
     <div ref="dom_btn" :class="$style.label" @click.stop="handleShow">
-      <base-button small>
+      <base-button radius="0" small>
         <span>{{ tagName }}</span>
         <div :class="$style.icon">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%"
+            viewBox="0 0 451.847 451.847" space="preserve">
             <use xlink:href="#icon-down" />
           </svg>
         </div>
@@ -15,7 +16,8 @@
         <div :class="$style.tag" @click="handleToggleTag('')">{{ $t('default') }}</div>
         <dl v-for="tagInfo in list" :key="tagInfo.name">
           <dt :class="$style.type">{{ tagInfo.name }}</dt>
-          <dd v-for="tag in tagInfo.list" :key="tag.id" :class="$style.tag" @click="handleToggleTag(tag.id)">{{ tag.name }}</dd>
+          <dd v-for="tag in tagInfo.list" :key="tag.id" :class="$style.tag" @click="handleToggleTag(tag.id)">{{ tag.name
+          }}</dd>
         </dl>
       </div>
     </div>
@@ -60,7 +62,7 @@ const handleToggleTag = (id) => {
   })
   handleHide()
 }
-watch(() => props.source, async(source) => {
+watch(() => props.source, async (source) => {
   if (!source) return
   // const source = (await getLeaderboardSetting()).source as LX.OnlineSource
   let tagInfo = tags[source]
@@ -93,7 +95,7 @@ const setTagPopupWidth = () => {
   }, 50)
 }
 
-const dom_btn = ref<HTMLElement | null>(null)
+const dom_btn = ref < HTMLElement | null > (null)
 const popupVisible = ref(false)
 const handleShow = () => popupVisible.value = !popupVisible.value
 const handleHide = (evt) => {
@@ -126,14 +128,16 @@ onBeforeUnmount(() => {
   position: relative;
   display: flex;
   align-items: center;
+
   &.active {
     .label {
       .icon {
-        svg{
+        svg {
           transform: rotate(180deg);
         }
       }
     }
+
     .popup {
       opacity: 1;
       transform: scale(1);
@@ -158,10 +162,12 @@ onBeforeUnmount(() => {
   span {
     flex: auto;
   }
+
   .icon {
     flex: none;
     margin-left: 7px;
     line-height: 0;
+
     svg {
       width: .8em;
       transition: transform .2s ease;
@@ -172,6 +178,7 @@ onBeforeUnmount(() => {
   &:hover {
     color: var(--color-primary-font-hover);
   }
+
   &:active {
     color: var(--color-primary-font-active);
   }
@@ -208,6 +215,7 @@ onBeforeUnmount(() => {
     border-bottom: 8px solid var(--color-content-background);
   }
 }
+
 .list {
   padding: 10px;
   box-sizing: border-box;
@@ -222,18 +230,20 @@ onBeforeUnmount(() => {
 
 .tag {
   display: inline-block;
-  margin: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 10px;
   background-color: var(--color-button-background);
   padding: 8px 10px;
-  border-radius: @radius-progress-border;
   transition: background-color @transition-normal;
   cursor: pointer;
+
   &:hover {
     background-color: var(--color-button-background-hover);
   }
+
   &:active {
     background-color: var(--color-button-background-active);
   }
 }
-
 </style>

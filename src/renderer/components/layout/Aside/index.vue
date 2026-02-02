@@ -1,17 +1,31 @@
 <template>
-  <div :class="[$style.aside, { [$style.fullscreen]: isFullscreen }]">
-    <ControlBtns v-if="appSetting['common.controlBtnPosition'] == 'left'" />
-    <div v-else :class="$style.logo">L X</div>
+  <div :class="[$style.aside]">
+    <div :class="$style.logo">
+      <div :class="[$style.logoImageContainer, { 'no-drag': lastFmUserInfo.name }]" @click="openLastFM">
+        <img :src="lastFmUserInfo.avatar || defaultLogo" alt="">
+        <div v-if="lastFMTrackResult !== 'normal'" :class="$style.status">
+          <base-svg-icon v-show="lastFMTrackResult === 'tracking'" :class="[$style.icon, $style.loader]"
+            icon-class="loader" />
+          <base-svg-icon v-show="lastFMTrackResult === 'success'" :class="$style.icon" icon-class="check" />
+          <base-svg-icon v-show="lastFMTrackResult === 'error'" :class="$style.icon" icon-class="error" />
+        </div>
+      </div>
+    </div>
     <NavBar />
   </div>
 </template>
 
 <script setup>
-import { isFullscreen } from '@renderer/store'
-import { appSetting } from '@renderer/store/setting'
+import { openUrl } from '@common/utils/electron'
+import { lastFmUserInfo, lastFMTrackResult } from '@renderer/store'
+import defaultLogo from '../../../assets/images/logo.png'
 
-import ControlBtns from './ControlBtns.vue'
 import NavBar from './NavBar.vue'
+
+const openLastFM = () => {
+  if (!lastFmUserInfo.name) return
+  openUrl('https://www.last.fm/user/' + lastFmUserInfo.name)
+}
 
 </script>
 
@@ -33,6 +47,7 @@ import NavBar from './NavBar.vue'
 
   &.fullscreen {
     -webkit-app-region: no-drag;
+
     .logo {
       display: none;
     }
@@ -41,15 +56,59 @@ import NavBar from './NavBar.vue'
 
 .logo {
   box-sizing: border-box;
-  padding: 0 13%;
-  height: 50px;
-  color: var(--color-nav-font);
-  opacity: .8;
-  flex: none;
-  text-align: center;
-  line-height: 50px;
-  font-weight: bold;
+  height: 72px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
   // -webkit-app-region: no-drag;
+  .logoImageContainer {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    -webkit-app-region: no-drag;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+    }
+  }
+
+  .status {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon {
+      height: 12px;
+      width: 12px;
+      color: var(--color-main-background);
+    }
+
+    .loader {
+      animation: spin 1.25s linear infinite;
+    }
+  }
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

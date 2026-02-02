@@ -1,15 +1,12 @@
 <template>
   <material-modal :show="show" teleport="#view" @close="handleClose" @after-enter="$refs.input.focus()">
     <main :class="$style.main">
-      <h2>{{ selectedNum > 0 ? $t('music_sort__title_multiple', { num: selectedNum }) : $t('music_sort__title', { name: musicInfo ? musicInfo.name : '' }) }}</h2>
-      <base-input
-        ref="input"
-        v-model="sortNum"
-        :class="$style.input"
-        type="number"
-        :placeholder="$t('music_sort__input_tip')"
-        @submit="handleSubmit" @blur="verify"
-      />
+      <h2>{{ selectedNum > 0 ? $t('music_sort__title_multiple', { num: selectedNum }) : $t('music_sort__title', {
+        name:
+          musicInfo ? musicInfo.name : ''
+      }) }}</h2>
+      <base-input ref="input" v-model="sortNum" :class="$style.input" type="number"
+        :placeholder="$t('music_sort__input_tip')" @submit="handleSubmit" @blur="verify" />
       <div :class="$style.footer">
         <base-btn :class="$style.btn" @click="handleSubmit">{{ $t('btn_confirm') }}</base-btn>
       </div>
@@ -79,6 +76,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
@@ -96,9 +94,11 @@ export default {
   // height: 26px;
   padding: 8px 8px;
 }
+
 .footer {
   margin: 20px 0 15px auto;
 }
+
 .btn {
   // box-sizing: border-box;
   // margin-left: 15px;
@@ -113,6 +113,4 @@ export default {
     margin-left: 10px;
   }
 }
-
-
 </style>

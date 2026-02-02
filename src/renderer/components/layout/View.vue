@@ -10,9 +10,10 @@
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .view {
   position: relative;
   z-index: 1;
-  padding-top: 84px;
+  padding-top: 54px;
 }
 </style>

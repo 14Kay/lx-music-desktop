@@ -5,6 +5,8 @@ import { appSetting } from '@renderer/store/setting'
 import { dislikeInfo } from '@renderer/store/dislikeList'
 import { setPowerSaveBlocker as setPowerSaveBlockerRemote } from '@renderer/utils/ipc'
 
+import { skippedList } from '@renderer/store/player/state'
+
 // export const getPlayType = (highQuality: boolean, musicInfo: LX.Music.MusicInfo | LX.Download.ListItem): LX.Quality | null => {
 //   if ('progress' in musicInfo || musicInfo.source == 'local') return null
 //   let type: LX.Quality = '128k'
@@ -16,7 +18,7 @@ import { setPowerSaveBlocker as setPowerSaveBlockerRemote } from '@renderer/util
 /**
  * 过滤列表中已播放的歌曲
  */
-export const filterList = async({ playedList, listId, list, playerMusicInfo, isNext }: {
+export const filterList = async ({ playedList, listId, list, playerMusicInfo, isNext }: {
   playedList: LX.Player.PlayMusicInfo[]
   listId: string
   list: Array<LX.Music.MusicInfo | LX.Download.ListItem>
@@ -25,6 +27,11 @@ export const filterList = async({ playedList, listId, list, playerMusicInfo, isN
 }) => {
   // if (this.list.listName === null) return
   // console.log(isCheckFile)
+  // 过滤跳过的歌曲
+  if (skippedList.size) {
+    list = list.filter(m => !skippedList.has(m.id))
+  }
+
   let { filteredList, canPlayList, playerIndex } = await window.lx.worker.main.filterMusicList({
     listId,
     list: list.map(m => toRaw(m)),

@@ -4,22 +4,27 @@
     <div :class="$style.list">
       <div :class="$style.content">
         <div v-show="!noItem && showMusicList.length > 0" ref="dom_listContent" :class="$style.content">
-          <base-virtualized-list ref="listRef" :list="showMusicList" key-name="id" :item-height="listItemHeight" container-class="scroll" content-class="list" @contextmenu.capture="handleListRightClick">
+          <base-virtualized-list ref="listRef" :list="showMusicList" key-name="id" :item-height="listItemHeight"
+            container-class="scroll" content-class="list" @contextmenu.capture="handleListRightClick">
             <template #default="{ item, index }">
-              <div
-                class="list-item" :class="[{ selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
-                @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
-              >
+              <div class="list-item"
+                :class="[{ selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
+                @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)">
                 <!-- <div class="list-item-cell no-select num" style="flex: 0 0 5%;" @click.stop>{{ index + 1 }}</div> -->
+                <div style="flex: 0 0 4%;" class="my__number">{{ formatIndex(index) }}</div>
                 <div :class="$style.songInfo" class="list-item-cell auto name">
-                  <img v-if="item.meta.picUrl" :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" :alt="item.name" loading="lazy">
+                  <img v-if="item.meta.picUrl" :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)"
+                    :alt="item.name" loading="lazy">
                   <img v-else :class="$style.cover" src="./../../../assets/images/default_cover.jpg">
                   <div :class="$style.info">
                     <div :class="$style.title">
                       <span class="select name" :aria-label="item.name">{{ item.name }}</span>
-                      <span v-if="item.meta._qualitys.flac24bit" class="no-select badge badge-theme-primary">{{ $t('tag__lossless_24bit') }}</span>
-                      <span v-else-if="item.meta._qualitys.ape || item.meta._qualitys.flac || item.meta._qualitys.wav" class="no-select badge badge-theme-primary">{{ $t('tag__lossless') }}</span>
-                      <span v-else-if="item.meta._qualitys['320k']" class="no-select badge badge-theme-secondary">{{ $t('tag__high_quality') }}</span>
+                      <span v-if="item.meta._qualitys.flac24bit" class="no-select badge badge-theme-primary">{{
+                        $t('tag__lossless_24bit') }}</span>
+                      <span v-else-if="item.meta._qualitys.ape || item.meta._qualitys.flac || item.meta._qualitys.wav"
+                        class="no-select badge badge-theme-primary">{{ $t('tag__lossless') }}</span>
+                      <span v-else-if="item.meta._qualitys['320k']" class="no-select badge badge-theme-secondary">{{
+                        $t('tag__high_quality') }}</span>
                       <span v-if="sourceTag" class="no-select badge badge-theme-tertiary">{{ item.source }}</span>
                     </div>
                     <div :class="$style.subtitle">
@@ -27,17 +32,32 @@
                     </div>
                   </div>
                 </div>
-                <div class="list-item-cell" style="flex: 0 0 40%;"><span class="select" :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
-                <div :class="[$style.textRight]" class="list-item-cell" style="flex: 0 0 8%;">
-                  <base-svg-icon v-show="!item.isExist" :class="$style.collection" icon-class="heart" @click="handleCollection(index)" />
-                  <base-svg-icon v-show="item.isExist" :class="$style.collection" icon-class="heart-solid" @click="handleUnCollection(index)" />
+                <div :class="[$style.textIndent, 'list-item-cell']" style="flex: 0 0 40%;"><span class="select"
+                    :aria-label="item.meta.albumName">{{ item.meta.albumName }}</span></div>
+
+                <div :class="$style.time" class="list-item-cell" style="flex: 0 0 12%;"><span class="no-select">{{
+                  item.interval || '--/--' }}</span>
                 </div>
-                <div :class="$style.textRight" class="list-item-cell" style="flex: 0 0 7%;"><span class="no-select">{{ item.interval || '--/--' }}</span></div>
+
+                <div :class="[$style.textRight, $style.actionBtns]" style="flex: 0 0 15%;">
+                  <!-- <base-svg-icon v-show="!item.isExist" :class="$style.collection" icon-class="heart"
+                    @click="handleCollection(index)" />
+                  <base-svg-icon v-show="item.isExist" :class="$style.collection" icon-class="heart-solid"
+                    @click="handleUnCollection(index)" /> -->
+                  <div class="my__button">
+                    <PhHeart v-show="!item.isExist" size="52%" @click="handleCollection(index)" weight="regular" />
+                    <PhHeart v-show="item.isExist" size="52%" @click="handleUnCollection(index)" weight="fill" />
+                  </div>
+                  <div class="my__button" @click.stop="handleListItemRightClick($event, index)">
+                    <PhDotsThreeVertical size="62%" weight="bold" />
+                  </div>
+                </div>
               </div>
             </template>
             <template #footer>
               <div :class="$style.pagination">
-                <material-pagination :count="total" :limit="limit" :page="page" @btn-click="$emit('togglePage', $event)" />
+                <material-pagination :count="total" :limit="limit" :page="page"
+                  @btn-click="$emit('togglePage', $event)" />
               </div>
             </template>
           </base-virtualized-list>
@@ -54,10 +74,13 @@
     <!-- <common-download-modal v-model:show="isShowDownload" :music-info="selectedDownloadMusicInfo" teleport="#view" />
     <common-download-multiple-modal v-model:show="isShowDownloadMultiple" :list="selectedList" teleport="#view" @confirm="removeAllSelect" /> -->
     <common-list-add-modal v-model:show="isShowListAdd" :music-info="selectedAddMusicInfo" teleport="#view" />
-    <common-list-add-multiple-modal v-model:show="isShowListAddMultiple" :music-list="selectedList" teleport="#view" @confirm="removeAllSelect" />
+    <common-list-add-multiple-modal v-model:show="isShowListAddMultiple" :music-list="selectedList" teleport="#view"
+      @confirm="removeAllSelect" />
     <common-download-modal v-model:show="isShowDownload" :music-info="selectedDownloadMusicInfo" teleport="#view" />
-    <common-download-multiple-modal v-model:show="isShowDownloadMultiple" :list="selectedList" teleport="#view" @confirm="removeAllSelect" />
-    <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name" @menu-click="handleMenuClick" />
+    <common-download-multiple-modal v-model:show="isShowDownloadMultiple" :list="selectedList" teleport="#view"
+      @confirm="removeAllSelect" />
+    <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name"
+      @menu-click="handleMenuClick" />
   </div>
 </template>
 
@@ -74,9 +97,14 @@ import useMusicActions from './useMusicActions'
 import { appSetting } from '@renderer/store/setting'
 import { addListMusics, getMusicExistListIds, removeListMusics } from '@renderer/store/list/action'
 import { loveList } from '@renderer/store/list/state'
+import { PhHeart, PhDotsThreeVertical } from '@phosphor-icons/vue'
 
 export default {
   name: 'MaterialOnlineList',
+  components: {
+    PhHeart,
+    PhDotsThreeVertical,
+  },
   props: {
     list: {
       type: Array,
@@ -267,6 +295,13 @@ export default {
       showMusicList.value = list
     })
 
+    const formatIndex = (index) => {
+      const num = index + 1
+      const total = props.total
+      const digits = total.toString().length
+      return num.toString().padStart(digits, '0')
+    }
+
     return {
       listItemHeight,
       handleListItemClick,
@@ -304,6 +339,7 @@ export default {
       showMusicList,
       handleCollection,
       handleUnCollection,
+      formatIndex,
     }
   },
 }
@@ -312,26 +348,39 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.textRight{
+
+.textRight {
   text-align: right;
 }
-.collection{
+
+.textIndent {
+  text-indent: 2em;
+}
+
+.collection {
   cursor: pointer
 }
-.songInfo{
+
+.songInfo {
   display: flex;
   align-items: center;
+
   .info {
     margin-left: 10px;
+    height: 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
-  .cover{
-      height: 38px;
-      width: 38px;
-      border-radius: 4px;
-      object-fit: cover;
+
+  .cover {
+    height: 38px;
+    width: 38px;
+    object-fit: cover;
   }
+
   .title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -339,6 +388,7 @@ export default {
     overflow: hidden;
     word-break: break-all;
   }
+
   .subtitle {
     font-size: 12px;
     opacity: 0.68;
@@ -349,6 +399,7 @@ export default {
     word-break: break-all;
   }
 }
+
 .songList {
   overflow: hidden;
   height: 100%;
@@ -367,21 +418,27 @@ export default {
   font-size: 14px;
 }
 
+.actionBtns {
+  display: flex;
+  gap: @gap-md;
+  justify-content: right;
+}
+
 .content {
   flex: auto;
   min-height: 0;
   position: relative;
   height: 100%;
+  justify-content: right;
 }
 
 .pagination {
   text-align: center;
-  margin-top: 24px;
-  padding: 15px 0;
-  border-top: var(--color-list-header-border-bottom);
+  margin-top: @gap;
   // left: 50%;
   // transform: translateX(-50%);
 }
+
 .noitem {
   height: 100%;
   width: 100%;
@@ -396,5 +453,4 @@ export default {
     color: var(--color-font-label);
   }
 }
-
 </style>

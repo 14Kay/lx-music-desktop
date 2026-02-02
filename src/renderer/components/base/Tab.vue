@@ -1,10 +1,9 @@
 <template>
   <ul :class="[$style.list, $style[align]]" role="tablist">
-    <li
-      v-for="item in list"
-      :key="item[itemKey]" :class="[$style.listItem, {[$style.active]: modelValue == item[itemKey]}]" tabindex="-1" role="tab"
-      :aria-label="item[itemLabel]" ignore-tip :aria-selected="modelValue == item[itemKey]" @click="handleToggle(item[itemKey])"
-    >
+    <li v-for="item in list" :key="item[itemKey]"
+      :class="[$style.listItem, { [$style.active]: modelValue == item[itemKey] }]" tabindex="-1" role="tab"
+      :aria-label="item[itemLabel]" ignore-tip :aria-selected="modelValue == item[itemKey]"
+      @click="handleToggle(item[itemKey])">
       <base-button>{{ item[itemLabel] }}</base-button>
     </li>
   </ul>
@@ -61,16 +60,20 @@ export default {
   font-size: 15px;
   font-weight: 700;
   gap: 16px;
+
   &.left {
     justify-content: flex-start;
   }
+
   &.center {
     justify-content: center;
   }
+
   &.right {
     justify-content: flex-end;
   }
 }
+
 .listItem {
   display: block;
   // padding: 5px 15px;
@@ -101,6 +104,7 @@ export default {
   display: block;
   position: relative;
   padding: 8px 0;
+
   &:after {
     .mixin-after;
     left: 0;

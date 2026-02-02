@@ -1,7 +1,8 @@
 <template>
-    <button :class="['button',{['small']: small}, {['noRadius']: noRadius}, {['active']: active}]" :style="{'border-radius': radius + 'px'}">
-        <slot></slot>
-    </button>
+  <button :class="['button', { ['small']: small }, { ['noRadius']: noRadius }, { ['active']: active }]"
+    :style="{ 'border-radius': radius + 'px' }">
+    <slot></slot>
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -20,41 +21,45 @@ defineProps({
   },
   radius: {
     type: Number,
-    default: 10,
+    default: 2,
   },
 })
 </script>
 
 <style lang="less" scoped>
 .button {
-    user-select: none;
-    cursor: pointer;
-    padding: 8px 16px;
-    min-height: 38px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-    font-size: 16px;
-    background: var(--color-025);
-    color: var(--color-secondary);
-    transition: 0.2s;
-    border: none;
-    outline: none;
-    &:hover {
-        background-color: var(--color-primary-light-800);
-        color: var(--color-primary);
-    }
+  user-select: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--color-025);
+  color: var(--color-secondary);
+  transition: 0.2s;
+  border: none;
+  outline: none;
+
+  &:hover {
+    background-color: var(--color-primary-background-hover);
+    color: var(--color-primary);
+  }
+
+  background-color: var(--color-050);
 }
 
-.active{
-  background-color: var(--color-primary-light-800);
+.active {
+  background-color: var(--color-primary-background-hover);
   color: var(--color-primary);
 }
-.small{
-    padding: 8px 12px;
+
+.small {
+  padding: 8px 12px;
 }
-.noRadius{
-    border-radius: 0;
+
+.noRadius {
+  border-radius: 0;
 }
 </style>

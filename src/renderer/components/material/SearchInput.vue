@@ -1,45 +1,24 @@
 <template>
   <div :class="$style.container">
-    <div :class="[$style.search, {[$style.active]: focus}, {[$style.big]: big}, {[$style.small]: small}]">
+    <div :class="[$style.search, { [$style.active]: focus }, { [$style.big]: big }, { [$style.small]: small }]">
       <div :class="$style.form">
-        <input
-          ref="dom_input"
-          v-model.trim="text"
-          :placeholder="placeholder"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @input="$emit('update:modelValue', text)"
-          @change="sendEvent('change')"
-          @keyup.enter="handleSearch"
-          @keydown.arrow-down.arrow-up.prevent
-          @keyup.arrow-down.prevent="handleKeyDown"
-          @keyup.arrow-up.prevent="handleKeyUp"
-          @contextmenu="handleContextMenu"
-        >
+        <button type="button" @click="handleSearch">
+          <PhMagnifyingGlass size="18" />
+        </button>
+        <input ref="dom_input" v-model.trim="text" :placeholder="placeholder" @focus="handleFocus" @blur="handleBlur"
+          @input="$emit('update:modelValue', text)" @change="sendEvent('change')" @keyup.enter="handleSearch"
+          @keydown.arrow-down.arrow-up.prevent @keyup.arrow-down.prevent="handleKeyDown"
+          @keyup.arrow-up.prevent="handleKeyUp" @contextmenu="handleContextMenu">
         <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
           <button v-show="text" :class="$style.close" type="button" @click="handleClearList">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 24 24" space="preserve">
-              <use xlink:href="#icon-close" />
-            </svg>
+            <PhX size="16" />
           </button>
         </transition>
-        <button type="button" @click="handleSearch">
-          <slot>
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="80%" viewBox="0 0 30.239 30.239" space="preserve">
-              <use xlink:href="#icon-search" />
-            </svg>
-          </slot>
-        </button>
       </div>
       <div v-if="list" :class="$style.list" :style="listStyle">
         <ul ref="dom_list" @mouseleave="selectIndex = -1">
-          <li
-            v-for="(item, index) in list"
-            :key="item"
-            :class="{[$style.select]: selectIndex === index }"
-            @mouseenter="selectIndex = index"
-            @click="handleTemplistClick(index)"
-          >
+          <li v-for="(item, index) in list" :key="item" :class="{ [$style.select]: selectIndex === index }"
+            @mouseenter="selectIndex = index" @click="handleTemplistClick(index)">
             <span>{{ item }}</span>
           </li>
         </ul>
@@ -52,6 +31,7 @@
 import { clipboardReadText } from '@common/utils/electron'
 import { HOTKEY_COMMON } from '@common/hotKey'
 import { appSetting } from '@renderer/store/setting'
+import { PhMagnifyingGlass, PhX } from '@phosphor-icons/vue'
 
 export default {
   props: {
@@ -81,6 +61,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    focusOnMount: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:modelValue', 'event'],
   data() {
@@ -93,6 +77,10 @@ export default {
         height: 0,
       },
     }
+  },
+  components: {
+    PhMagnifyingGlass,
+    PhX,
   },
   watch: {
     list(n) {
@@ -110,7 +98,11 @@ export default {
     },
   },
   mounted() {
-    if (appSetting['search.isFocusSearchBox']) this.handleFocusInput()
+    if (appSetting['search.isFocusSearchBox'] || this.focusOnMount) {
+      setTimeout(() => {
+        this.handleFocusInput()
+      }, 100)
+    }
     this.handleRegisterEvent('on')
   },
   beforeUnmount() {
@@ -203,8 +195,8 @@ export default {
 
 .container {
   position: relative;
-  width: 160px;
-  height: @height-toolbar * 0.6;
+  height: 100%;
+  width: 100%;
   -webkit-app-region: no-drag;
 }
 
@@ -212,131 +204,140 @@ export default {
   position: absolute;
   height: 100%;
   width: 100%;
-  border-radius: @form-radius * 2;
+  border-radius: @form-radius;
   display: flex;
   flex-flow: column nowrap;
-  background-color: var(--color-050);
+  background-color: rgba(0, 0, 0, 0.06);
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  backdrop-filter: blur(8px);
+
   &.active {
-    background-color: var(--color-primary-light-600-alpha-100);
-    color: var(--color-primary);
+    background-color: var(--color-content-background);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: var(--color-font);
+
     .form {
-      color: var(--color-primary);
+      color: var(--color-font);
+
       input {
-        border-bottom-left-radius: 0;
-        color: var(--color-primary);
+        color: var(--color-font);
+
         &::placeholder {
-          color: var(--color-primary);
+          color: var(--color-font-label);
         }
       }
+
       button {
-        border-bottom-right-radius: 0;
-        color: var(--color-primary);
+        color: var(--color-font);
       }
     }
   }
+
   .form {
-    height: @height-toolbar * 0.52;
-    position: relative;
     height: 100%;
     width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+
     input {
+      flex: 1;
       width: 100%;
-      // border: 1px solid;
       height: 100%;
-
-      border-top-left-radius: 3px;
-      border-bottom-left-radius: 3px;
       background-color: transparent;
-      // border-bottom: 2px solid var(--color-primary);
-      // border-color: var(--color-primary);
       border: none;
-
       outline: none;
-      // height: @height-toolbar * .7;
-      text-indent: 8px;
-      overflow: hidden;
-      font-size: 13.5px;
-      padding: 0;
+      text-indent: 0;
+      padding-left: 4px;
+      font-size: 14px;
+      color: var(--color-font);
+
       &::placeholder {
-        color: var(--color-700);
-        font-size: .98em;
+        color: var(--color-font-label);
+        font-size: 0.95em;
+        transition: color 0.3s ease;
       }
     }
+
     button {
       flex: none;
       border: none;
-      // background-color: @color-search-form-background;
       background-color: transparent;
       outline: none;
       cursor: pointer;
       height: 100%;
-      padding: 8px 7px;
-      color: var(--color-700);
-      transition: background-color .2s ease;
-      position: absolute;
-      right: 0;
-      top: 0;
-      &:last-child {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-      }
+      padding: 0 10px;
+      color: var(--color-font-label);
+      transition: color 0.2s ease, transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
-        background-color: var(--color-button-background-hover);
-      }
-      &:active {
-        background-color: var(--color-button-background-active);
-      }
-    }
-    .close{
-        right: 30px;
-      }
-  }
-  .list {
-    // background-color: @color-search-form-background;
-    font-size: 13px;
-    transition: .3s ease;
-    height: 0px;
-    transition-property: height;
-    overflow: hidden;
-    position: absolute;
-    top: 100%;
-    width: 100%;
-    color: var(--color-1000);
-    backdrop-filter: saturate(180%) blur(20px);
-    background-color: var(--color-primary-light-1000-alpha-150);
-    li {
-      cursor: pointer;
-      padding: 8px 5px;
-      transition: background-color .2s ease;
-      line-height: 1.3;
-      span {
-        .mixin-ellipsis-2;
+        color: var(--color-primary);
+        transform: scale(1.1);
       }
 
-      &.select {
-        background-color: var(--color-primary-dark-100-alpha-700);
+      &:active {
+        transform: scale(0.95);
       }
-      &:last-child {
-        border-bottom-left-radius: 3px;
-        border-bottom-right-radius: 3px;
+    }
+
+    .close {
+      padding: 0 8px;
+      margin-right: 2px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .list {
+    font-size: 13.5px;
+    position: absolute;
+    top: calc(100% + 6px);
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    color: var(--color-font);
+    background-color: var(--color-content-background);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform-origin: top center;
+    z-index: 1000;
+
+    ul {
+      overflow-y: auto;
+    }
+
+    li {
+      cursor: pointer;
+      padding: 10px 16px;
+      transition: background-color 0.2s ease;
+      line-height: 1.4;
+
+      span {
+        .mixin-ellipsis-1;
+      }
+
+      &.select,
+      &:hover {
+        background-color: var(--color-primary-light-100-alpha-500);
+        color: var(--color-primary);
       }
     }
   }
 }
 
 .big {
-  width: 100%;
-  // input {
-  //   line-height: 30px;
-  // }
   .form {
-    height: 30px;
-    button {
-      padding: 6px 10px;
+    height: 36px;
+
+    input {
+      font-size: 15px;
     }
   }
 }
-
-
 </style>

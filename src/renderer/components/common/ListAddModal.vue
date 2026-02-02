@@ -1,14 +1,18 @@
 <template>
-  <material-modal :show="show" :bg-close="bgClose" :teleport="teleport" max-width="70%" min-width="200px" @close="handleClose">
+  <material-modal :show="show" :bg-close="bgClose" :teleport="teleport" max-width="42%" min-width="200px"
+    @close="handleClose">
     <main :class="$style.main">
-      <h2>{{ $t('list_add__' + (isMove ? 'title_first_move' : 'title_first_add')) }}&nbsp;<span :class="$style.name">{{ currentMusicInfo.name }}</span>&nbsp;{{ $t('list_add__title_last') }}</h2>
+      <h2>{{ $t('list_add__' + (isMove ? 'title_first_move' : 'title_first_add')) }}&nbsp;<span :class="$style.name">{{
+        currentMusicInfo.name }}</span>&nbsp;{{ $t('list_add__title_last') }}</h2>
       <div class="scroll" :class="$style.btnContent">
-        <base-btn v-for="(item, index) in lists" :key="item.id" :class="$style.btn" :aria-label="$t('list_add__btn_title', { name: item.name })" :disabled="item.isExist" @click="handleClick(index)">{{ item.name }}</base-btn>
-        <base-btn :class="[$style.btn, $style.newList, isEditing ? $style.editing : null]" :aria-label="$t('lists__new_list_btn')" @click="handleEditing($event)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 0 42 42" space="preserve">
-            <use xlink:href="#icon-addTo" />
-          </svg>
-          <base-input :class="$style.newListInput" :value="newListName" :placeholder="$t('lists__new_list_input')" @keyup.enter="handleSaveList($event)" @blur="handleSaveList($event)" />
+        <base-btn v-for="(item, index) in lists" :key="item.id" :class="$style.btn"
+          :aria-label="$t('list_add__btn_title', { name: item.name })" :disabled="item.isExist"
+          @click="handleClick(index)">{{ item.name }}</base-btn>
+        <base-btn :class="[$style.btn, $style.newList, isEditing ? $style.editing : null]"
+          :aria-label="$t('lists__new_list_btn')" @click="handleEditing($event)">
+          <ph-plus size="18" />
+          <base-input :class="$style.newListInput" :value="newListName" :placeholder="$t('lists__new_list_input')"
+            @keyup.enter="handleSaveList($event)" @blur="handleSaveList($event)" />
         </base-btn>
         <span v-for="i in spaceNum" :key="i" :class="$style.btn" />
       </div>
@@ -24,8 +28,11 @@ import { addListMusics, moveListMusics, createUserList, getMusicExistListIds } f
 import useKeyDown from '@renderer/utils/compositions/useKeyDown'
 import { useI18n } from '@root/lang'
 import { dialog } from '@renderer/plugins/Dialog'
-
+import { PhPlus } from '@phosphor-icons/vue'
 export default {
+  components: {
+    PhPlus,
+  },
   props: {
     show: {
       type: Boolean,
@@ -194,10 +201,11 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--color-font);
     line-height: 1.3;
     text-align: center;
@@ -218,18 +226,22 @@ export default {
   justify-content: space-evenly;
 }
 
-@item-width: (100% / 3);
+@item-width: (100% / 2);
+
 .btn {
   position: relative;
   box-sizing: border-box;
   margin-left: 15px;
   margin-bottom: 15px;
-  height: 36px;
-  line-height: 36px;
+  height: 48px;
+  line-height: 48px;
   padding: 0 10px !important;
   width: calc(@item-width - 15px);
   min-width: 160px;
   .mixin-ellipsis-1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .newList {
@@ -238,22 +250,19 @@ export default {
   color: var(--color-primary-font-hover);
   opacity: .7;
 
-  svg {
-    height: 18px;
-    margin-top: 9px;
-  }
-
   &.editing {
     opacity: 1;
 
     svg {
       display: none;
     }
+
     .newListInput {
       display: block;
     }
   }
 }
+
 .newListInput {
   position: absolute;
   left: 0;
@@ -271,23 +280,24 @@ export default {
   display: none;
 }
 
-@item-width2: (100% / 4);
-@media (min-width: 1920px){
+@item-width2: (100% / 3);
+@media (min-width: 1920px) {
   .btn {
     width: calc(@item-width2 - 15px);
   }
 }
-@item-width3: (100% / 5);
-@media (min-width: 2560px){
+
+@item-width3: (100% / 4);
+@media (min-width: 2560px) {
   .btn {
     width: calc(@item-width3 - 15px);
   }
 }
-@item-width4: (100% / 6);
-@media (min-width: 3840px){
+
+@item-width4: (100% / 5);
+@media (min-width: 3840px) {
   .btn {
     width: calc(@item-width4 - 15px);
   }
 }
-
 </style>

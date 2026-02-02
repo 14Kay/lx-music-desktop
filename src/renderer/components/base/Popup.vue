@@ -1,14 +1,8 @@
 <template>
   <component :is="Teleport" to="#root">
-    <div
-      :class="[$style.popup, {[$style.top]: isShowTop}, {[$style.active]: props.visible}]"
-      :style="popupStyle"
-      :aria-hidden="!props.visible"
-      @click.stop
-      @mouseenter="emit('mouseenter', $event)"
-      @mouseleave="emit('mouseleave', $event)"
-      @transitionend="emit('transitionend', $event)"
-    >
+    <div :class="[$style.popup, { [$style.top]: isShowTop }, { [$style.active]: props.visible }]" :style="popupStyle"
+      :aria-hidden="!props.visible" @click.stop @mouseenter="emit('mouseenter', $event)"
+      @mouseleave="emit('mouseleave', $event)" @transitionend="emit('transitionend', $event)">
       <div ref="dom_content" class="scroll" :class="$style.list">
         <slot />
       </div>
@@ -76,7 +70,7 @@ watch(() => props.visible, (visible) => {
 
   const maxWidth = document.body.clientWidth - 20
   let center = dom_content.value.clientWidth / 2
-  let left = rect.left + rect.width / 2 - window.lx.rootOffset - center
+  let left = rect.left + rect.width / 2 - center
   if (left < sidePadding) {
     center -= sidePadding - left
     left = sidePadding
@@ -121,7 +115,7 @@ onBeforeUnmount(() => {
   // left: 8px;
   // margin-top: 12px;
   max-width: 98%;
-  border-radius: 4px;
+  border-radius: 3px;
   background-color: var(--color-content-background);
   opacity: 0;
   transform: scale(.8);
@@ -163,10 +157,10 @@ onBeforeUnmount(() => {
     }
   }
 }
+
 .list {
   padding: 10px;
   box-sizing: border-box;
   // box-shadow: 0 0 4px rgba(0, 0, 0, .2);
 }
-
 </style>

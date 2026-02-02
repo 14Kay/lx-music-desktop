@@ -1,7 +1,7 @@
 <template>
   <material-modal :show="show" :bg-close="bgClose" :teleport="teleport" @close="handleClose">
     <main :class="$style.main">
-      <h2>{{ info.name }}<br>{{ info.singer }}</h2>
+      <h2>下载 <span :class="$style.name">{{ info.name }} - {{ info.singer }}</span></h2>
       <base-btn v-for="quality in qualitys" :key="quality.type" :class="$style.btn" @click="handleClick(quality.type)">
         {{ getTypeName(quality.type) }}{{ quality.size && ` - ${quality.size.toUpperCase()}` }}
       </base-btn>
@@ -87,6 +87,10 @@ export default {
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
 
+.name {
+  color: var(--color-primary);
+}
+
 .main {
   padding: 15px;
   max-width: 400px;
@@ -94,6 +98,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
+
   h2 {
     font-size: 13px;
     color: var(--color-font);
@@ -106,9 +111,9 @@ export default {
 .btn {
   display: block;
   margin-bottom: 15px;
+
   &:last-child {
     margin-bottom: 0;
   }
 }
-
 </style>

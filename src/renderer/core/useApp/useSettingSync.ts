@@ -4,8 +4,6 @@ import { appSetting } from '@renderer/store/setting'
 import { sendSyncAction, setWindowSize } from '@renderer/utils/ipc'
 import { setLanguage } from '@root/lang'
 import { setUserApi } from '../apiSource'
-// import { applyTheme, getThemes } from '@renderer/store/utils'
-
 
 export default () => {
   watch(() => appSetting['common.windowSizeId'], (index) => {

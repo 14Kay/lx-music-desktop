@@ -55,7 +55,6 @@
     "publish:linux:rpm": "node build-config/build-pack.js target=linux arch=x64 type=rpm publish=always",
     "publish:linux:pacman": "node build-config/build-pack.js target=linux arch=x64 type=pacman publish=always",
     "dev": "cross-env NODE_OPTIONS=--max-http-header-size=200000 node build-config/runner-dev.js",
-    "build:theme": "node src/common/theme/createThemes.js",
     "build": "node build-config/pack.js",
     "build:main": "cross-env NODE_ENV=production webpack --config build-config/main/webpack.config.prod.js --progress",
     "build:renderer": "cross-env NODE_ENV=production webpack --config build-config/renderer/webpack.config.prod.js --progress",
@@ -166,7 +165,7 @@
     "terser-webpack-plugin": "^5.3.12",
     "tree-kill": "^1.2.2",
     "ts-loader": "^9.5.2",
-    "typescript": "5.8.2",
+    "typescript": "5.3.3",
     "vue-eslint-parser": "^9.4.3",
     "vue-loader": "^17.4.2",
     "vue-template-compiler": "^2.7.16",
@@ -177,6 +176,7 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
+    "@phosphor-icons/vue": "^2.2.1",
     "@simonwep/pickr": "^1.9.1",
     "better-sqlite3": "^11.8.1",
     "bufferutil": "^4.0.9",

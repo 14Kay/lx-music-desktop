@@ -1,67 +1,59 @@
-<!--
- * @Description: 我的最爱
- * @Author: 14K
- * @Date: 2024-12-03 15:39:40
- * @LastEditTime: 2024-12-08 14:08:11
- * @LastEditors: 14K
--->
 <template>
-    <div :class="$style.favorite">
-        <div :class="$style.favoriteCount" @click="goCollectList">
-          <common-audio-visualizer :class="$style.audio" />
-            <div :class="$style.music">
-              <div :class="$style.cover">
-                <img
-                  v-if="musicInfo.pic"
-                  :src="musicInfo.pic"
-                  decoding="async"
-                />
+  <div :class="$style.favorite">
+    <div :class="$style.favoriteCount" @click="showPlayerDetail" :style="themeColor ? { background: themeColor } : {}">
+      <div>
+        <common-audio-visualizer :class="$style.audio" :color="visualizerColor" :bar-count="120" />
+        <div :class="$style.content">
+          <div :class="$style.music">
+            <div :class="$style.cover">
+              <div>
+                <img v-if="musicInfo.pic" :src="musicInfo.pic" decoding="async" />
                 <div v-else :class="$style.emptyPic">L<span>X</span></div>
               </div>
-              <p :class="$style.title">{{ title }}</p>
+              <div :class="$style.musicInfo">
+                <p :class="$style.name">{{ musicInfo.name }}</p>
+                <p :class="$style.singer">{{ musicInfo.singer }}</p>
+              </div>
+            </div>
+          </div>
+          <div :class="$style.bottom">
+            <div :class="$style.titles">
+              <!-- <div :class="$style.title">我最爱的音乐</div>
+              <div :class="$style.sub_title">{{ count }} 首</div> -->
               <p :class="$style.status">{{ statusText }} </p>
+              <p v-show="!statusText">Wating for playing...</p>
             </div>
-            <div :class="$style.bottom">
-                <div :class="$style.titles">
-                    <div :class="$style.title">我最爱的音乐</div>
-                    <div :class="$style.sub_title">{{ count }} 首歌</div>
-                </div>
-                <button :class="$style.play" @click.stop="togglePlay">
-                    <base-svg-icon v-show="!isPlay" :class="$style.svg" icon-class="play" />
-                    <base-svg-icon v-show="isPlay" :class="[$style.svg,$style.pause]" icon-class="pause" />
-                </button>
-            </div>
+            <button :class="$style.play" @click.stop="togglePlay">
+              <base-svg-icon v-show="!isPlay" :class="$style.svg" icon-class="play" />
+              <base-svg-icon v-show="isPlay" :class="[$style.svg, $style.pause]" icon-class="pause" />
+            </button>
+          </div>
         </div>
-
-        <div :class="$style.favoriteList">
-            <List
-                v-if="list.length !== 0"
-                :list-id="listId"
-                :list="list"
-                :player-info="playerInfo"
-                :playing="playing"
-            />
-            <div v-else :class="$style.empty">
-              这里还没有东西，去添加一些吧~ <router-link to="/list"> 这就去</router-link>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <div :class="$style.favoriteList">
+      <List :column-number="1" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import List from './List.vue'
 import useListInfo from './useListInfo'
-import { useRouter } from '@common/utils/vueRouter'
-import { loveList } from '@renderer/store/list/state'
 import { useI18n } from '@root/lang'
-import { computed } from 'vue'
-import { appSetting } from '@renderer/store/setting'
+import { ref, watch } from 'vue'
 import { togglePlay } from '@renderer/core/player'
+
+import {
+  setShowPlayerDetail,
+} from '@renderer/store/player/action'
 
 import {
   musicInfo,
   isPlay,
   statusText,
+  playMusicInfo,
 } from '@renderer/store/player/state'
 
 const t = useI18n()
@@ -76,54 +68,116 @@ const { listId, columnNumber } = defineProps({
   },
 })
 const {
-  list,
-  playerInfo,
-  playing,
   count,
   cover,
 } = useListInfo({ listId, maxCount: columnNumber * 3 })
 
-const title = computed(() => {
-  return musicInfo.name
-    ? appSetting['download.fileName']
-      .replace('歌名', musicInfo.name)
-      .replace('歌手', musicInfo.singer)
-    : ''
-})
+const showPlayerDetail = () => {
+  if (!playMusicInfo.musicInfo) return
+  setShowPlayerDetail(true)
+}
 
-const router = useRouter()
-const goCollectList = () => {
-  router.push({
-    path: '/library/playlist',
-    query: {
-      id: listId,
-      title: t(loveList.name),
-      count: count.value,
-      cover: cover.value,
-    },
+const themeColor = ref('')
+const visualizerColor = ref('')
+
+const getDominantColor = (imgUrl: string) => {
+  return new Promise<{ r: number, g: number, b: number } | null>((resolve) => {
+    const img = new Image()
+    img.crossOrigin = "Anonymous"
+    img.src = imgUrl
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return resolve(null)
+        canvas.width = 1
+        canvas.height = 1
+        ctx.drawImage(img, 0, 0, 1, 1)
+        const data = ctx.getImageData(0, 0, 1, 1).data
+        resolve({ r: data[0], g: data[1], b: data[2] })
+      } catch (e) {
+        resolve(null)
+      }
+    }
+    img.onerror = () => resolve(null)
   })
 }
+
+watch(() => musicInfo.pic, async (pic) => {
+  if (!pic) {
+    themeColor.value = ''
+    visualizerColor.value = ''
+    return
+  }
+  const color = await getDominantColor(pic)
+  if (color) {
+    themeColor.value = `rgba(${color.r}, ${color.g}, ${color.b}, 0.9)`
+    visualizerColor.value = 'rgba(255, 255, 255, 0.6)'
+  } else {
+    // Retrieval failed (likely CORS), fallback to defaults
+    themeColor.value = ''
+    // Use a high-contrast default for visualizer (e.g., white with opacity) to avoid gray-on-gray issues
+    visualizerColor.value = 'rgba(255, 255, 255, 0.4)'
+  }
+}, { immediate: true })
+
 </script>
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.empty{
+
+.empty {
   font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
-.music{
-  line-height: 1.5;
+
+.status {
+  font-size: 20px;
+  font-family: 'Outfit';
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.14);
+  transition: 0.2s;
+  padding: @gap;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.music {
   font-size: 14px;
-  width: 300px;
-  color: var(--color-700);
-  .cover{
-    img{
+  font-family: 'Outfit';
+
+  .musicInfo {
+    display: flex;
+    flex-direction: column;
+    height: 40px;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.9);
+
+    .singer {
+      font-size: 12px;
+    }
+  }
+
+  .cover {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 45px;
+
+    img {
       width: 45px;
       height: 45px;
-      border-radius: 5px;
+      box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.2);
     }
 
     .emptyPic {
@@ -144,25 +198,26 @@ const goCollectList = () => {
       }
     }
   }
-
-  .status, .title{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 }
 
-.favorite{
-    display: flex;
-    margin-top: 24px;
-    min-height: 220px;
+.line {
+  width: 50px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 1);
+  position: absolute;
+  top: 50%;
+  left: @gap;
 }
+
+.favorite {
+  display: flex;
+  margin-top: 24px;
+  min-height: 220px;
+}
+
 .favoriteCount {
-  flex: 3;
-  margin-top: 8px;
+  flex: 4;
   cursor: pointer;
-  border-radius: 16px;
-  padding: 18px 24px;
   display: flex;
   flex-direction: column;
   transition: all 0.4s;
@@ -170,14 +225,22 @@ const goCollectList = () => {
   position: relative;
   background: var(--color-primary-alpha-900);
   overflow: hidden;
-  .audio{
+
+  >div {
+    padding: @gap;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .audio {
     z-index: 1;
   }
+
   .bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--color-primary);
+    color: #fff;
     position: absolute;
     left: 0;
     width: 100%;
@@ -185,10 +248,13 @@ const goCollectList = () => {
     padding: 0 24px;
     z-index: 3;
     box-sizing: border-box;
+
     .title {
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 400;
+      letter-spacing: 1px;
     }
+
     .sub_title {
       font-size: 15px;
       margin-top: 2px;
@@ -202,25 +268,28 @@ const goCollectList = () => {
       height: 44px;
       width: 44px;
       background: var(--color-primary);
-      border-radius: 50%;
-      transition: 0.2s;
       box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       outline: none;
       border: none;
+      flex-shrink: 0;
+
       .svg {
         color: var(--color-main-background);
         margin-left: 4px;
         height: 16px;
         width: 16px;
       }
-      .pause{
+
+      .pause {
         margin-left: 0
       }
+
       &:hover {
         transform: scale(1.06);
         box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.4);
       }
+
       &:active {
         transform: scale(0.94);
       }
@@ -234,15 +303,16 @@ const goCollectList = () => {
     font-size: 14px;
     opacity: 0.88;
     color: var(--color-primary);
+
     p {
       margin-top: 2px;
     }
   }
 }
-.favoriteList{
-    flex: 7;
-    margin-top: 8px;
-    margin-left: 36px;
-    overflow: hidden;
+
+.favoriteList {
+  flex: 1;
+  margin-left: @gap;
+  overflow: hidden;
 }
 </style>

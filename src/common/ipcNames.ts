@@ -142,6 +142,7 @@ const modules = {
     last_fm_track_love: 'last_fm_track_love',
     last_fm_track_unlove: 'last_fm_track_unlove',
     last_fm_track_update_now_playing: 'last_fm_track_update_now_playing',
+    last_fm_get_user_info: 'last_fm_get_user_info',
     sync_action: 'sync_action',
     sync_get_server_devices: 'sync_get_server_devices',
     sync_remove_server_device: 'sync_remove_server_device',
@@ -162,6 +163,10 @@ const modules = {
     download_list_update: 'download_list_update',
     download_list_remove: 'download_list_remove',
     download_list_clear: 'download_list_clear',
+
+    play_history_save: 'play_history_save',
+    play_history_get_most_played: 'play_history_get_most_played',
+    play_history_get_recently_played: 'play_history_get_recently_played',
   },
   winLyric: {
     close: 'close',

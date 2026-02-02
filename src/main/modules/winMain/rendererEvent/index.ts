@@ -10,6 +10,7 @@ import sync from './sync'
 import data from './data'
 import music from './music'
 import download from './download'
+import playHistory from './playHistory'
 import soundEffect from './soundEffect'
 import openAPI from './openAPI'
 import lastFM from './lastFM'
@@ -38,6 +39,7 @@ export default () => {
   data()
   music()
   download()
+  playHistory()
   soundEffect()
   openAPI()
   lastFM()

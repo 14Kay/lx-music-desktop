@@ -19,7 +19,8 @@
                 <svg-icon name="share" />
               </button>
               <button type="button" :class="$style.btn" @click="handleToggle(item)">
-                <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 287.386 287.386" space="preserve">
+                <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+                  height="50%" viewBox="0 0 287.386 287.386" space="preserve">
                   <use xlink:href="#icon-testPlay" />
                 </svg>
               </button>
@@ -56,7 +57,8 @@
             </h2>
           </template>
         </div>
-        <base-btn :disabled="!toggleMusicInfo" :class="$style.btn" @click="handleClean">{{ $t('music_toggle_clean') }}</base-btn>
+        <base-btn :disabled="!toggleMusicInfo" :class="$style.btn" @click="handleClean">{{ $t('music_toggle_clean')
+        }}</base-btn>
       </div>
     </main>
   </material-modal>
@@ -164,8 +166,7 @@ export default {
 @import '@renderer/assets/styles/layout.less';
 
 .main {
-  padding: 10px 7px 0;
-  width: 560px;
+  width: 464px;
   max-width: 100%;
   box-sizing: border-box;
   // min-width: 280px;
@@ -175,7 +176,9 @@ export default {
   // max-height: 100%;
   // overflow: hidden;
   height: 100%;
+  padding-top: @gap-sm;
 }
+
 .tab {
   flex: none;
 }
@@ -183,12 +186,11 @@ export default {
 .list {
   flex: auto;
   min-height: 100px;
-  min-width: 460px;
   // background-color: @color-search-form-background;
   font-size: 13px;
   transition-property: height;
   margin-top: 10px;
-  padding: 0 7px;
+
   // position: relative;
   .listItem {
     position: relative;
@@ -205,6 +207,7 @@ export default {
     &:hover {
       background-color: var(--color-primary-background-hover);
     }
+
     // &:last-child {
     //   border-bottom-left-radius: 4px;
     //   border-bottom-right-radius: 4px;
@@ -218,6 +221,7 @@ export default {
     text-align: center;
     color: var(--color-font-label);
   }
+
   .textContent {
     flex: auto;
     min-width: 0;
@@ -226,15 +230,18 @@ export default {
     align-items: flex-start;
     overflow: hidden;
   }
+
   .text {
     max-width: 100%;
     .mixin-ellipsis-1;
   }
+
   .albumName {
     font-size: 12px;
     opacity: 0.6;
     // .mixin-ellipsis-1;
   }
+
   .label {
     flex: none;
     font-size: 12px;
@@ -245,6 +252,7 @@ export default {
     // transform: rotate(45deg);
     // background-color:
   }
+
   .btns {
     flex: none;
     font-size: 12px;
@@ -252,6 +260,7 @@ export default {
     display: flex;
     align-items: center;
   }
+
   .btn {
     background-color: transparent;
     border: none;
@@ -263,6 +272,7 @@ export default {
     outline: none;
     transition: background-color 0.2s ease;
     line-height: 0;
+
     &:last-child {
       margin-right: 0;
     }
@@ -275,6 +285,7 @@ export default {
     &:hover {
       background-color: var(--color-primary-background-hover);
     }
+
     &:active {
       background-color: var(--color-primary-font-active);
     }
@@ -302,6 +313,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px 7px;
+  padding-bottom: 0;
+
   .info {
     min-width: 0;
     display: flex;
@@ -317,13 +330,16 @@ export default {
       line-height: 1.5;
       word-break: break-all;
     }
+
     .nameLabel {
       display: flex;
       flex-flow: row nowrap;
     }
+
     .name {
       .mixin-ellipsis;
     }
+
     .label {
       flex: none;
       font-size: 12px;
@@ -335,6 +351,7 @@ export default {
       // transform: rotate(45deg);
       // background-color:
     }
+
     .singer {
       // font-size: 0.9em;
       color: var(--color-font-label);
@@ -358,6 +375,4 @@ export default {
     }
   }
 }
-
-
 </style>

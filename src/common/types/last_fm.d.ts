@@ -6,6 +6,7 @@ import type {
   LastFMTrackParams as LastFMTrackParamsAlias,
   LastFMTrackUpdateNowPlayingParams as LastFMTrackUpdateNowPlayingParamsAlias,
   LastFMUpdateNowPlayingResponse as LastFMUpdateNowPlayingResponseAlias,
+  LastFMUserGetInfoResponse as LastFMUserGetInfoResponseAlias,
 } from 'lastfm-ts-api'
 
 declare global {
@@ -27,6 +28,7 @@ declare global {
       type TrackParams = LastFMTrackParamsAlias
       type TrackUpdateNowPlayingParams = LastFMTrackUpdateNowPlayingParamsAlias
       type UpdateNowPlayingResponse = LastFMUpdateNowPlayingResponseAlias
+      type UserGetInfoResponse = LastFMUserGetInfoResponseAlias
     }
   }
 }

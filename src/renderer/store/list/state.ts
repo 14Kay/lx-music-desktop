@@ -31,9 +31,9 @@ export {
 //   meta: {},
 // })
 
-export const tempListMeta = {
+export const tempListMeta = reactive({
   id: '',
-}
+})
 
 
 // export const userLists: LX.List.UserListInfo[] = window.lxData.userLists = reactive([])

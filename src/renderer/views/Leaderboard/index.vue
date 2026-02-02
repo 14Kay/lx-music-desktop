@@ -3,7 +3,8 @@
     <div class="title" :class="$style.leaderboardTitle">
       <h1>排行榜</h1>
       <div :class="$style.listsSelect">
-        <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name" @update:model-value="handleToggleSource" />
+        <base-selection :model-value="source" :class="$style.select" :list="sourceList" item-key="id" item-name="name"
+          @update:model-value="handleToggleSource" />
       </div>
     </div>
     <div :class="$style.lists">
@@ -28,7 +29,7 @@ import { useRoute, useRouter } from '@common/utils/vueRouter'
 const source = ref('')
 const boardId = ref(null)
 
-const verifyQueryParams = async function(to, from, next) {
+const verifyQueryParams = async function (to, from, next) {
   let _source = to.query.source
   let _boardId = to.query.boardId
 
@@ -89,15 +90,18 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.leaderboardTitle{
+
+.leaderboardTitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .leaderboard {
   height: 100%;
   position: relative;
 }
+
 .header {
   flex: none;
   width: 100%;
@@ -105,13 +109,16 @@ export default {
   flex-flow: row nowrap;
 
 }
+
 .tab {
   flex: auto;
 }
+
 .select {
   flex: none;
   width: 80px;
 }
+
 .content {
   flex: auto;
   display: flex;
@@ -123,9 +130,10 @@ export default {
   flex: none;
   display: flex;
   align-items: center;
-  margin-top: 24px;
+  margin-top: @gap;
   overflow: hidden;
 }
+
 .listsHeader {
   position: relative;
 }
@@ -143,18 +151,22 @@ export default {
     display: block;
     width: 100%;
   }
+
   :global(.label-content) {
     background-color: transparent !important;
     line-height: 38px;
     height: 38px;
     border-radius: 0;
+
     &:hover {
       background: none !important;
     }
   }
+
   :global(.label) {
     color: var(--color-font) !important;
   }
+
   :global(.icon) {
     opacity: .6;
     transition: opacity .3s ease;
@@ -162,14 +174,17 @@ export default {
 
   :global(.selection-list) {
     max-height: 500px;
-    box-shadow: 0 1px 8px 0 rgba(0,0,0,.2);
+    box-shadow: 0 1px 8px 0 rgba(0, 0, 0, .2);
+
     li {
       // background-color: var(--color-main-background);
       line-height: 38px;
       font-size: 13px;
+
       &:hover {
         background-color: var(--color-button-background-hover);
       }
+
       &:active {
         background-color: var(--color-button-background-active);
       }
@@ -191,5 +206,4 @@ export default {
 
   // }
 }
-
 </style>

@@ -1,38 +1,23 @@
 <template>
   <div :class="$style.container">
-    <common-playlist-info
-    :list-id="listDetailInfo.id"
-    :author="listDetailInfo.info.author"
-    :cover="picUrl || listDetailInfo.info.img"
-    :description="listDetailInfo.info.desc"
-    :title="listDetailInfo.info.name"
-    :count="listDetailInfo.total"
-    :is-collected="isCollected"
-    @play="playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list)"
-    @collect="handleCollect"
-    @search="handleSearch"
-    />
-    <div :class="$style.list">
-      <material-online-list
-        ref="listRef"
-        :page="listDetailInfo.page"
-        :limit="listDetailInfo.limit"
-        :total="listDetailInfo.total"
-        :list="listDetailInfo.list"
-        :no-item="listDetailInfo.noItemLabel"
-        :search="searchContent"
-        @play-list="handlePlayList"
-        @toggle-page="togglePage"
-      />
+    <common-playlist-info :class="$style.info" :list-id="fullListId" :author="listDetailInfo.info.author"
+      :cover="picUrl || listDetailInfo.info.img" :description="listDetailInfo.info.desc"
+      :title="listDetailInfo.info.name" :count="listDetailInfo.total" :is-collected="isCollected" @play="handlePlay"
+      @collect="handleCollect" @search="handleSearch" />
+    <div :class="$style.musicList">
+      <material-online-list ref="listRef" :page="listDetailInfo.page" :limit="listDetailInfo.limit"
+        :total="listDetailInfo.total" :list="listDetailInfo.list" :no-item="listDetailInfo.noItemLabel"
+        :search="searchContent" @play-list="handlePlayList" @toggle-page="togglePage" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watch } from '@common/utils/vueTools'
+import { ref, watch, computed } from '@common/utils/vueTools'
 import { useRoute } from '@common/utils/vueRouter'
 import { addSongListDetail, playSongListDetail, isAlreadyExists, removeSongListDetail } from './action'
 import useList from './useList'
+import { appSetting } from '@renderer/store/setting'
 
 const source = ref<LX.OnlineSource>('kw')
 const id = ref<string>('')
@@ -41,6 +26,10 @@ const picUrl = ref<string>('')
 const refresh = ref<boolean>(false)
 const isCollected = ref<boolean>(false)
 const searchContent = ref<string>('')
+
+const randomFrom = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
 
 interface Query {
   source?: string
@@ -78,7 +67,15 @@ export default {
       void getListData(source.value, id.value, page, refresh.value)
     }
 
-    const handleCollect = async() => {
+    const handlePlay = () => {
+      let index = 0
+      if (appSetting['player.togglePlayMethod'] === 'random' || appSetting['player.togglePlayMethod'] === 'singleLoop') {
+        index = randomFrom(0, listDetailInfo.list.length - 1)
+      }
+      playSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.list, index)
+    }
+
+    const handleCollect = async () => {
       if (!isAlreadyExists(listDetailInfo.id, listDetailInfo.source)) {
         await addSongListDetail(listDetailInfo.id, listDetailInfo.source, listDetailInfo.info.name, picUrl.value || listDetailInfo.info.img)
         isCollected.value = true
@@ -88,7 +85,7 @@ export default {
       }
     }
 
-    watch([source, id, page, refresh], async([_source, _id, _page, _refresh]) => {
+    watch([source, id, page, refresh], async ([_source, _id, _page, _refresh]) => {
       isCollected.value = isAlreadyExists(_id, _source)
       void getListData(_source, _id, _page, _refresh)
     }, {
@@ -98,6 +95,11 @@ export default {
       if (content.trim() === searchContent.value.trim()) return
       searchContent.value = content.toLowerCase().trim()
     }
+
+    const fullListId = computed(() => {
+      return `${listDetailInfo.source}__${listDetailInfo.id}`
+    })
+
     return {
       source,
       id,
@@ -114,6 +116,8 @@ export default {
       handleCollect,
       searchContent,
       handleSearch,
+      handlePlay,
+      fullListId,
     }
   },
 }
@@ -122,92 +126,29 @@ export default {
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
 
+.musicList {
+  width: calc(100% - 200px);
+  margin-left: 200px;
+  padding-left: @gap;
+  padding-bottom: @gap;
+}
+
 .container {
-  // position: absolute;
-  // left: 0;
-  // top: 0;
-  // width: 100%;
-  // height: 100%;
-  padding-top: 24px;
+  padding-top: @gap;
   display: flex;
-  flex-flow: column nowrap;
-}
-
-.songListHeader {
-  flex: none;
-  display: flex;
-  flex-flow: row nowrap;
-  height: 80px;
-}
-.songListHeaderLeft {
-  flex: none;
-  margin-left: 15px;
-  height: 100%;
-  aspect-ratio: 1 / 1;
   position: relative;
+  height: 100%;
   overflow: hidden;
-  border-radius: 4px;
-  background-position: center;
-  background-size: cover;
-  opacity: .9;
-  box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
-}
-.playNum {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 4px;
-  background-color: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  font-size: 12px;
-  text-align: right;
-  .mixin-ellipsis-1;
-}
 
-.songListHeaderMiddle {
-  flex: auto;
-  padding: 2px 7px;
-  min-width: 0;
-  h3 {
-    .mixin-ellipsis-1;
-    line-height: 1.2;
-    padding-bottom: 5px;
-    color: var(--color-font);
-  }
-  p {
-    .mixin-ellipsis(3);
-    font-size: 12px;
-    line-height: 1.2;
-    color: var(--color-font-label);
-  }
-}
-.songListHeaderRight {
-  flex: none;
-  display: flex;
-  align-items: center;
-  padding-right: 15px;
-
-  .headerRightBtn {
-    border-radius: 0;
-    &:first-child {
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    &:last-child {
-      border-top-right-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-  }
-}
-
-.list {
-  position: relative;
   width: 100%;
-  min-height: 0;
-  flex: auto;
-  height: 100%;
-  margin-top: 32px;
+
+  .info {
+    width: 200px;
+    position: fixed;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+  }
 }
 </style>
-

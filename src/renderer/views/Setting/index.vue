@@ -2,45 +2,19 @@
   <div :class="$style.main">
     <div class="scroll" :class="$style.toc">
       <ul :class="$style.tocList" role="toolbar">
-        <li v-for="h2 in tocList" :key="h2.id" :class="$style.tocListItem" role="presentation">
-          <h2
-            :class="[$style.tocH2, {[$style.active]: avtiveComponentName == h2.id }]"
-            role="tab" :aria-selected="avtiveComponentName == h2.id"
-            :aria-label="h2.title" ignore-tip @click="toggleTab(h2.id)"
-          >
-            <transition name="list-active">
-              <svg-icon v-if="avtiveComponentName == h2.id" name="angle-right-solid" :class="$style.activeIcon" />
-            </transition>
-            {{ h2.title }}
+        <li v-for="h2 in tocList" :key="h2.id"
+          :class="[$style.tocListItem, { [$style.active]: avtiveComponentName == h2.id }]" role="presentation">
+          <h2 :class="[$style.tocH2]" role="tab" :aria-selected="avtiveComponentName == h2.id" :aria-label="h2.title"
+            ignore-tip @click="toggleTab(h2.id)">
+            <component :is="h2.icon" size="1.2em" weight="regular" :class="$style.icon" />
+            <span>{{ h2.title }}</span>
           </h2>
-          <!-- <ul v-if="h2.children.length" :class="$style.tocList">
-            <li v-for="h3 in h2.children" :key="h3.id" :class="$style.tocSubListItem">
-              <h3 :class="[$style.tocH3, toc.activeId == h3.id ? $style.active : null]" :aria-label="h3.title">
-                <a :href="'#' + h3.id" @click.stop="toc.activeId = h3.id">{{ h3.title }}</a>
-              </h3>
-            </li>
-          </ul> -->
         </li>
       </ul>
     </div>
     <div ref="dom_content_ref" class="scroll" :class="$style.setting">
       <dl>
         <component :is="avtiveComponentName" />
-        <!-- <SettingBasic />
-        <SettingPlay />
-        <SettingPlayDetail />
-        <SettingDesktopLyric />
-        <SettingSearch />
-        <SettingList />
-        <SettingDownload />
-        <SettingSync />
-        <SettingHotKey />
-        <SettingNetwork />
-        <SettingOdc />
-        <SettingBackup />
-        <SettingOther />
-        <SettingUpdate />
-        <SettingAbout /> -->
       </dl>
     </div>
   </div>
@@ -69,6 +43,26 @@ import SettingBackup from './components/SettingBackup.vue'
 import SettingOther from './components/SettingOther.vue'
 import SettingUpdate from './components/SettingUpdate.vue'
 import SettingAbout from './components/SettingAbout.vue'
+
+import {
+  PhGear,
+  PhPlay,
+  PhFaders,
+  PhTextbox,
+  PhMagnifyingGlass,
+  PhListBullets,
+  PhDownloadSimple,
+  PhKeyboard,
+  PhArrowsLeftRight,
+  PhBracketsCurly,
+  PhGlobe,
+  PhCloud,
+  PhFloppyDisk,
+  PhDotsThreeCircle,
+  PhArrowCircleUp,
+  PhBroadcast,
+  PhInfo,
+} from '@phosphor-icons/vue'
 
 export default {
   name: 'Setting',
@@ -99,23 +93,23 @@ export default {
 
     const tocList = computed(() => {
       return [
-        { id: 'SettingBasic', title: t('setting__basic') },
-        { id: 'SettingPlay', title: t('setting__play') },
-        { id: 'SettingPlayDetail', title: t('setting__play_detail') },
-        { id: 'SettingDesktopLyric', title: t('setting__desktop_lyric') },
-        { id: 'SettingSearch', title: t('setting__search') },
-        { id: 'SettingList', title: t('setting__list') },
-        { id: 'SettingDownload', title: t('setting__download') },
-        { id: 'SettingHotKey', title: t('setting__hot_key') },
-        { id: 'SettingSync', title: t('setting__sync') },
-        { id: 'SettingOpenAPI', title: t('setting__open_api') },
-        { id: 'SettingNetwork', title: t('setting__network') },
-        { id: 'SettingOdc', title: t('setting__odc') },
-        { id: 'SettingBackup', title: t('setting__backup') },
-        { id: 'SettingOther', title: t('setting__other') },
-        { id: 'SettingUpdate', title: t('setting__update') },
-        { id: 'SettingLastFM', title: 'Last FM' },
-        { id: 'SettingAbout', title: t('setting__about') },
+        { id: 'SettingBasic', title: t('setting__basic'), icon: PhGear },
+        { id: 'SettingPlay', title: t('setting__play'), icon: PhPlay },
+        { id: 'SettingPlayDetail', title: t('setting__play_detail'), icon: PhFaders },
+        { id: 'SettingDesktopLyric', title: t('setting__desktop_lyric'), icon: PhTextbox },
+        { id: 'SettingSearch', title: t('setting__search'), icon: PhMagnifyingGlass },
+        { id: 'SettingList', title: t('setting__list'), icon: PhListBullets },
+        { id: 'SettingDownload', title: t('setting__download'), icon: PhDownloadSimple },
+        { id: 'SettingHotKey', title: t('setting__hot_key'), icon: PhKeyboard },
+        { id: 'SettingSync', title: t('setting__sync'), icon: PhArrowsLeftRight },
+        { id: 'SettingOpenAPI', title: t('setting__open_api'), icon: PhBracketsCurly },
+        { id: 'SettingNetwork', title: t('setting__network'), icon: PhGlobe },
+        { id: 'SettingOdc', title: t('setting__odc'), icon: PhCloud },
+        { id: 'SettingBackup', title: t('setting__backup'), icon: PhFloppyDisk },
+        { id: 'SettingOther', title: t('setting__other'), icon: PhDotsThreeCircle },
+        { id: 'SettingUpdate', title: t('setting__update'), icon: PhArrowCircleUp },
+        { id: 'SettingLastFM', title: 'Last FM', icon: PhBroadcast },
+        { id: 'SettingAbout', title: t('setting__about'), icon: PhInfo },
       ]
     })
 
@@ -140,41 +134,6 @@ export default {
       toggleTab,
     }
   },
-  // mounted() {
-  //   this.initTOC()
-  // },
-  // methods: {
-  //   initTOC() {
-  //     const list = this.$refs.dom_setting_list.children
-  //     const toc = []
-  //     let prevTitle
-  //     for (const item of list) {
-  //       if (item.tagName == 'DT') {
-  //         prevTitle = {
-  //           title: item.innerText.replace(/[（(].+?[)）]/, ''),
-  //           id: item.getAttribute('id'),
-  //           dom: item,
-  //           children: [],
-  //         }
-  //         toc.push(prevTitle)
-  //         continue
-  //       }
-  //       const h3 = item.querySelector('h3')
-  //       if (h3) {
-  //         prevTitle.children.push({
-  //           title: h3.innerText.replace(/[（(].+?[)）]/, ''),
-  //           id: h3.getAttribute('id'),
-  //           dom: h3,
-  //         })
-  //       }
-  //     }
-  //     console.log(toc)
-  //     this.toc.list = toc
-  //   },
-  //   handleListScroll(event) {
-  //     // console.log(event.target.scrollTop)
-  //   },
-  // },
 }
 </script>
 
@@ -185,17 +144,43 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   height: 100%;
+  padding: @gap 0;
   // border-top: var(--color-list-header-border-bottom);
 }
+
 .toc {
   position: fixed;
   width: 12%;
-  height: 100%;
-  background-color: var(--color-025);
-  ul{
-    padding: 12px;
+  background-color: var(--color-aside-background);
+
+  ul {
+
+    li {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0px;
+        height: 100%;
+        background-color: var(--color-primary);
+        transition: all .3s ease;
+      }
+    }
+
+    .active {
+      background-color: var(--color-primary-background-hover);
+
+      &::before {
+        width: 3px;
+      }
+    }
   }
 }
+
 .tocH2 {
   line-height: 1.5;
   .mixin-ellipsis-1;
@@ -207,20 +192,29 @@ export default {
 
   &:not(.active) {
     cursor: pointer;
+
     &:hover {
       background-color: var(--color-button-background-hover);
     }
   }
+
   &.active {
     color: var(--color-primary);
   }
+
+  .icon {
+    margin-right: 6px;
+    vertical-align: middle;
+  }
 }
+
 .activeIcon {
   height: .9em;
   width: .9em;
   margin-left: -0.45em;
   vertical-align: -0.05em;
 }
+
 // .tocH3 {
 //   font-size: 13px;
 //   opacity: .8;
@@ -236,33 +230,50 @@ export default {
 // }
 
 .setting {
-  padding: 0 15px 15px;
-  font-size: 14px;
+  padding: 0 @gap ;
+  padding-right: 0;
+  font-size: 13px;
   box-sizing: border-box;
   overflow-y: auto;
   height: 100%;
   position: relative;
   width: 100%;
-  margin-left: 20%;
+  margin-left: 12%;
+
   :global {
     dt {
       margin: 15px 0;
       font-size: 24px;
       font-weight: 600;
-      + dd h3 {
+      display: none;
+
+      +dd h3 {
         margin-top: 0;
       }
     }
 
-    h3 {
-      font-size: 12px;
-      margin: 25px 0 15px;
+    dd {
+      background-color: var(--color-aside-background);
+      padding: @gap-md;
+      margin-bottom: 12px;
     }
+
+    dd:last-child {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      padding-bottom: 6px;
+    }
+
     .p {
       padding: 3px 0;
       line-height: 1.3;
+
       .btn {
-        + .btn {
+        +.btn {
           margin-left: 10px;
         }
       }
@@ -276,10 +287,12 @@ export default {
       color: var(--color-button-font);
       cursor: pointer;
       transition: opacity 0.2s ease;
+
       &:hover {
         opacity: 0.7;
       }
     }
+
     .help-icon {
       margin: 0 0.4em;
     }
@@ -307,7 +320,4 @@ export default {
 // @keyframes highlight {
 //   from { background: yellow; }
 //   to { background: transparent; }
-// }
-
-</style>
-
+// }</style>

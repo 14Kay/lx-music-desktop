@@ -1,92 +1,48 @@
 <template>
   <div>
-    <div :style="listStyles">
-      <ListItem
-v-for="(item, index) in list" :key="item.id" :cover="item.meta.picUrl" :name="item.name"
-        :singer="item.singer" :class="[
-          { [$style.playing]: playerInfo.isPlayList && playing && playerInfo.playIndex === index },
-          { [$style.active]: playerInfo.isPlayList && playerInfo.playIndex === index }
-        ]" @dblclick="handleListItemDblClick(index)"
-/>
+    <div :style="listStyles" :class="$style.recent">
+      <h2 class="my__title"><span>RECENTLY PLAYED</span></h2>
+      <ListItem v-for="(item, index) in recentlyPlayedList" :key="item.musicId + '_' + index"
+        :cover="item.meta?.picUrl || item.meta?.albumImg || ''" :name="item.name" :singer="item.singer" />
+      <div v-if="recentlyPlayedList.length === 0" :class="$style.empty">暂无播放记录</div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import ListItem from './ListItem.vue'
-import { playList } from '@renderer/core/player'
-import { ref } from 'vue'
+import { recentlyPlayedList } from '@renderer/store/playHistory/state'
+import { loadRecentlyPlayed } from '@renderer/store/playHistory/action'
+import { onMounted } from 'vue'
 
-export default {
-  name: 'List',
-  components: {
-    ListItem,
+defineProps({
+  columnNumber: {
+    type: Number,
+    default: 4,
   },
-  props: {
-    list: {
-      type: Array,
-      required: true,
-    },
-    listId: {
-      type: String,
-      required: true,
-    },
-    playerInfo: {
-      type: Object,
-      required: true,
-      default() {
-        return {
-          isPlayList: false,
-          playIndex: -1,
-        }
-      },
-    },
-    playing: {
-      type: Boolean,
-    },
-    columnNumber: {
-      type: Number,
-      default: 4,
-    },
-  },
-  emits: ['show-menu'],
-  setup(props, { emit }) {
-    const activeIndex = ref(-1)
+})
 
-    const handleListItemDblClick = (index) => {
-      activeIndex.value = index
-      playList(props.listId, index)
-    }
-
-    return {
-      handleListItemDblClick,
-      activeIndex,
-    }
-  },
-  data() {
-    return {
-      listStyles: {},
-    }
-  },
-  created() {
-    this.listStyles = {
-      display: 'grid',
-      gap: '4px',
-      gridTemplateColumns: `repeat(${this.columnNumber - 1}, 1fr)`,
-    }
-  },
+const listStyles = {
+  display: 'grid',
+  gap: '18px',
+  gridTemplateColumns: 'repeat(1, 1fr)',
 }
 
+onMounted(() => {
+  void loadRecentlyPlayed(5)
+})
 </script>
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
 
-.active {
-  background-color: var(--color-050);
-}
+.recent {}
 
-.playing {
-  background: var(--color-primary-alpha-900)
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 24px;
+  color: var(--color-font-label);
+  font-size: 13px;
 }
 </style>

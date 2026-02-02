@@ -1,9 +1,18 @@
 <template>
-  <div :class="[$style.sliderContent, { [$style.disabled]: disabled }, className]" :style="{width: width + 'px'}">
+  <div :class="[$style.sliderContent, { [$style.disabled]: disabled, [$style.vertical]: vertical }, className]"
+    :style="vertical ? { height: height + 'px' } : { width: width + 'px' }">
     <div :class="[$style.slider]">
-      <div ref="dom_sliderBar" :class="$style.sliderBar" :style="{ transform: `scaleX(${(value - min) / (max - min) || 0})` }" />
+      <div ref="dom_sliderBar" :class="$style.sliderBar"
+        :style="{ transform: `scale${vertical ? 'Y' : 'X'}(${(value - min) / (max - min) || 0})` }" />
     </div>
-    <div v-show="showText" :class="$style.value" :style="{ left: `${Math.trunc(value * 100) + '%'}`}">{{ Math.trunc(value * 100) }}%</div>
+    <div :class="$style.sliderDot" :style="vertical
+      ? { bottom: `${((value - min) / (max - min) || 0) * 100}%` }
+      : { left: `${((value - min) / (max - min) || 0) * 100}%` }" />
+    <div v-show="showText" :class="$style.value" :style="vertical
+      ? { bottom: `${Math.trunc(value * 100) + '%'}` }
+      : { left: `${Math.trunc(value * 100) + '%'}` }">
+      {{ Math.trunc(value * 100) }}%
+    </div>
     <div :class="$style.sliderMask" @mousedown="handleSliderMsDown" />
   </div>
 </template>
@@ -38,6 +47,14 @@ export default {
       type: Number,
       default: 100,
     },
+    height: {
+      type: Number,
+      default: 100,
+    },
+    vertical: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['change'],
   setup(props, { emit }) {
@@ -53,9 +70,14 @@ export default {
       if (props.disabled) return
 
       sliderEvent.isMsDown = true
-      sliderEvent.msDownX = event.clientX
+      if (props.vertical) {
+        sliderEvent.msDownY = event.clientY
+        sliderEvent.msDownValue = 1 - (event.offsetY / dom_sliderBar.value.clientHeight)
+      } else {
+        sliderEvent.msDownX = event.clientX
+        sliderEvent.msDownValue = event.offsetX / dom_sliderBar.value.clientWidth
+      }
 
-      sliderEvent.msDownValue = event.offsetX / dom_sliderBar.value.clientWidth
       let val = sliderEvent.msDownValue * (props.max - props.min) + props.min
       if (val < props.min) val = props.min
       if (val > props.max) val = props.max
@@ -69,7 +91,12 @@ export default {
     }
     const handleSliderMsMove = event => {
       if (!sliderEvent.isMsDown || props.disabled) return
-      let value = (sliderEvent.msDownValue + (event.clientX - sliderEvent.msDownX) / dom_sliderBar.value.clientWidth) * (props.max - props.min) + props.min
+      let value
+      if (props.vertical) {
+        value = (sliderEvent.msDownValue - (event.clientY - sliderEvent.msDownY) / dom_sliderBar.value.clientHeight) * (props.max - props.min) + props.min
+      } else {
+        value = (sliderEvent.msDownValue + (event.clientX - sliderEvent.msDownX) / dom_sliderBar.value.clientWidth) * (props.max - props.min) + props.min
+      }
       if (value > props.max) value = props.max
       else if (value < props.min) value = props.min
       emit('change', value)
@@ -93,7 +120,8 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.value{
+
+.value {
   position: absolute;
   left: 0%;
   top: -150%;
@@ -101,6 +129,7 @@ export default {
   font-size: 12px;
   text-align: left;
 }
+
 .sliderContent {
   flex: none;
   position: relative;
@@ -110,14 +139,18 @@ export default {
   align-items: center;
   opacity: 1;
   transition: opacity @transition-normal;
+
   &:hover {
     opacity: 1;
-    .sliderBar{
+
+    .sliderBar {
       background-color: var(--color-primary);
     }
   }
+
   &.disabled {
     opacity: .3;
+
     .sliderMask {
       cursor: default;
     }
@@ -153,9 +186,27 @@ export default {
   width: 100%;
   height: 100%;
   // border-radius: @radius-progress-border;
-  transition-duration: 0.2s;
-  background-color: var(--color-800);
+  background-color: var(--color-primary);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.sliderDot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: opacity @transition-fast;
+  pointer-events: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+.sliderContent:hover .sliderDot {
+  opacity: 1;
 }
 
 .sliderMask {
@@ -166,4 +217,31 @@ export default {
   cursor: pointer;
 }
 
+.vertical {
+  flex-direction: column;
+  padding: 0 4px;
+
+  .slider {
+    width: 4px;
+    height: 100%;
+  }
+
+  .sliderBar {
+    transform-origin: bottom;
+  }
+
+  .sliderDot {
+    top: auto;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+
+  .value {
+    left: auto;
+    top: auto;
+    right: 200%;
+    bottom: 0;
+    transform: translateY(50%);
+  }
+}
 </style>

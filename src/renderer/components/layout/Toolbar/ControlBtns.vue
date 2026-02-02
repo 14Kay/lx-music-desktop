@@ -1,14 +1,12 @@
 <template>
-  <div v-show="!isFullscreen" ref="dom_btns" :class="$style.control">
-    <button type="button" :class="[$style.btn, $style.min]" :aria-label="$t('min')" ignore-tip :title="$t('min')" @click="minWindow">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="60%" viewBox="0 0 24 24" space="preserve">
-        <use xlink:href="#icon-window-minimize-2" />
-      </svg>
+  <div ref="dom_btns" :class="$style.control">
+    <button type="button" :class="[$style.btn, $style.min, 'my__button']" :aria-label="$t('min')" ignore-tip
+      :title="$t('min')" @click="minWindow">
+      <PhMinus size="60%" weight="bold" />
     </button>
-    <button type="button" :class="[$style.btn, $style.close]" :aria-label="$t('close')" ignore-tip :title="$t('close')" @click="closeWindow">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="60%" viewBox="0 0 24 24" space="preserve">
-        <use xlink:href="#icon-window-close-2" />
-      </svg>
+    <button type="button" :class="[$style.btn, $style.close, 'my__button']" :aria-label="$t('close')" ignore-tip
+      :title="$t('close')" @click="closeWindow">
+      <PhX size="60%" weight="bold" />
     </button>
   </div>
 </template>
@@ -17,12 +15,13 @@
 import { minWindow, closeWindow } from '@renderer/utils/ipc'
 import { onMounted, onBeforeUnmount, ref, useCssModule } from '@common/utils/vueTools'
 // import { getRandom } from '../../utils'
-import { isFullscreen } from '@renderer/store'
+import { PhX, PhMinus } from '@phosphor-icons/vue'
 
 const dom_btns = ref()
 
 const cssModule = useCssModule()
 
+console.log(cssModule.hover)
 const handle_focus = () => {
   if (!dom_btns.value) return
   for (const node of dom_btns.value.childNodes) {
@@ -30,7 +29,8 @@ const handle_focus = () => {
     node.classList.remove(cssModule.hover)
   }
 }
-const getBtnEl = (el) => el.tagName == 'BUTTON' || !el ? el : getBtnEl(el.parentNode)
+
+const getBtnEl = (el) => !el || el.tagName == 'BUTTON' ? el : getBtnEl(el.parentNode)
 const handle_mouseover = (event) => {
   const btn = getBtnEl(event.target)
   if (!btn) return
@@ -64,31 +64,27 @@ onBeforeUnmount(() => {
   display: flex;
   align-self: flex-start;
   -webkit-app-region: no-drag;
-  height: 30px;
+  gap: 15px;
 
   .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 46px;
-    height: 30px;
-    background: none;
-    border: none;
-    outline: none;
-    padding: 1px;
+    background-color: transparent;
     cursor: pointer;
-    color: var(--color-font-label);
-    transition: background-color 0.2s ease-in-out;
+
     &.hover {
-      &.min, &.max {
-        background-color: var(--color-button-background-hover);
+
+      &.min,
+      &.max {
+        background-color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+        color: #fff;
       }
+
       &.close {
-        background-color: var(--color-btn-close);
+        background-color: #E81123;
+        border: 1px solid #E81123;
+        color: #fff;
       }
     }
   }
 }
-
 </style>

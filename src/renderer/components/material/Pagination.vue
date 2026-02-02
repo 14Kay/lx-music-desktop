@@ -2,49 +2,44 @@
   <div v-if="maxPage > 1" :class="$style.pagination">
     <ul>
       <li v-if="page == 1" :class="$style.disabled">
-        <span>
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-left" />
-          </svg>
-        </span>
+        <div>
+          <PhCaretLeft size="1.2em" />
+          <span>Prev</span>
+        </div>
       </li>
       <li v-else>
-        <button type="button" :aria-label="$t('pagination__prev')" @click="handleClick(page - 1)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-left" />
-          </svg>
-        </button>
+        <div type="button" :aria-label="$t('pagination__prev')" @click="handleClick(page - 1)">
+          <PhCaretLeft size="1.2em" />
+          <span>Prev</span>
+        </div>
       </li>
-      <li v-if="maxPage > btnLength && page > pageEvg+1" :class="$style.first">
-        <button type="button" :aria-label="$t('pagination__page', { num: 1 })" @click="handleClick(1)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-first" />
-          </svg>
-        </button>
+      <li v-if="maxPage > btnLength && page > pageEvg + 1" :class="$style.first">
+        <div type="button" :aria-label="$t('pagination__page', { num: 1 })" @click="handleClick(1)">
+          <PhCaretLineLeft size="1.2em" />
+          <span>First</span>
+        </div>
       </li>
-      <li v-for="p in pages" :key="p" :class="{[$style.active] : p == page}">
-        <span v-if="p === page" v-text="page" />
-        <button v-else type="button" :aria-label="$t('pagination__page', { num: p })" @click="handleClick(p)" v-text="p" />
+      <li v-for="p in pages" :key="p" :class="{ [$style.active]: p == page }">
+        <div v-if="p === page" v-text="page" />
+        <div v-else type="button" :aria-label="$t('pagination__page', { num: p })" @click="handleClick(p)" v-text="p" />
       </li>
       <li v-if="maxPage > btnLength && maxPage - page > pageEvg" :class="$style.last">
-        <button type="button" :aria-label="$t('pagination__page', { num: maxPage })" @click="handleClick(maxPage)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-last" />
-          </svg>
-        </button>
+        <div type="button" :aria-label="$t('pagination__page', { num: maxPage })" @click="handleClick(maxPage)">
+          <span>Last</span>
+          <PhCaretLineRight size="1.2em" />
+        </div>
       </li>
       <li v-if="page == maxPage" :class="$style.disabled">
-        <span>
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-right" />
-          </svg></span>
+        <div>
+          <span>Next</span>
+          <PhCaretRight size="1.2em" />
+        </div>
       </li>
       <li v-else>
-        <button type="button" :aria-label="$t('pagination__next')" @click="handleClick(page + 1)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.846 451.847" space="preserve">
-            <use xlink:href="#icon-right" />
-          </svg>
-        </button>
+        <div type="button" :aria-label="$t('pagination__next')" @click="handleClick(page + 1)">
+          <span>Next</span>
+          <PhCaretRight size="1.2em" />
+        </div>
       </li>
     </ul>
   </div>
@@ -52,8 +47,14 @@
 
 <script>
 import { computed } from '@common/utils/vueTools'
-
+import { PhCaretLeft, PhCaretRight, PhCaretLineLeft, PhCaretLineRight } from '@phosphor-icons/vue'
 export default {
+  components: {
+    PhCaretLeft,
+    PhCaretRight,
+    PhCaretLineLeft,
+    PhCaretLineRight,
+  },
   props: {
     count: {
       type: Number,
@@ -112,9 +113,12 @@ export default {
 .pagination {
   display: inline-block;
   border-radius: @radius-border;
+
   ul {
     display: flex;
     flex-flow: row nowrap;
+    gap: 10px;
+
     // border: .0625rem solid @theme_color2;
     // border-radius: .3125rem;
     li {
@@ -125,67 +129,75 @@ export default {
       transition: 0.4s ease;
       transition-property: all;
       display: flex;
+
       // border-right: none;
-      svg {
-        height: 1em;
-      }
-      span,
-      button {
-        display: block;
-        width: 34px;
-        height: 34px;
-        color: var(--color-button-font);
-        font-size: 14px;
+      // border-right: none;
+
+
+      >div {
+        height: 36px;
+        padding: 0 14px;
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 1px solid var(--color-200);
+        cursor: pointer;
+        background: unset;
+        display: flex;
+        box-sizing: border-box;
+        min-width: 36px;
+        align-self: center;
+        font-family: Outfit !important;
       }
+
       &.active {
-        span {
-          background-color: var(--color-button-background-selected);
+        div {
+          background-color: var(--color-primary);
+          color: var(--color-main-background);
         }
       }
+
       button {
         background-color: transparent;
-        border: none;
         cursor: pointer;
-        outline: none;
         transition: background-color .3s ease;
+
         &:hover {
           background-color: var(--color-button-background-hover);
         }
+
         &:active {
-          background-color: var(--color-button-background-active);
+          background-color: var(--color-primary);
         }
       }
+
       &.disabled {
-        span {
+        div {
           opacity: .3;
         }
       }
+
       &:first-child {
-        span, button {
+
+        div {
           border-top-left-radius: @radius-border;
           border-bottom-left-radius: @radius-border;
         }
+
         // border-right: .0625rem solid @theme_line;
       }
+
       &:last-child {
-        span, button {
+
+        div {
           border-top-right-radius: @radius-border;
           border-bottom-right-radius: @radius-border;
         }
+
         // border-right: .0625rem solid @theme_line;
       }
-      &:first-child, &:last-child, &.first, &.last {
-        span,
-        button {
-          line-height: 0;
-        }
-      }
+
     }
   }
 }
-
-
 </style>

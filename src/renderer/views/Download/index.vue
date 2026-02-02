@@ -20,19 +20,16 @@
         </table>
       </div>
       <div v-if="list.length" ref="dom_listContent" :class="$style.content">
-        <base-virtualized-list
-          ref="listRef" v-slot="{ item, index }" :list="list" key-name="id" :item-height="listItemHeight"
-          container-class="scroll" content-class="list"
-        >
-          <div
-            class="list-item"
-            :class="[$style.listItem,{[$style.active]: playTaskId == item.id }, { selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
-            @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)"
-          >
+        <base-virtualized-list ref="listRef" v-slot="{ item, index }" :list="list" key-name="id"
+          :item-height="listItemHeight" container-class="scroll" content-class="list">
+          <div class="list-item"
+            :class="[$style.listItem, { [$style.active]: playTaskId == item.id }, { selected: rightClickSelectedIndex == index }, { active: selectedList.includes(item) }]"
+            @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)">
             <div class="list-item-cell no-select" :class="$style.num" style="flex: 0 0 5%;">
               <transition name="play-active">
                 <div v-if="playTaskId == item.id" :class="$style.playIcon">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 512 512" space="preserve">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+                    height="50%" viewBox="0 0 512 512" space="preserve">
                     <use xlink:href="#icon-play-outline" />
                   </svg>
                 </div>
@@ -42,17 +39,17 @@
             <div class="list-item-cell auto name">
               <span class="select name" :aria-label="getName(item)">{{ getName(item) }}</span>
             </div>
-            <div class="list-item-cell" style="flex: 0 0 20%;">{{ item.progress }}%<span v-if="item.status == downloadStatus.RUN && item.speed"> - {{ item.speed }}/s</span></div>
+            <div class="list-item-cell" style="flex: 0 0 20%;">{{ item.progress }}%<span
+                v-if="item.status == downloadStatus.RUN && item.speed"> - {{ item.speed }}/s</span></div>
             <div class="list-item-cell" style="flex: 0 0 22%;" :aria-label="item.statusText">{{ item.statusText }}</div>
             <div class="list-item-cell" style="flex: 0 0 10%;">{{ getTypeName(item.metadata.quality) }}</div>
             <div class="list-item-cell" style="flex: 0 0 13%; padding-left: 0; padding-right: 0;">
-              <material-list-buttons
-                :index="index" :download-btn="false" :file-btn="item.status != downloadStatus.ERROR" remove-btn="remove-btn"
+              <material-list-buttons :index="index" :download-btn="false"
+                :file-btn="item.status != downloadStatus.ERROR" remove-btn="remove-btn"
                 :start-btn="!item.isComplate && item.status != downloadStatus.WAITING && (item.status != downloadStatus.RUN)"
                 :pause-btn="!item.isComplate && (item.status == downloadStatus.RUN || item.status == downloadStatus.WAITING)"
                 :list-add-btn="false" :play-btn="item.status == downloadStatus.COMPLETED"
-                :search-btn="item.status == downloadStatus.ERROR" @btn-click="handleListBtnClick"
-              />
+                :search-btn="item.status == downloadStatus.ERROR" @btn-click="handleListBtnClick" />
             </div>
           </div>
         </base-virtualized-list>
@@ -60,7 +57,8 @@
       <div v-else :class="$style.noItem">
         <p v-text="$t('no_item')" />
       </div>
-      <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name" @menu-click="handleMenuClick" />
+      <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name"
+        @menu-click="handleMenuClick" />
       <!-- <base-menu :menus="listItemMenu" :location="listMenu.menuLocation" item-name="name" :is-show="listMenu.isShowItemMenu" @menu-click="handleListItemMenuClick" /> -->
     </div>
   </div>
@@ -136,7 +134,7 @@ export default {
     const doubleClickPlay = index => {
       if (
         window.performance.now() - clickTime > 400 ||
-      clickIndex !== index
+        clickIndex !== index
       ) {
         clickTime = window.performance.now()
         clickIndex = index
@@ -228,15 +226,19 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.header{
-  margin-top: 24px;
+
+.header {
+  margin-top: @gap;
 }
-table th{
+
+table th {
   padding: 0 !important;
 }
-.list-item{
+
+.list-item {
   padding: 0 !important;
 }
+
 .download {
   position: relative;
   overflow: hidden;
@@ -250,6 +252,7 @@ table th{
     }
   }
 }
+
 .num {
   height: 100%;
   display: flex;
@@ -257,6 +260,7 @@ table th{
   justify-content: center;
   position: relative;
 }
+
 .playIcon {
   position: absolute;
   left: 0;
@@ -287,11 +291,10 @@ table th{
   justify-content: center;
   align-items: center;
   margin-top: 24px;
+
   p {
     font-size: 24px;
     color: var(--color-font-label);
   }
 }
-
 </style>
-

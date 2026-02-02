@@ -30,6 +30,8 @@ export const createDownloadWorker = () => {
   return Comlink.wrap<LX.WorkerDownloadTypes>(worker)
 }
 
+export type DBServiceTypes = Comlink.Remote<LX.WorkerDBSeriveTypes>
+
 export const proxyCallback = <Args extends any[]>(callback: (...T: Args) => void) => {
   return Comlink.proxy(callback)
 }

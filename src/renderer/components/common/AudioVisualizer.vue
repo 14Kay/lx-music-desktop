@@ -39,7 +39,17 @@ const getBarWidth = canvasWidth => {
     : diffWidth > 12 ? width : barWidth
 }
 export default {
-  setup() {
+  props: {
+    color: {
+      type: String,
+      default: '',
+    },
+    barCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  setup(props) {
     const dom_canvas = ref(null)
     const analyser = getAnalyser()
 
@@ -75,34 +85,63 @@ export default {
 
       ctx.clearRect(0, 0, WIDTH, HEIGHT)
       // ctx.fillRect(0, 0, WIDTH, HEIGHT)
-      ctx.fillStyle = themeColor
+      ctx.fillStyle = props.color || themeColor
 
-      for (let i = 0; i < bufferLength; i++) {
-        mult = Math.floor(i / maxNum)
-        num = mult % 2 === 0 ? (i - maxNum * mult) : (maxNum - (i - maxNum * mult))
-        let spectrum = num > 90 ? 0 : dataArray[num + 20]
-        frequencyAvg += spectrum * 1.2
-      }
-      frequencyAvg /= bufferLength
-      frequencyAvg *= 1.4
+      if (props.barCount > 0) {
+        // High frequencies (above ~15kHz) are often empty/silent in music
+        // We limit to the first ~75% of bins to make the visualizer look "fuller"
+        const effectiveBufferLength = Math.floor(bufferLength * 0.75)
+        const step = effectiveBufferLength / props.barCount
 
-      frequencyAvg = frequencyAvg / maxNum
-      // ctx.scale(1, 1 + frequencyAvg)
+        // Recalculate barWidth to ensure it fills WIDTH exactly
+        const actualBarWidth = WIDTH / props.barCount
 
-      for (let i = 0; i < bufferLength; i++) {
-        if (x > WIDTH) break
+        for (let i = 0; i < props.barCount; i++) {
+          let sum = 0
+          const start = Math.floor(i * step)
+          const end = Math.floor((i + 1) * step)
+          const count = end - start
+          for (let j = start; j < end; j++) {
+            sum += dataArray[j]
+          }
+          let avg = count > 0 ? sum / count : 0
+          if (count === 0 && start < dataArray.length) avg = dataArray[start]
 
-        barHeight = dataArray[i]
+          barHeight = (avg / 255) * HEIGHT
 
-        // let r = barHeight + (25 * (i / bufferLength))
-        // let g = 250 * (i / bufferLength)
-        // let b = 50
+          const xPos = i * actualBarWidth
+          // Draw with slight overlap (0.5px) to prevent gaps
+          ctx.fillRect(xPos, HEIGHT - barHeight, actualBarWidth + 0.5, barHeight)
+        }
+      } else {
+        // legacy render logic
+        for (let i = 0; i < bufferLength; i++) {
+          mult = Math.floor(i / maxNum)
+          num = mult % 2 === 0 ? (i - maxNum * mult) : (maxNum - (i - maxNum * mult))
+          let spectrum = num > 90 ? 0 : dataArray[num + 20]
+          frequencyAvg += spectrum * 1.2
+        }
+        frequencyAvg /= bufferLength
+        frequencyAvg *= 1.4
 
-        // ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')'
-        barHeight = (barHeight * frequencyAvg + barHeight * 0.42) * MAX_HEIGHT
-        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight)
+        frequencyAvg = frequencyAvg / maxNum
+        // ctx.scale(1, 1 + frequencyAvg)
 
-        x += barWidth
+        for (let i = 0; i < bufferLength; i++) {
+          if (x > WIDTH) break
+
+          barHeight = dataArray[i]
+
+          // let r = barHeight + (25 * (i / bufferLength))
+          // let g = 250 * (i / bufferLength)
+          // let b = 50
+
+          // ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')'
+          barHeight = (barHeight * frequencyAvg + barHeight * 0.42) * MAX_HEIGHT
+          ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight)
+
+          x += barWidth
+        }
       }
 
       animationFrameId = null
@@ -114,7 +153,11 @@ export default {
       // analyser.fftSize = 256
       bufferLength = analyser.frequencyBinCount
       // console.log(bufferLength)
-      barWidth = getBarWidth(WIDTH)
+      if (props.barCount > 0 && WIDTH) {
+        barWidth = WIDTH / props.barCount
+      } else {
+        barWidth = getBarWidth(WIDTH)
+      }
       dataArray = new Uint8Array(bufferLength)
       renderFrame()
     }
@@ -131,7 +174,11 @@ export default {
       HEIGHT = canvas.height
       MAX_HEIGHT = Math.round(HEIGHT * 0.4 / 255 * 10000) / 10000
       // console.log(MAX_HEIGHT)
-      barWidth = getBarWidth(WIDTH)
+      if (props.barCount > 0) {
+        barWidth = WIDTH / props.barCount
+      } else {
+        barWidth = getBarWidth(WIDTH)
+      }
     }
 
     window.app_event.on('play', handlePlay)
@@ -175,6 +222,7 @@ export default {
   pointer-events: none;
   z-index: 100;
 }
+
 .canvas {
   width: 100%;
   height: 100%;

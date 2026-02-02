@@ -144,6 +144,43 @@ export const userApi = reactive<{
   apis: {},
 })
 
+
+
+export const lastFmUserInfo = reactive({
+  name: '',
+  avatar: '',
+})
+
+import { getLastFMUserInfo } from '@renderer/utils/ipc'
+
+export const fetchLastFmUserInfo = async () => {
+  if (appSetting['lastFM.enable'] && appSetting['lastFM.session.key']) {
+    try {
+      // console.log('fetchLastFmUserInfo', appSetting['lastFM.session.name'])
+      const userInfo = await getLastFMUserInfo({
+        api_key: appSetting['lastFM.api_key'],
+        secret: appSetting['lastFM.secret'],
+        username: appSetting['lastFM.session.name'] || '',
+      })
+      // console.log(userInfo)
+      lastFmUserInfo.name = userInfo.user.name
+      const img = userInfo.user.image.find(i => i.size == 'medium') ?? userInfo.user.image[0]
+      lastFmUserInfo.avatar = img?.['#text'] ?? ''
+    } catch (err) {
+      console.error('Failed to fetch Last.fm user info', err)
+    }
+  }
+}
+
+watch(() => [appSetting['lastFM.enable'], appSetting['lastFM.session.key']], ([enable, sessionKey]) => {
+  if (enable && sessionKey) {
+    void fetchLastFmUserInfo()
+  } else {
+    lastFmUserInfo.name = ''
+    lastFmUserInfo.avatar = ''
+  }
+})
+
 export const isShowChangeLog = ref(false)
 
 

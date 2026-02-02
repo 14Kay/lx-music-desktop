@@ -4,17 +4,17 @@
       <base-button small>
         <span class="label">{{ label }}</span>
         <div class="icon" :class="$style.icon">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 451.847 451.847" space="preserve">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%"
+            viewBox="0 0 451.847 451.847" space="preserve">
             <use xlink:href="#icon-down" />
           </svg>
         </div>
       </base-button>
     </div>
     <ul v-if="show" ref="dom_list" class="selection-list scroll" :class="$style.list" :style="listStyles">
-      <li
-        v-for="(item, index) in list" :key="index" :class="[$style.listItem, (itemKey ? item[itemKey] : item) == modelValue ? $style.active : null]"
-        :aria-label="itemName ? item[itemName] : item" @click="handleClick(item)"
-      >
+      <li v-for="(item, index) in list" :key="index"
+        :class="[$style.listItem, (itemKey ? item[itemKey] : item) == modelValue ? $style.active : null]"
+        :aria-label="itemName ? item[itemName] : item" @click="handleClick(item)">
         {{ itemName ? item[itemName] : item }}
       </li>
     </ul>
@@ -90,6 +90,10 @@ export default {
       this.$emit('change', item)
     },
     handleShow() {
+      if (this.show) {
+        this.handleHide()
+        return
+      }
       this.show = true
       this.$nextTick(() => {
         this.listStyles.transform = `scaleY(1) translateY(${this.handleGetOffset()}px)`
@@ -125,15 +129,18 @@ export default {
   width: 300px;
   display: flex;
   align-items: center;
+
   &.active {
     .label {
       background-color: var(--color-button-background);
     }
+
     .list {
       opacity: 1;
     }
+
     .icon {
-      svg{
+      svg {
         transform: rotate(180deg);
       }
     }
@@ -157,10 +164,12 @@ export default {
     flex: auto;
     .mixin-ellipsis-1;
   }
+
   .icon {
     flex: none;
     margin-left: 7px;
     line-height: 0;
+
     svg {
       width: 1em;
       transition: transform .2s ease;
@@ -171,6 +180,7 @@ export default {
   &:hover {
     background-color: var(--color-button-background-hover);
   }
+
   &:active {
     background-color: var(--color-button-background-active);
   }
@@ -178,7 +188,7 @@ export default {
 
 .list {
   position: absolute;
-  top: 0;
+  top: 120%;
   left: 0;
   width: 100%;
   background-color: var(--color-content-background);
@@ -193,6 +203,7 @@ export default {
   overflow: auto;
   max-height: 200px;
 }
+
 .listItem {
   cursor: pointer;
   padding: 0 10px;
@@ -207,13 +218,13 @@ export default {
   &:hover {
     background-color: var(--color-button-background-hover);
   }
+
   &:active {
     background-color: var(--color-button-background-active);
   }
+
   &.active {
     color: var(--color-button-font);
   }
 }
-
-
 </style>

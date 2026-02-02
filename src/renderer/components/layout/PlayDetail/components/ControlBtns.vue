@@ -11,7 +11,7 @@ div(:class="$style.footerLeftControlBtns")
   button(:class="[$style.footerLeftControlBtn, { [$style.active]: isShowLrcSelectContent }]" :aria-label="$t('lyric__select')" @click="toggleVisibleLrc")
     svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="95%" viewBox="0 0 24 24" space="preserve")
       use(xlink:href="#icon-text")
-  button(:class="[$style.footerLeftControlBtn, {[$style.active]: isShowPlayComment}]" :aria-label="$t('comment__show')" @click="toggleVisibleComment")
+  button(:class="[$style.footerLeftControlBtn, { [$style.active]: isShowPlayComment }]" :aria-label="$t('comment__show')" @click="toggleVisibleComment")
     svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="95%" viewBox="0 0 24 24" space="preserve")
       use(xlink:href="#icon-comment")
   common-sound-effect-btn
@@ -71,7 +71,7 @@ export default {
 
     const isShowAddMusicTo = ref(false)
 
-    const toggleAudioVisualization = async() => {
+    const toggleAudioVisualization = async () => {
       const newSetting = !appSetting['player.audioVisualization']
       if (newSetting && appSetting['player.mediaDeviceId'] != 'default') {
         const confirm = await dialog.confirm({
@@ -147,5 +147,4 @@ export default {
     width: 20px;
   }
 }
-
 </style>

@@ -1,9 +1,8 @@
 <template>
   <transition name="tips-fade" @after-leave="afterLeave">
-    <div
-      v-show="visible" ref="dom_tips" :style="{ left: position.left + 'px' , top: position.top + 'px', transform, maxWidth, }"
-      :class="$style.tips" role="presentation"
-    >
+    <div v-show="visible" ref="dom_tips"
+      :style="{ left: position.left + 'px', top: position.top + 'px', transform, maxWidth, }" :class="$style.tips"
+      role="presentation">
       {{ message }}
     </div>
   </transition>
@@ -14,7 +13,7 @@ export default {
   props: {
     afterLeave: {
       type: Function,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -97,12 +96,13 @@ export default {
   box-sizing: border-box;
 }
 
-:global(.tips-fade-enter-active), :global(.tips-fade-leave-active) {
+:global(.tips-fade-enter-active),
+:global(.tips-fade-leave-active) {
   transition: opacity .2s;
 }
-:global(.tips-fade-enter), :global(.tips-fade-leave-to) {
+
+:global(.tips-fade-enter),
+:global(.tips-fade-leave-to) {
   opacity: 0;
 }
-
-
 </style>

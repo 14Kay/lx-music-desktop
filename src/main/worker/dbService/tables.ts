@@ -102,17 +102,20 @@
 // ]
 
 type Tables = 'db_info'
-| 'my_list'
-| 'my_list_music_info'
-| 'index_my_list_music_info'
-| 'my_list_music_info_order'
-| 'index_my_list_music_info_order'
-| 'music_info_other_source'
-| 'index_music_info_other_source'
-| 'lyric'
-| 'music_url'
-| 'download_list'
-| 'dislike_list'
+  | 'my_list'
+  | 'my_list_music_info'
+  | 'index_my_list_music_info'
+  | 'my_list_music_info_order'
+  | 'index_my_list_music_info_order'
+  | 'music_info_other_source'
+  | 'index_music_info_other_source'
+  | 'lyric'
+  | 'music_url'
+  | 'download_list'
+  | 'dislike_list'
+  | 'play_history'
+  | 'index_play_history_musicId'
+  | 'index_play_history_playedAt'
 
 const tables = new Map<Tables, string>()
 
@@ -225,7 +228,28 @@ tables.set('dislike_list', `
     "meta" TEXT
   );
 `)
+tables.set('play_history', `
+  CREATE TABLE "play_history" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "musicId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "singer" TEXT NOT NULL,
+    "source" TEXT NOT NULL,
+    "meta" TEXT NOT NULL,
+    "playedAt" INTEGER NOT NULL
+  );
+`)
+tables.set('index_play_history_musicId', `
+  CREATE INDEX "index_play_history_musicId" ON "play_history" (
+    "musicId"
+  );
+`)
+tables.set('index_play_history_playedAt', `
+  CREATE INDEX "index_play_history_playedAt" ON "play_history" (
+    "playedAt" DESC
+  );
+`)
 
 export default tables
 
-export const DB_VERSION = '2'
+export const DB_VERSION = '3'

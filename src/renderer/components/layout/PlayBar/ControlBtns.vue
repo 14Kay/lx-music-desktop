@@ -1,44 +1,176 @@
 <template>
   <div :class="$style.controlBtn">
-    <!-- <common-volume-bar /> -->
-    <div v-if="appSetting['lastFM.enable']" :class="[$style.lastFm]" @click="openLastFM">
-      <base-svg-icon v-show="lastFMTrackResult === 'normal'" :class="$style.lastFmSvg" style="height: 18px" icon-class="last-fm" />
-      <base-svg-icon v-show="lastFMTrackResult === 'tracking'" :class="[$style.lastFmSvg, $style.loader]" style="height: 18px" icon-class="loader" />
-      <base-svg-icon v-show="lastFMTrackResult === 'success'" :class="$style.lastFmSvg" style="height: 18px" icon-class="check" />
-      <base-svg-icon v-show="lastFMTrackResult === 'error'" :class="$style.lastFmSvg" style="height: 18px" icon-class="error" />
-      <div :class="$style.username">
-        {{ appSetting['lastFM.session.name'] }}
-      </div>
+
+    <div class="my__button" @click="addMusicTo">
+      <PhHeart size="52%" weight="regular" />
     </div>
-    <button :class="$style.titleBtn" :aria-label="$t('player__add_music_to')" @click="addMusicTo">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="75%" viewBox="0 0 512 512" space="preserve">
-        <use xlink:href="#icon-heart" />
+
+    <div :class="[$style.list, 'my__button']" @click="togglePlaylistPopup">
+      <svg t="1769493815060" height="54%" width="54%" viewBox="0 0 1024 1024" version="1.1"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect x="112" y="185" width="400" height="80" fill="currentColor" />
+        <rect x="112" y="467" width="800" height="80" fill="currentColor" />
+        <rect x="112" y="749" width="520" height="80" fill="currentColor" />
       </svg>
-    </button>
-    <button :class="$style.titleBtn" :aria-label="toggleDesktopLyricBtnTitle" @click="toggleDesktopLyric" @contextmenu="toggleLockDesktopLyric">
-      <svg v-show="appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 512 512" space="preserve">
-        <use xlink:href="#icon-desktop-lyric-on" />
-      </svg>
-      <svg v-show="!appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="100%" viewBox="0 0 512 512" space="preserve">
-        <use xlink:href="#icon-desktop-lyric-off" />
-      </svg>
-    </button>
-    <common-toggle-play-mode-btn />
-    <common-volume-progress />
-    <common-list-add-modal v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo" />
+    </div>
+
+    <div ref="dom_menuBtn" class="my__button" @click.stop="showMenu">
+      <PhDotsThreeVertical size="62%" weight="bold" />
+    </div>
+    <common-list-add-modal v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo || {}" />
+    <PlaylistPopup v-model:show="isShowPlaylistPopup" />
+    <base-menu v-model="isShowItemMenu" :menus="menus" :xy="menuLocation" item-name="name"
+      @menu-click="handleMenuClick" />
+    <music-toggle-modal v-if="playMusicInfo.musicInfo" v-model:show="isShowMusicToggleModal"
+      :music-info="playMusicInfo.musicInfo" @toggle="toggleSource" />
+    <common-download-modal v-if="playMusicInfo.musicInfo" v-model:show="isShowDownload"
+      :music-info="playMusicInfo.musicInfo" teleport="#view" />
   </div>
 </template>
 
 <script>
-import { ref } from '@common/utils/vueTools'
+import { ref, reactive, computed } from '@common/utils/vueTools'
+import { clipboardWriteText, openUrl } from '@common/utils/electron'
+import { useRouter } from '@common/utils/vueRouter'
+import { useI18n } from '@renderer/plugins/i18n'
+import musicSdk from '@renderer/utils/musicSdk'
+import { toOldMusicInfo } from '@renderer/utils'
+import { assertApiSupport } from '@renderer/store/utils'
+import { updateListMusics } from '@renderer/store/list/listManage'
+import { playList } from '@renderer/core/player'
 import useToggleDesktopLyric from '@renderer/utils/compositions/useToggleDesktopLyric'
-import { musicInfo, playMusicInfo } from '@renderer/store/player/state'
+import { musicInfo, playMusicInfo, playInfo } from '@renderer/store/player/state'
 import { appSetting } from '@renderer/store/setting'
 import { lastFMTrackResult } from '@renderer/store'
+import { PhDotsThreeVertical, PhShuffle, PhHeart, PhPlaylist } from '@phosphor-icons/vue'
+import PlaylistPopup from './PlaylistPopup.vue'
+import MusicToggleModal from '@renderer/views/Library/Playlist/MusicList/components/MusicToggleModal.vue'
 
 export default {
+  components: {
+    PhDotsThreeVertical,
+    PhShuffle,
+    PhHeart,
+    PhPlaylist,
+    PhPlaylist,
+    PlaylistPopup,
+    MusicToggleModal,
+  },
   setup() {
+    const t = useI18n()
+    const router = useRouter()
     const isShowAddMusicTo = ref(false)
+    const isShowPlaylistPopup = ref(false)
+
+    const isShowItemMenu = ref(false)
+    const menuLocation = reactive({ x: 0, y: 0 })
+    const isShowDownload = ref(false)
+    const isShowMusicToggleModal = ref(false)
+
+    const menus = computed(() => {
+      const info = playMusicInfo.musicInfo
+      return [
+        {
+          name: t('list__download'),
+          action: 'download',
+          disabled: !info || !assertApiSupport(info.source),
+        },
+        {
+          name: t('list__toggle_source'),
+          action: 'toggleSource',
+          disabled: !info,
+        },
+        {
+          name: t('list__copy_name'),
+          action: 'copyName',
+          disabled: !info,
+        },
+        {
+          name: t('list__source_detail'),
+          action: 'sourceDetail',
+          disabled: !info || !musicSdk[info.source]?.getMusicDetailPageUrl,
+        },
+        {
+          name: t('list__search'),
+          action: 'search',
+          disabled: !info,
+        },
+      ]
+    })
+
+    const dom_menuBtn = ref(null)
+
+    const showMenu = () => {
+      if (!dom_menuBtn.value) return
+      const rect = dom_menuBtn.value.getBoundingClientRect()
+      menuLocation.x = rect.right
+      menuLocation.y = rect.top - 220
+      isShowItemMenu.value = true
+    }
+
+    const handleMenuClick = (action) => {
+      isShowItemMenu.value = false
+      if (!action) return
+      const info = playMusicInfo.musicInfo
+      switch (action.action) {
+        case 'download':
+          isShowDownload.value = true
+          break
+        case 'toggleSource':
+          isShowMusicToggleModal.value = true
+          break
+        case 'copyName':
+          clipboardWriteText(appSetting['download.fileName'].replace('歌名', info.name).replace('歌手', info.singer))
+          break
+        case 'sourceDetail': {
+          const url = musicSdk[info.source]?.getMusicDetailPageUrl(toOldMusicInfo(info))
+          if (url) openUrl(url)
+          break
+        }
+        case 'search':
+          router.push({
+            path: '/search',
+            query: {
+              text: `${info.name} ${info.singer}`,
+            },
+          })
+          break
+      }
+    }
+
+    const toggleSource = (toggleMusicInfo) => {
+      const info = playMusicInfo.musicInfo
+      if (!info) return
+      const listId = playMusicInfo.listId
+      if (!listId) return
+
+      const newMusicInfo = {
+        ...info,
+        meta: {
+          ...info.meta,
+          toggleMusicInfo,
+        },
+      }
+
+      updateListMusics([{ id: listId, musicInfo: newMusicInfo }])
+
+      // Update the cache if needed? listManage usually updates cache.
+      // But useMusicToggle.js did manual cache update:
+      // const rawInfo = getListMusicsFromCache(props.listId)[index]
+      // rawInfo.meta.toggleMusicInfo = toggleMusicInfo
+      // This suggests updateListMusics might not be synchronous or sufficient for immediate replay?
+      // Or maybe it updates the persistent store but we need to update the running player instance's view of the list??
+      // But playList(listId, index) should pull from the list.
+
+      // I'll try just playing the list index again.
+      // But I need the index. playMusicInfo.playIndex is available.
+
+      updateListMusics([{ id: listId, musicInfo: newMusicInfo }])
+
+      playList(listId, playInfo.playerPlayIndex)
+      isShowMusicToggleModal.value = false
+    }
+
     const {
       toggleDesktopLyricBtnTitle,
       toggleDesktopLyric,
@@ -48,19 +180,38 @@ export default {
       if (!musicInfo.id) return
       isShowAddMusicTo.value = true
     }
+    const togglePlaylistPopup = () => {
+      isShowPlaylistPopup.value = !isShowPlaylistPopup.value
+    }
     const openLastFM = () => {
       window.open('https://www.last.fm/user/' + appSetting['lastFM.session.name'])
     }
     return {
       appSetting,
       isShowAddMusicTo,
+      isShowPlaylistPopup,
       toggleDesktopLyricBtnTitle,
       toggleDesktopLyric,
       toggleLockDesktopLyric,
       addMusicTo,
+      togglePlaylistPopup,
       playMusicInfo,
       lastFMTrackResult,
       openLastFM,
+      menus,
+      isShowItemMenu,
+      menuLocation,
+      showMenu,
+      handleMenuClick,
+      isShowDownload,
+      isShowMusicToggleModal,
+      toggleSource,
+      handleMenuClick,
+      isShowDownload,
+      isShowMusicToggleModal,
+      toggleSource,
+      playMusicInfo,
+      dom_menuBtn,
     }
   },
 }
@@ -68,7 +219,12 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.last-fm{
+
+.list {
+  svg {}
+}
+
+.last-fm {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -76,17 +232,20 @@ export default {
   padding: 8px 6px;
   border-radius: 10px;
   transition: all .15s ease;
-  &:hover{
+
+  &:hover {
     background-color: var(--color-primary-alpha-900);
   }
-  .lastFmSvg{
+
+  .lastFmSvg {
     color: var(--color-primary)
   }
-  .username{
+
+  .username {
     margin-left: 6px;
   }
 
-  .loader{
+  .loader {
     animation: spin 1.25s linear infinite;
   }
 }
@@ -95,17 +254,19 @@ export default {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
+
 .controlBtn {
-  padding-left: 20px;
   flex: none;
   display: flex;
   flex-flow: row nowrap;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
+
   button {
     color: var(--color-1000);
   }
@@ -133,13 +294,13 @@ export default {
   svg {
     filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
   }
+
   &:hover {
     opacity: 1;
   }
+
   &:active {
     opacity: 1;
   }
 }
-
-
 </style>

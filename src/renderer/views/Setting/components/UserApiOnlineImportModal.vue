@@ -2,14 +2,8 @@
   <material-modal :show="show" teleport="#view" @close="handleClose" @after-enter="$refs.input.focus()">
     <main :class="$style.main">
       <h2>{{ $t('user_api_import_online__title') }}</h2>
-      <base-input
-        ref="input"
-        v-model="url"
-        :class="$style.input"
-        type="url"
-        :placeholder="$t('user_api_import_online__input_tip')"
-        @submit="handleSubmit" @blur="verify"
-      />
+      <base-input ref="input" v-model="url" :class="$style.input" type="url"
+        :placeholder="$t('user_api_import_online__input_tip')" @submit="handleSubmit" @blur="verify" />
       <div :class="$style.footer">
         <base-btn :class="$style.btn" @click="handleClose">{{ $t('btn_close') }}</base-btn>
         <base-btn :class="$style.btn" :disabled="disabled" @click="handleSubmit">{{ btnText }}</base-btn>
@@ -94,6 +88,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
@@ -107,13 +102,14 @@ export default {
 }
 
 .input {
-  // width: 100%;
   // height: 26px;
   padding: 8px 8px;
 }
+
 .footer {
   margin: 20px 0 15px auto;
 }
+
 .btn {
   // box-sizing: border-box;
   // margin-left: 15px;
@@ -128,6 +124,4 @@ export default {
     margin-left: 10px;
   }
 }
-
-
 </style>

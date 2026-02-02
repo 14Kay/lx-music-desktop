@@ -1,12 +1,19 @@
 import {
   LastFMAuth,
   LastFMTrack,
+  LastFMUser,
 } from 'lastfm-ts-api'
 
 interface Base {
   api_key: string
   secret: string
 }
+
+export async function getUserinfo(apikey: string, secret: string, username: string) {
+  const user = new LastFMUser(apikey, secret)
+  return await user.getInfo({ user: username })
+}
+
 export async function getToken(apikey: string, secret: string) {
   const auth = new LastFMAuth(apikey, secret)
   return await auth.getToken()

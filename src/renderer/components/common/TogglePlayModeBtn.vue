@@ -1,11 +1,11 @@
 <template>
   <material-popup-btn ref="btn_ref" :class="$style.btnContent">
     <div class="my__button" :aria-label="nextTogglePlayName">
-      <PhShuffle size="55%" v-if="appSetting['player.togglePlayMethod'] == 'random'" weight="bold" />
-      <PhQueue size="55%" v-else-if="appSetting['player.togglePlayMethod'] == 'list'" weight="bold" />
-      <PhRepeatOnce size="58%" v-else-if="appSetting['player.togglePlayMethod'] == 'singleLoop'" weight="bold" />
-      <PhRepeat size="55%" v-else-if="appSetting['player.togglePlayMethod'] == 'listLoop'" weight="bold" />
-      <PhLock size="55%" v-else weight="bold" />
+      <PhShuffle v-if="appSetting['player.togglePlayMethod'] == 'random'" size="55%" weight="bold" />
+      <PhQueue v-else-if="appSetting['player.togglePlayMethod'] == 'list'" size="55%" weight="bold" />
+      <PhRepeatOnce v-else-if="appSetting['player.togglePlayMethod'] == 'singleLoop'" size="58%" weight="bold" />
+      <PhRepeat v-else-if="appSetting['player.togglePlayMethod'] == 'listLoop'" size="55%" weight="bold" />
+      <PhLock v-else size="55%" weight="bold" />
     </div>
     <template #content>
       <div :class="$style.setting">

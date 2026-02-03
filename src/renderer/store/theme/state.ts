@@ -25,7 +25,7 @@ export const darkMode = {
     },
     set enabled(val: boolean) {
         isDarkMode.value = val
-    }
+    },
 }
 
 // 监听状态变化，自动保存到 localStorage 并更新 DOM

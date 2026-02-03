@@ -4,6 +4,8 @@ import { appSetting } from './setting'
 import pkg from '../../../package.json'
 import { type ProgressInfo } from 'electron-updater'
 import music from '@renderer/utils/musicSdk'
+
+import { getLastFMUserInfo } from '@renderer/utils/ipc'
 process.versions.app = pkg.version
 
 export const apiSource = ref<string | null>(null)
@@ -145,15 +147,12 @@ export const userApi = reactive<{
 })
 
 
-
 export const lastFmUserInfo = reactive({
   name: '',
   avatar: '',
 })
 
-import { getLastFMUserInfo } from '@renderer/utils/ipc'
-
-export const fetchLastFmUserInfo = async () => {
+export const fetchLastFmUserInfo = async() => {
   if (appSetting['lastFM.enable'] && appSetting['lastFM.session.key']) {
     try {
       // console.log('fetchLastFmUserInfo', appSetting['lastFM.session.name'])

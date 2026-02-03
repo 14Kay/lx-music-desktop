@@ -1,10 +1,16 @@
 export const resizeImage = (imgUrl: string, size = 512) => {
   if (!imgUrl) return ''
-  let httpsImgUrl = imgUrl
-  if (imgUrl.slice(0, 5) !== 'https') {
-    httpsImgUrl = 'https' + imgUrl.slice(4)
+
+  try {
+    const url = new URL(imgUrl)
+    const domain = url.hostname
+
+    if (domain.includes('kugou')) {
+      return imgUrl.replace('/100/', `/${size}/`)
+    }
+
+    return `${imgUrl}${imgUrl.includes('?') ? '&' : '?'}param=${size}y${size}`
+  } catch (e) {
+    return imgUrl
   }
-  const url = new URL(httpsImgUrl)
-  const domain = url.hostname
-  return domain.includes('kugou') ? httpsImgUrl.replace('/100/', '/400/') : `${httpsImgUrl}?param=${size}y${size}`
 }

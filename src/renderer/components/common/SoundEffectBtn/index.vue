@@ -1,11 +1,6 @@
 <template>
-  <button :class="$style.btn" :aria-label="$t('player__sound_effect')" @click="visible = true">
-    <svg
-version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="90%"
-      viewBox="0 0 24 24" space="preserve"
->
-      <use xlink:href="#icon-tune-variant" />
-    </svg>
+  <button class="my__button" :aria-label="$t('player__sound_effect')" @click="visible = true">
+    <component :is="PhFaders" size="80%" weight="regular" />
   </button>
   <material-modal :show="visible" bg-close="bg-close" :teleport="teleport" @close="visible = false">
     <!-- <main :class="$style.main"> -->
@@ -38,6 +33,7 @@ import AudioPanner from './AudioPanner.vue'
 import AudioConvolution from './AudioConvolution.vue'
 import PitchShifter from './PitchShifter.vue'
 import { appSetting } from '@renderer/store/setting'
+import { PhFaders } from '@phosphor-icons/vue'
 
 defineProps({
   teleport: {

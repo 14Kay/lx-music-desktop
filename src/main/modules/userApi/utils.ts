@@ -67,13 +67,13 @@ const matchInfo = (scriptInfo: string) => {
     if (!result) continue
     const key = result[1] as keyof typeof INFO_NAMES
     if (INFO_NAMES[key] == null) continue
-    infos[key] = result[2].trim()
+    infos[key] = (result[2] || '').trim()
   }
 
   for (const [key, len] of Object.entries(INFO_NAMES) as Array<{ [K in keyof INFO_NAMES_Type]: [K, INFO_NAMES_Type[K]] }[keyof INFO_NAMES_Type]>) {
     infos[key] ||= ''
     if (infos[key] == null) infos[key] = ''
-    else if (infos[key].length > len) infos[key] = infos[key].substring(0, len) + '...'
+    else if (infos[key]!.length > len) infos[key] = infos[key]!.substring(0, len) + '...'
   }
 
   return infos as Record<keyof typeof INFO_NAMES, string>

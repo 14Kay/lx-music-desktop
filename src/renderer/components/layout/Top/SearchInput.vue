@@ -52,10 +52,6 @@ const handleOnPageClick = () => {
   }
 }
 
-const openGitHub = () => {
-  window.open('https://github.com/14Kay/lx-music-desktop')
-}
-
 const tipSearch = debounce(async () => {
   if (searchText.value === '' && prevTempSearchSource) {
     tipList.value = []
@@ -112,11 +108,6 @@ const handleEvent = ({ action, data }) => {
   }
 }
 
-const goDownload = () => {
-  showMenu.value = false
-  router.push('/download')
-}
-
 onMounted(() => {
   $bus.on('click', handleOnPageClick)
 })
@@ -158,7 +149,6 @@ onBeforeUnmount(() => {
     top: 80%;
     border-radius: @radius-border * 1.5;
     background-color: var(--color-content-background);
-    box-shadow: 0 1px 8px 0 rgba(0, 0, 0, .2);
     z-index: 10;
     overflow: hidden;
     padding: 8px;
@@ -182,7 +172,7 @@ onBeforeUnmount(() => {
       transition: @transition-normal;
       transition-property: background-color, opacity;
       box-sizing: border-box;
-      .mixin-ellipsis-1;
+      .mixin-ellipsis-1();
       // background-color: var(--color-primary-light-600-alpha-800);
 
       &:hover {

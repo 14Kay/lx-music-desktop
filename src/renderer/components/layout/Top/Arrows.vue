@@ -1,9 +1,9 @@
 <template>
   <div class="navigation-buttons">
-    <div @click="go('back')" class="my__button">
+    <div class="my__button" @click="go('back')">
       <PhCaretLeft size="45%" weight="bold" />
     </div>
-    <div @click="go('forward')" class="my__button">
+    <div class="my__button" @click="go('forward')">
       <PhCaretRight size="45%" weight="bold" />
     </div>
   </div>
@@ -11,8 +11,9 @@
 
 <script setup>
 import { useRouter } from '@common/utils/vueRouter'
-const router = useRouter()
 import { PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue'
+
+const router = useRouter()
 
 const go = (where) => {
   if (where === 'back') router.go(-1)

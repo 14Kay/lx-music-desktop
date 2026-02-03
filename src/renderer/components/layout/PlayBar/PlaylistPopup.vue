@@ -1,22 +1,29 @@
 <template>
     <Teleport to="body">
         <Transition name="fade">
-            <div v-if="show" :class="$style.overlay" @click="$emit('update:show', false)">
-                <div :class="$style.popup" :style="popupStyles" @click.stop>
-                    <div :class="$style.header">
-                        <h3 :class="$style.title">待播放</h3>
-                        <div :class="$style.count">{{ playQueue.length }} 首歌曲</div>
-                    </div>
+            <div v-if="show" :class="$style.overlay" @click="$emit('update:show', false)"></div>
+        </Transition>
+        <Transition enter-active-class="animated slideInRight" leave-active-class="animated fadeOut"
+            @after-enter="handleAfterEnter">
+            <div v-if="show" :class="$style.popup" :style="popupStyles" @click.stop>
+                <div :class="$style.header">
+                    <h3 :class="$style.title">播放列表 <span :class="$style.count">{{ playQueue.length }}</span>
+                    </h3>
+                </div>
 
-                    <div ref="listRef" :class="$style.list">
-                        <div v-for="(item, index) in playQueue" :key="item.musicInfo?.id + '_' + index"
-                            :class="[$style.song, { [$style.active]: isCurrentPlaying(index) }]"
-                            @click="handlePlaySong(index)">
+                <VirtualizedList ref="listRef" :list="playQueue" :item-height="52" key-name="_key" :class="$style.list">
+                    <template #default="{ item, index }: { item: any, index: number }">
+                        <div :class="[$style.song, { [$style.active]: isCurrentPlaying(index) }]"
+                            @dblclick="handlePlaySong(index)">
                             <div :class="$style.cover">
                                 <img v-if="(item.musicInfo as any)?.meta?.picUrl || (item.musicInfo as any)?.meta?.albumImg"
                                     :src="resizeImage((item.musicInfo as any)?.meta?.picUrl || (item.musicInfo as any)?.meta?.albumImg || '', 64)"
                                     alt="cover" loading="lazy" />
                                 <img v-else src="./../../../assets/images/default_cover.jpg" alt="cover" />
+                                <div :class="$style.coverOverlay" @click.stop="handleTogglePlay(item, index)">
+                                    <PhPause v-if="isCurrentPlaying(index) && isPlay" :size="18" weight="fill" />
+                                    <PhPlay v-else :size="18" weight="fill" />
+                                </div>
                             </div>
 
                             <div :class="$style.info">
@@ -25,21 +32,21 @@
                             </div>
 
                             <div :class="$style.actions">
-                                <button :class="$style.actionBtn" @click.stop="handleFavorite(item)"
-                                    :title="isFavorite(item) ? '取消收藏' : '收藏'">
+                                <button :class="$style.actionBtn" :title="isFavorite(item) ? '取消收藏' : '收藏'"
+                                    @click.stop="handleFavorite(item)">
                                     <PhHeart :size="16" :weight="isFavorite(item) ? 'fill' : 'regular'" />
                                 </button>
 
-                                <button :class="$style.actionBtn" @click.stop="handleRemove(index)" title="从播放列表移除">
+                                <button title="从播放列表移除" :class="$style.actionBtn" @click.stop="handleRemove(index)">
                                     <PhTrash :size="16" weight="regular" />
                                 </button>
                             </div>
                         </div>
+                    </template>
+                </VirtualizedList>
 
-                        <div v-if="playQueue.length === 0" :class="$style.empty">
-                            待播放列表为空
-                        </div>
-                    </div>
+                <div v-if="playQueue.length === 0" :class="$style.empty">
+                    待播放列表为空
                 </div>
             </div>
         </Transition>
@@ -47,14 +54,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, nextTick } from 'vue'
-import { PhHeart, PhTrash } from '@phosphor-icons/vue'
-import { tempPlayList, playInfo, playedList, playMusicInfo, skippedList } from '@renderer/store/player/state'
+import { computed, ref, nextTick } from 'vue'
+import { PhHeart, PhTrash, PhPlay, PhPause } from '@phosphor-icons/vue'
+import { tempPlayList, playInfo, playMusicInfo, skippedList, isPlay } from '@renderer/store/player/state'
 import { resizeImage } from '@renderer/utils/resizeCover'
-import { playList as playListAction, resetRandomNextMusicInfo, playNext } from '@renderer/core/player/action'
+import { playList as playListAction, resetRandomNextMusicInfo, playNext, togglePlay } from '@renderer/core/player/action'
 import { getList, removeTempPlayList } from '@renderer/store/player/action'
 import { appSetting } from '@renderer/store/setting'
 import { listUpdateTimes } from '@renderer/store/list/state'
+import VirtualizedList from '@renderer/components/base/VirtualizedList.vue'
 
 const props = withDefaults(defineProps<{
     show: boolean
@@ -65,7 +73,7 @@ const props = withDefaults(defineProps<{
         left?: string
     }
 }>(), {
-    position: () => ({ right: '20px', bottom: '80px' })
+    position: () => ({ right: '20px', bottom: '80px' }),
 })
 
 const emit = defineEmits<{
@@ -73,58 +81,57 @@ const emit = defineEmits<{
 }>()
 
 const popupStyles = computed(() => ({
-    ...props.position
+    ...props.position,
 }))
 
 // 列表容器引用
-const listRef = ref<HTMLElement | null>(null)
+const listRef = ref<any>(null)
 
-// 监听弹窗显示状态，仅在随机模式下自动滚动到当前播放的歌曲
-watch(() => props.show, (newVal) => {
-    if (newVal) {
-        nextTick(() => {
-            if (listRef.value) {
-                // 只在随机模式下才自动滚动
-                const playMode = appSetting['player.togglePlayMethod']
-                if (playMode === 'random') {
-                    // 查找当前播放歌曲的索引
-                    const currentIndex = playQueue.value.findIndex(item =>
-                        item.musicInfo.id === currentPlaylist.value[playInfo.playerPlayIndex]?.id
-                    )
+const handleAfterEnter = () => {
+    nextTick(() => {
+        if (listRef.value) {
+            console.log('PlaylistPopup handleAfterEnter, clientHeight:', listRef.value.$el.clientHeight)
+            listRef.value.refresh()
+            // 只在随机模式下才自动滚动
+            const playMode = appSetting['player.togglePlayMethod']
+            if (playMode === 'random') {
+                // 查找当前播放歌曲的索引
+                const currentIndex = playQueue.value.findIndex((item: any) =>
+                    item.musicInfo.id === currentPlaylist.value[playInfo.playerPlayIndex]?.id,
+                )
 
-                    if (currentIndex >= 0) {
-                        // 找到当前歌曲的 DOM 元素并滚动到它
-                        const songElements = listRef.value.querySelectorAll(`.${listRef.value.className.split(' ')[0]} > div`)
-                        const currentElement = songElements[currentIndex] as HTMLElement
-                        if (currentElement) {
-                            // 滚动到当前歌曲，使其在视图中居中
-                            currentElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                        }
-                    }
-                } else {
-                    // 非随机模式，滚动到顶部
-                    listRef.value.scrollTop = 0
+                if (currentIndex >= 0) {
+                    // 滚动到当前歌曲，使其在视图中居中
+                    listRef.value.scrollToIndex(currentIndex, 0, true)
                 }
+            } else {
+                // 非随机模式，滚动到顶部
+                listRef.value.scrollTo(0)
             }
-        })
-    }
-})
+        }
+    })
+}
 
 // 获取当前播放列表
 const currentPlaylist = computed(() => {
     if (!playInfo.playerListId) return []
     // 依赖 listUpdateTimes 触发更新
-    // eslint-disable-next-line no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     listUpdateTimes[playInfo.playerListId]
     return getList(playInfo.playerListId)
 })
 
 // 构建待播放队列
 const playQueue = computed(() => {
-    const queue: LX.Player.PlayMusicInfo[] = []
+    const queue: Array<LX.Player.PlayMusicInfo & { _key: string }> = []
 
     // 1. 添加稍后播放列表
-    queue.push(...tempPlayList)
+    tempPlayList.forEach((item: any, index: number) => {
+        queue.push({
+            ...item,
+            _key: `temp_${item.musicInfo.id}_${index}`,
+        })
+    })
 
     // 2. 根据播放模式添加当前播放列表的歌曲
     const currentList = currentPlaylist.value
@@ -133,12 +140,13 @@ const playQueue = computed(() => {
 
         if (playMode === 'random') {
             // 随机模式：显示完整播放列表（所有歌曲）
-            currentList.forEach((music) => {
+            currentList.forEach((music: any, index: number) => {
                 if (!skippedList.has(music.id)) {
                     queue.push({
                         musicInfo: music,
                         listId: playInfo.playerListId!,
-                        isTempPlay: false
+                        isTempPlay: false,
+                        _key: `random_${music.id}_${index}`,
                     })
                 }
             })
@@ -152,7 +160,8 @@ const playQueue = computed(() => {
                     queue.push({
                         musicInfo: currentList[i],
                         listId: playInfo.playerListId,
-                        isTempPlay: false
+                        isTempPlay: false,
+                        _key: `seq_${currentList[i].id}_${i}`,
                     })
                 }
             }
@@ -164,7 +173,8 @@ const playQueue = computed(() => {
                         queue.push({
                             musicInfo: currentList[i],
                             listId: playInfo.playerListId,
-                            isTempPlay: false
+                            isTempPlay: false,
+                            _key: `loop_${currentList[i].id}_${i}`,
                         })
                     }
                 }
@@ -204,6 +214,14 @@ const handlePlaySong = (index: number) => {
             playListAction(playInfo.playerListId, listIndex)
             emit('update:show', false)
         }
+    }
+}
+
+const handleTogglePlay = (item: LX.Player.PlayMusicInfo, index: number) => {
+    if (isCurrentPlaying(index)) {
+        togglePlay()
+    } else {
+        handlePlaySong(index)
     }
 }
 
@@ -256,36 +274,47 @@ const handleRemove = (index: number) => {
 .popup {
     position: fixed;
     width: 340px;
-    max-height: 600px;
+    height: 600px;
     background: var(--color-main-background);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    z-index: 10000;
 }
 
 .header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    padding: @gap-sm 12px;
+    background-color: var(--color-top-background);
+    backdrop-filter: saturate(180%) blur(20px);
+    flex: none;
 
     .title {
         font-size: 18px;
         font-weight: 700;
-        margin: 0 0 4px 0;
+        position: relative;
         color: var(--color-font);
+        display: inline-block;
     }
 
     .count {
-        font-size: 13px;
+        font-size: 12px;
         opacity: 0.6;
         color: var(--color-font);
+        margin-left: 6px;
+        font-weight: 500;
+        position: absolute;
+        right: -18px;
+        top: -4px;
+        font-family: Outfit;
     }
 }
 
 .list {
     flex: 1;
-    overflow-y: auto;
-    padding: 12px 0;
+    min-height: 0;
+    // padding: 0;
+    background-color: var(--color-main-background);
 
     &::-webkit-scrollbar {
         width: 6px;
@@ -300,20 +329,26 @@ const handleRemove = (index: number) => {
 .song {
     display: flex;
     align-items: center;
-    padding: 8px 24px;
+    padding: 8px 12px;
     cursor: pointer;
     transition: background 0.15s ease;
+    height: 52px;
+    box-sizing: border-box;
 
     &:hover {
-        background: var(--color-primary-background-hover);
+        background: var(--color-hover);
 
         .actions {
             opacity: 1;
         }
+
+        .coverOverlay {
+            opacity: 1 !important;
+        }
     }
 
     &.active {
-        background: var(--color-primary-background-active);
+        background: var(--color-hover);
 
         .name {
             color: var(--color-primary);
@@ -322,12 +357,30 @@ const handleRemove = (index: number) => {
 
     .cover {
         flex-shrink: 0;
+        position: relative;
+        height: 36px;
 
         img {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
             object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .coverOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            color: #fff;
+            transition: opacity 0.2s;
+            border-radius: 4px;
         }
     }
 
@@ -335,9 +388,14 @@ const handleRemove = (index: number) => {
         flex: 1;
         margin-left: 12px;
         min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        height: 100%;
 
         .name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--color-font);
             overflow: hidden;
@@ -346,7 +404,6 @@ const handleRemove = (index: number) => {
         }
 
         .singer {
-            margin-top: 2px;
             font-size: 12px;
             opacity: 0.68;
             color: var(--color-font);

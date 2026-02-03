@@ -125,7 +125,7 @@ onBeforeUnmount(() => {
   max-height: 250px;
   z-index: 10;
   pointer-events: none;
-  filter: drop-shadow(0px 0px 3px rgba(0, 0, 0, .12));
+  filter: drop-shadow(var(--box-shadow));
   display: flex;
 
   &:before {
@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
   }
 
   &.top {
-    filter: drop-shadow(0px 1px 3px rgba(0, 0, 0, .12));
+    filter: drop-shadow(var(--box-shadow));
     transform-origin: 50% 100% 0;
 
     &:before {

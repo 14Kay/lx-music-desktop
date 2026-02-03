@@ -1,9 +1,6 @@
 <template>
-  <div
-    ref="dom_lyric"
-    :class="classNames"
-    :style="lrcStyles" @wheel="handleWheel" @mousedown="handleLyricMouseDown" @touchstart="handleLyricTouchStart"
-  >
+  <div ref="dom_lyric" :class="classNames" :style="lrcStyles" @wheel="handleWheel" @mousedown="handleLyricMouseDown"
+    @touchstart="handleLyricTouchStart">
     <div :class="$style.lyricSpace" />
     <div ref="dom_lyric_text" />
     <div :class="$style.lyricSpace" />
@@ -80,22 +77,28 @@ export default {
   cursor: move;
   writing-mode: vertical-rl;
   width: 100%;
+
   &::-webkit-scrollbar {
     height: 0;
   }
 
   :global {
-    .font-lrc, .shadow {
+
+    .font-lrc,
+    .shadow {
       padding: 0.14em 0.07em;
       margin: 0 -0.07em;
     }
+
     .font-lrc {
       color: var(--color-lyric-unplay);
     }
+
     .shadow {
       color: transparent;
       // margin-left: -0.14em;
     }
+
     .line-content {
       line-height: 1.2;
       margin: 0 var(--line-gap);
@@ -109,26 +112,32 @@ export default {
         font-size: 0.8em;
         margin-right: var(--line-extended-gap);
       }
+
       &.line-mode {
         letter-spacing: 5px;
+
         .font-lrc {
           transition: @transition-slow;
           transition-property: font-size, color;
         }
       }
-      &.line-mode.active .font-lrc, &.font-mode.played .font-lrc {
+
+      &.line-mode.active .font-lrc,
+      &.font-mode.played .font-lrc {
         color: var(--color-lyric-played);
       }
+
       &.font-mode .extended .font-lrc {
         transition: @transition-slow;
         transition-property: font-size, color;
       }
+
       // &.font-mode > .line {
       //   font-weight: bold;
       // }
 
-      &.font-mode > .line > .font-lrc {
-        > span {
+      &.font-mode>.line>.font-lrc {
+        >span {
           transition: @transition-slow;
           transition-property: font-size;
           font-size: 1em;
@@ -148,6 +157,7 @@ export default {
         margin: -0.08em;
       }
     }
+
     // .shadow {
     //   .stroke2(rgba(0, 0, 0, 0.05));
     //   transition: font-size @transition-normal;
@@ -156,7 +166,8 @@ export default {
     //   .stroke(1px, rgba(0, 0, 0, 0.05));
     //   // text-shadow: 1px 0 2px rgba(0, 0, 0, 0.30), 1px 0 1px rgba(0, 0, 0, 0.20);
     // }
-    .line-mode .font-lrc, .extended .font-lrc {
+    .line-mode .font-lrc,
+    .extended .font-lrc {
       // text-shadow: 0 0 2px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.3);
       // .stroke2(rgba(0, 0, 0, 0.14));
       .stroke4(var(--color-lyric-shadow));
@@ -164,6 +175,7 @@ export default {
       // .stroke(2px, rgba(0, 0, 0, 0.025));
       transition: font-size @transition-slow;
     }
+
     .font-mode .line .shadow span {
       .stroke(1px, var(--color-lyric-shadow-font-mode));
       // .stroke(1px, rgba(0, 0, 0, 0.07));
@@ -173,6 +185,7 @@ export default {
 
 
   }
+
   // p {
   //   padding: 8px 0;
   //   line-height: 1.2;
@@ -181,6 +194,7 @@ export default {
   //   transition-property: color, font-size;
   // }
 }
+
 // .lrc-line {
 //   display: inline-block;
 //   padding: 8px 0;
@@ -203,6 +217,7 @@ export default {
   width: 80%;
   height: 100%;
 }
+
 // .lyric-text {
 
 // }
@@ -226,6 +241,7 @@ export default {
     }
   }
 }
+
 .lrcActiveZoom {
   :global {
     .line-content {
@@ -233,6 +249,7 @@ export default {
         .extended {
           font-size: .94em;
         }
+
         .line {
           font-size: 1.2em;
         }
@@ -240,28 +257,34 @@ export default {
     }
   }
 }
+
 .ellipsis {
   :global {
-    .font-lrc, .shadow {
+
+    .font-lrc,
+    .shadow {
       display: -webkit-box !important;
       .mixin-ellipsis(1);
     }
   }
 }
+
 .fontWeightFont {
   :global {
-    .font-mode > .line {
+    .font-mode>.line {
       font-weight: bold;
     }
   }
 }
+
 .fontWeightLine {
   :global {
-    .line-mode > .line {
+    .line-mode>.line {
       font-weight: bold;
     }
   }
 }
+
 .fontWeightExtended {
   :global {
     .extended {
@@ -269,11 +292,10 @@ export default {
     }
   }
 }
+
 // .footer {
 //   flex: 0 0 100px;
 //   overflow: hidden;
 //   display: flex;
 //   align-items: center;
-// }
-
-</style>
+// }</style>

@@ -1,4 +1,3 @@
-// const path = require('path')
 import { app } from 'electron'
 import { mainHandle, mainOn } from '@common/mainIpc'
 import { WIN_MAIN_RENDERER_EVENT_NAME } from '@common/ipcNames'
@@ -23,7 +22,7 @@ import {
   showSaveDialog,
 } from '@main/modules/winMain'
 import { quitApp } from '@main/app'
-import { getAllThemes, removeTheme, saveTheme, setPowerSaveBlocker } from '@main/utils'
+import { setPowerSaveBlocker } from '@main/utils'
 import { openDirInExplorer } from '@common/utils/electron'
 
 export default () => {
@@ -120,16 +119,6 @@ export default () => {
 
   mainOn(WIN_MAIN_RENDERER_EVENT_NAME.inited, () => {
     global.lx.event_app.main_window_inited()
-  })
-
-  mainHandle<{ themes: LX.Theme[], userThemes: LX.Theme[] }>(WIN_MAIN_RENDERER_EVENT_NAME.get_themes, async() => {
-    return getAllThemes()
-  })
-  mainHandle<LX.Theme>(WIN_MAIN_RENDERER_EVENT_NAME.save_theme, async({ params: theme }) => {
-    saveTheme(theme)
-  })
-  mainHandle<string>(WIN_MAIN_RENDERER_EVENT_NAME.remove_theme, async({ params: id }) => {
-    removeTheme(id)
   })
 }
 

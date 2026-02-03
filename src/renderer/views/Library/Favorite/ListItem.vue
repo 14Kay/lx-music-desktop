@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.song">
     <div :class="$style.cover">
-      <img v-if="cover" :src="resizeImage(cover, 64)" alt="cover" loading="lazy" />
+      <img v-if="cover !== null && cover !== ''" :src="resizeImage(cover, 64)" alt="cover" loading="lazy" />
       <img v-else src="./../../../assets/images/default_cover.jpg" />
     </div>
     <div :class="$style.info">
@@ -33,6 +33,7 @@ defineProps({
   playCount: {
     type: Number,
     required: false,
+    default: 0,
   },
 })
 

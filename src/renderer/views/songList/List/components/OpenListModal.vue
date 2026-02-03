@@ -1,19 +1,13 @@
 <template>
-  <material-modal
-:show="props.modelValue" teleport="#view" width="60%" @close="emit('update:model-value', $event)"
-    @after-enter="$refs.input.focus()"
->
+  <material-modal :show="props.modelValue" teleport="#view" width="60%" @close="emit('update:model-value', $event)"
+    @after-enter="$refs.input.focus()">
     <main class="scroll" :class="$style.main">
       <h2>{{ $t('songlist__import_input_title') }}</h2>
       <div :class="$style.inputContent">
-        <base-selection
-v-model="source" :class="$style.select" :list="props.sourceList" item-key="id"
-          item-name="name"
-/>
-        <base-input
-ref="input" v-model.trim="text" :class="$style.input"
-          :placeholder="$t('songlist__import_input_tip')" @submit="handleSubmit"
-/>
+        <base-selection v-model="source" :class="$style.select" :list="props.sourceList" item-key="id"
+          item-name="name" />
+        <base-input ref="input" v-model.trim="text" :class="$style.input"
+          :placeholder="$t('songlist__import_input_tip')" @submit="handleSubmit" />
       </div>
       <div :class="$style.footer">
         <div :class="$style.tips">
@@ -23,11 +17,9 @@ ref="input" v-model.trim="text" :class="$style.input"
             <li>{{ $t('songlist__import_input_tip_3') }}</li>
             <li>
               {{ $t('songlist__import_input_tip_4') }}
-              <span
-class="hover underline"
+              <span class="hover underline"
                 aria-label="https://lyswhut.github.io/lx-music-doc/desktop/faq/cannot-open-songlist"
-                @click="openUrl('https://lyswhut.github.io/lx-music-doc/desktop/faq/cannot-open-songlist')"
->FAQ</span>
+                @click="openUrl('https://lyswhut.github.io/lx-music-doc/desktop/faq/cannot-open-songlist')">FAQ</span>
             </li>
           </ul>
         </div>
@@ -175,6 +167,6 @@ const handleSubmit = () => {
   // line-height: 36px;
   // padding: 0 10px !important;
   min-width: 80px;
-  // .mixin-ellipsis-1;
+  // .mixin-ellipsis-1();
 }
 </style>

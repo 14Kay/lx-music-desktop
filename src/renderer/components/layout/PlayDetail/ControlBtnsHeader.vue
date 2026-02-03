@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.header" ref="dom_btns">
+  <div ref="dom_btns" :class="$style.header">
     <div>
       <button ref="dom_hide_btn" type="button" :class="[$style.btn, $style.min, 'my__button']" :aria-label="$t('min')"
         ignore-tip :title="$t('min')" @click="hide">
@@ -81,6 +81,7 @@ const hide = () => {
   justify-content: space-between;
   position: relative;
   padding: @gap;
+  -webkit-app-region: drag;
 
   .right {
     display: flex;
@@ -88,6 +89,7 @@ const hide = () => {
   }
 
   .btn {
+    -webkit-app-region: no-drag;
 
     &.hover {
 

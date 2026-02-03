@@ -127,7 +127,7 @@ export const updateSetting = (setting?: Partial<LX.AppSetting>, isInit: boolean 
 /**
  * 初始化设置
  */
-export const initSetting = async () => {
+export const initSetting = async() => {
   const electronStore_config = getStore(STORE_NAMES.APP_SETTINGS)
 
   let setting = electronStore_config.get('setting') as LX.AppSetting | undefined
@@ -147,7 +147,7 @@ export const initSetting = async () => {
 /**
  * 初始化快捷键设置
  */
-export const initHotKey = async () => {
+export const initHotKey = async() => {
   const electronStore_hotKey = getStore(STORE_NAMES.HOTKEY)
 
   let localConfig = electronStore_hotKey.get('local') as LX.HotKeyConfig | null
@@ -201,76 +201,18 @@ export const openDevTools = (webContents: Electron.WebContents) => {
 }
 
 
-let userThemes: LX.Theme[]
-export const getAllThemes = () => {
-  userThemes ??= getStore(STORE_NAMES.THEME).get('themes') as (LX.Theme[] | null) ?? []
-  return {
-    themes: [], // 不再使用内置主题
-    userThemes,
-    dataPath: joinPath(global.lxDataPath, 'theme_images'),
-  }
-}
-
-export const saveTheme = (theme: LX.Theme) => {
-  const targetTheme = userThemes.find(t => t.id === theme.id)
-  if (targetTheme) Object.assign(targetTheme, theme)
-  else userThemes.push(theme)
-  getStore(STORE_NAMES.THEME).set('themes', userThemes)
-}
-
-export const removeTheme = (id: string) => {
-  const index = userThemes.findIndex(t => t.id === id)
-  if (index < 0) return
-  userThemes.splice(index, 1)
-  getStore(STORE_NAMES.THEME).set('themes', userThemes)
-}
-
-const copyTheme = (theme: LX.Theme): LX.Theme => {
-  return {
-    ...theme,
-    config: {
-      ...theme.config,
-      extInfo: { ...theme.config.extInfo },
-      themeColors: { ...theme.config.themeColors },
-    },
-  }
-}
-export const getTheme = () => {
-  // 现在主题完全由 CSS 变量管理，此函数保留用于兼容性
+export const getTheme = (): LX.ThemeSetting => {
   const shouldUseDarkColors = nativeTheme.shouldUseDarkColors
-  let themeId = global.lx.appSetting['theme.id'] == 'auto'
-    ? shouldUseDarkColors
-      ? global.lx.appSetting['theme.darkId']
-      : global.lx.appSetting['theme.lightId']
-    : global.lx.appSetting['theme.id']
-
-  // 检查用户自定义主题
-  userThemes = getStore(STORE_NAMES.THEME).get('themes') as LX.Theme[] | null ?? []
-  let theme = userThemes.find(theme => theme.id == themeId)
-
-  if (theme) {
-    if (theme.config.extInfo['--background-image'] != 'none') {
-      theme = copyTheme(theme)
-      theme.config.extInfo['--background-image'] =
-        isUrl(theme.config.extInfo['--background-image'])
-          ? `url(${theme.config.extInfo['--background-image']})`
-          : `url(file:///${encodePath(joinPath(global.lxDataPath, 'theme_images', theme.config.extInfo['--background-image']))})`
-    }
-  }
-
-  const colors: Record<string, string> = {
-    ...theme?.config.themeColors,
-    ...theme?.config.extInfo,
-  }
+  const themeId = shouldUseDarkColors ? 'dark' : 'light'
 
   return {
     shouldUseDarkColors,
     theme: {
-      id: global.lx.appSetting['theme.id'],
-      name: theme?.name,
-      isDark: theme?.isDark,
-      isDarkFont: theme?.isDarkFont,
-      colors,
+      id: themeId,
+      name: shouldUseDarkColors ? 'Dark' : 'Light',
+      isDark: shouldUseDarkColors,
+      // isDarkFont: false, // removed from type definition if not needed, or add if strictly required by other consumers
+      colors: {}, // Populate if needed, or keep empty if handled by CSS variables completely
     },
   }
 }

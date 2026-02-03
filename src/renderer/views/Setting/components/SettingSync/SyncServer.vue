@@ -74,7 +74,9 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
-.portInput[disabled], .hostInput[disabled] {
+
+.portInput[disabled],
+.hostInput[disabled] {
   opacity: .8 !important;
 }
 
@@ -88,6 +90,7 @@ export default {
   font-size: 13px;
   transition-property: height;
   position: relative;
+
   .listItem {
     position: relative;
     padding: 15px 10px 15px 15px;
@@ -102,6 +105,7 @@ export default {
     &:hover {
       background-color: var(--color-primary-background-hover);
     }
+
     // border-radius: 4px;
     // &:last-child {
     //   border-bottom-left-radius: 4px;
@@ -124,7 +128,7 @@ export default {
 .text {
   flex: auto;
   margin-bottom: 2px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
 
 .label {
@@ -137,6 +141,7 @@ export default {
   // transform: rotate(45deg);
   // background-color:
 }
+
 .btns {
   flex: none;
   font-size: 12px;
@@ -144,6 +149,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .btn {
   background-color: transparent;
   border: none;
@@ -155,6 +161,7 @@ export default {
   outline: none;
   transition: background-color 0.2s ease;
   line-height: 0;
+
   &:last-child {
     margin-right: 0;
   }
@@ -167,9 +174,9 @@ export default {
   &:hover {
     background-color: var(--color-primary-background-hover);
   }
+
   &:active {
     background-color: var(--color-primary-font-active);
   }
 }
-
 </style>

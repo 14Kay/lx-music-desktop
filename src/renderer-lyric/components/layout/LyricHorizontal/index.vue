@@ -1,9 +1,6 @@
 <template>
-  <div
-    ref="dom_lyric"
-    :class="classNames"
-    :style="lrcStyles" @wheel="handleWheel" @mousedown="handleLyricMouseDown" @touchstart="handleLyricTouchStart"
-  >
+  <div ref="dom_lyric" :class="classNames" :style="lrcStyles" @wheel="handleWheel" @mousedown="handleLyricMouseDown"
+    @touchstart="handleLyricTouchStart">
     <div :class="$style.lyricSpace" />
     <div ref="dom_lyric_text" />
     <div :class="$style.lyricSpace" />
@@ -82,17 +79,22 @@ export default {
   // font-weight: bold;
 
   :global {
-    .font-lrc, .shadow {
+
+    .font-lrc,
+    .shadow {
       padding: 0.08em 0.14em;
       margin: -0.08em 0;
     }
+
     .font-lrc {
       color: var(--color-lyric-unplay);
     }
+
     .shadow {
       color: transparent;
       // margin-left: -0.14em;
     }
+
     .line-content {
       line-height: 1.2;
       margin: var(--line-gap) 0;
@@ -106,25 +108,30 @@ export default {
         font-size: 0.8em;
         margin-top: var(--line-extended-gap);
       }
+
       &.line-mode {
         .font-lrc {
           transition: @transition-slow;
           transition-property: font-size, color;
         }
       }
-      &.line-mode.active .font-lrc, &.font-mode.played .font-lrc {
+
+      &.line-mode.active .font-lrc,
+      &.font-mode.played .font-lrc {
         color: var(--color-lyric-played);
       }
+
       &.font-mode .extended .font-lrc {
         transition: @transition-slow;
         transition-property: font-size, color;
       }
+
       // &.font-mode > .line {
       //   font-weight: bold;
       // }
 
-      &.font-mode > .line > .font-lrc {
-        > span {
+      &.font-mode>.line>.font-lrc {
+        >span {
           transition: @transition-slow;
           transition-property: font-size;
           font-size: 1em;
@@ -142,7 +149,8 @@ export default {
           margin-bottom: -0.12em;
         }
       }
-     .line .shadow span {
+
+      .line .shadow span {
         padding-left: 0.12em;
         padding-right: 0.12em;
         padding-bottom: 0.12em;
@@ -150,6 +158,7 @@ export default {
         margin-right: -0.11em;
         margin-bottom: -0.12em;
       }
+
       // &.line-mode {
       //   .shadow {
       //     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.40);
@@ -159,7 +168,9 @@ export default {
       // &.font-mode {
       // }
     }
-    .line-mode .font-lrc, .extended .font-lrc {
+
+    .line-mode .font-lrc,
+    .extended .font-lrc {
       // text-shadow: 0 0 2px rgba(0, 0, 0, 0.7), 0 0 2px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.3);
       .stroke3(var(--color-lyric-shadow));
       // .stroke2(rgba(0, 0, 0, 0.18));
@@ -167,6 +178,7 @@ export default {
       // .stroke(2px, rgba(0, 0, 0, 0.025));
       transition: font-size @transition-slow;
     }
+
     .font-mode .line .shadow span {
       .stroke(1px, var(--color-lyric-shadow-font-mode));
       transition: font-size @transition-slow;
@@ -174,6 +186,7 @@ export default {
     }
 
   }
+
   // p {
   //   padding: 8px 0;
   //   line-height: 1.2;
@@ -204,6 +217,7 @@ export default {
 .lyricSpace {
   height: 80%;
 }
+
 // .lyric-text {
 
 // }
@@ -227,6 +241,7 @@ export default {
     }
   }
 }
+
 .lrcActiveZoom {
   :global {
     .line-content {
@@ -234,6 +249,7 @@ export default {
         .extended {
           font-size: .94em;
         }
+
         .line {
           font-size: 1.2em;
         }
@@ -241,28 +257,34 @@ export default {
     }
   }
 }
+
 .ellipsis {
   :global {
-    .font-lrc, .shadow {
+
+    .font-lrc,
+    .shadow {
       display: -webkit-box !important;
       .mixin-ellipsis(1);
     }
   }
 }
+
 .fontWeightFont {
   :global {
-    .font-mode > .line {
+    .font-mode>.line {
       font-weight: bold;
     }
   }
 }
+
 .fontWeightLine {
   :global {
-    .line-mode > .line {
+    .line-mode>.line {
       font-weight: bold;
     }
   }
 }
+
 .fontWeightExtended {
   :global {
     .extended {
@@ -270,11 +292,10 @@ export default {
     }
   }
 }
+
 // .footer {
 //   flex: 0 0 100px;
 //   overflow: hidden;
 //   display: flex;
 //   align-items: center;
-// }
-
-</style>
+// }</style>

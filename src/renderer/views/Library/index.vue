@@ -9,9 +9,9 @@
       <div :class="$style.right">
         <div :class="$style.mostPlayed">
           <h2 class="my__title"><span>MOST PLAYED</span></h2>
-          <ListItem v-for="(item, index) in mostPlayedList" :key="item.musicId"
+          <ListItem v-for="(item) in mostPlayedList" :key="item.musicId"
             :cover="item.meta?.picUrl || item.meta?.albumImg || ''" :name="item.name" :singer="item.singer"
-            :playCount="item.playCount" />
+            :play-count="item.playCount" @dblclick="handlePlay(item)" />
           <div v-if="mostPlayedList.length === 0" :class="$style.empty">暂无播放记录</div>
         </div>
       </div>
@@ -32,7 +32,8 @@ import { appSetting } from '@renderer/store/setting'
 import ListItem from './Favorite/ListItem.vue'
 import { mostPlayedList } from '@renderer/store/playHistory/state'
 import { loadMostPlayed } from '@renderer/store/playHistory/action'
-import { PhPlus } from '@phosphor-icons/vue'
+import { addTempPlayList } from '@renderer/store/player/action'
+import { playNext } from '@renderer/core/player/action'
 
 export default {
   name: 'Library',
@@ -41,13 +42,25 @@ export default {
     OpenNewListModal,
     MyList,
     ListItem,
-    PhPlus
   },
   setup() {
     const visibleOpenNewListModal = ref(false)
     const createList = async (name) => {
       await createUserList({ name })
       visibleOpenNewListModal.value = false
+    }
+
+    const handlePlay = (item) => {
+      const musicInfo = {
+        id: item.musicId,
+        name: item.name,
+        singer: item.singer,
+        source: item.source,
+        interval: item.meta?.interval ?? null,
+        meta: item.meta,
+      }
+      addTempPlayList([{ musicInfo, listId: null, isTop: true }])
+      playNext()
     }
 
     onMounted(() => {
@@ -60,6 +73,7 @@ export default {
       loveList,
       appSetting,
       mostPlayedList,
+      handlePlay,
     }
   },
 }

@@ -1,17 +1,7 @@
 <template>
-  <input
-    ref="dom_input"
-    :class="$style.input"
-    :type="type"
-    :placeholder="placeholder"
-    :value="modelValue"
-    :disabled="disabled"
-    tabindex="0"
-    @input="handleInput"
-    @change="$emit('change', $event.target.value.trim())"
-    @keyup.enter="$emit('submit', $event.target.value.trim())"
-    @contextmenu="handleContextMenu"
-  >
+  <input ref="dom_input" :class="$style.input" :type="type" :placeholder="placeholder" :value="modelValue"
+    :disabled="disabled" tabindex="0" @input="handleInput" @change="$emit('change', $event.target.value.trim())"
+    @keyup.enter="$emit('submit', $event.target.value.trim())" @contextmenu="handleContextMenu">
 </template>
 
 <script>
@@ -112,9 +102,11 @@ export default {
     opacity: .4;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: var(--color-primary-background-hover);
   }
+
   &:active {
     background-color: var(--color-primary-background-active);
   }
@@ -124,5 +116,4 @@ export default {
   padding: 3px 8px;
   font-size: 12px;
 }
-
 </style>

@@ -28,18 +28,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import NavBar from './NavBar.vue'
 import SearchInput from './SearchInput.vue'
 import Arrows from './Arrows.vue'
 import { search as searchMusic } from '@renderer/store/search/music'
 import { onPlayTargetMusic } from '@renderer/utils/ipc'
-import { onMounted } from '@common/utils/vueTools'
 import { assertApiSupport } from '@renderer/store/utils'
 import { LIST_IDS } from '@common/constants'
 import { getListMusics, addListMusics } from '@renderer/store/list/action'
 import { playList } from '@renderer/core/player/action'
 import { PhMagnifyingGlass, PhMoon, PhSun } from '@phosphor-icons/vue'
-import { ref } from '@common/utils/vueTools'
+import { ref, onMounted } from '@common/utils/vueTools'
 import { darkMode, toggleDarkMode } from '@renderer/store/theme/state'
 
 const isShowSearch = ref(false)

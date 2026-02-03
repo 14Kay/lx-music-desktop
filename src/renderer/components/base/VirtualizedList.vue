@@ -1,11 +1,6 @@
 <template>
-  <component
-    :is="containerEl"
-    ref="dom_scrollContainer"
-    :class="containerClass"
-    tabindex="0"
-    style="outline: none; height: 100%; overflow-y: auto; position: relative; display: block; "
-  >
+  <component :is="containerEl" ref="dom_scrollContainer" :class="containerClass" tabindex="0"
+    style="outline: none; height: 100%; overflow-y: auto; position: relative; display: block; ">
     <component :is="contentEl" :class="contentClass" :style="contentStyle">
       <div v-for="item in views" :key="item.key" :style="item.style">
         <slot name="default" v-bind="{ item: item.item, index: item.index }" />
@@ -33,7 +28,7 @@ import {
 export const debounce = (fn, delay = 100) => {
   let timer = null
   let _args = null
-  return function(...args) {
+  return function (...args) {
     _args = args
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
@@ -49,7 +44,7 @@ const easeInOutQuad = (t, b, c, d) => {
   t--
   return (-c / 2) * (t * (t - 2) - 1) + b
 }
-const handleScroll = (element, to, duration = 300, callback = () => {}, onCancel = () => {}) => {
+const handleScroll = (element, to, duration = 300, callback = () => { }, onCancel = () => { }) => {
   if (!element) { callback(); return }
   const start = element.scrollTop || element.scrollY || 0
   let cancel = false
@@ -159,9 +154,10 @@ export default {
     const updateView = (currentScrollTop = dom_scrollContainer.value.scrollTop) => {
       // const currentScrollTop = this.$refs.dom_scrollContainer.scrollTop
       const itemHeight = props.itemHeight
-      const currentStartIndex = Math.floor(currentScrollTop / itemHeight)
       const scrollContainerHeight = dom_scrollContainer.value.clientHeight
+      const currentStartIndex = Math.floor(currentScrollTop / itemHeight)
       const currentEndIndex = currentStartIndex + Math.ceil(scrollContainerHeight / itemHeight)
+
       const continuous = currentStartIndex <= endIndex && currentEndIndex >= startIndex
       const currentStartRenderIndex = Math.max(currentStartIndex, 0)
       const currentEndRenderIndex = currentEndIndex + 1
@@ -270,9 +266,15 @@ export default {
       cachedList = Array(list.length)
       startIndex = -1
       endIndex = -1
-      void nextTick(() => {
-        updateView()
-      })
+      if (cachedList.length) {
+        void nextTick(() => {
+          requestAnimationFrame(() => {
+            updateView()
+          })
+        })
+      } else {
+        views.value = []
+      }
     }
     watch(() => props.itemHeight, () => {
       handleReset(props.list)
@@ -281,22 +283,45 @@ export default {
       handleReset(list)
     })
 
+    let resizeObserver = null
+
     onMounted(() => {
-      dom_scrollContainer.value.addEventListener('scroll', onScroll, false)
+      dom_scrollContainer.value.addEventListener('scroll', onScroll, {
+        capture: false,
+        passive: true,
+      })
       cachedList = Array(props.list.length)
       startIndex = -1
       endIndex = -1
-      updateView()
+
+      if (props.list.length) {
+        void nextTick(() => {
+          requestAnimationFrame(() => {
+            updateView()
+          })
+        })
+      }
       window.addEventListener('resize', handleResize)
+
+      if (ResizeObserver) {
+        resizeObserver = new ResizeObserver(handleResize)
+        resizeObserver.observe(dom_scrollContainer.value)
+      }
     })
     onBeforeUnmount(() => {
       dom_scrollContainer.value.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', handleResize)
       if (cancelScroll) cancelScroll()
+      if (resizeObserver) resizeObserver.disconnect()
     })
+
+    const refresh = () => {
+      updateView()
+    }
 
     return {
       views,
+      refresh,
       dom_scrollContainer,
       contentStyle,
       scrollTo,

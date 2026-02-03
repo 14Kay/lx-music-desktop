@@ -1,33 +1,26 @@
 <template lang="pug">
 div(:class="$style.footerLeftControlBtns")
-  button(:class="[$style.footerLeftControlBtn, $style.lrcBtn]" :aria-label="toggleDesktopLyricBtnTitle" @click="toggleDesktopLyric" @contextmenu="toggleLockDesktopLyric")
-    svg(v-show="appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="125%" viewBox="0 0 512 512" space="preserve")
-      use(xlink:href="#icon-desktop-lyric-on")
-    svg(v-show="!appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="125%" viewBox="0 0 512 512" space="preserve")
-      use(xlink:href="#icon-desktop-lyric-off")
-  button(:class="[$style.footerLeftControlBtn, { [$style.active]: appSetting['player.audioVisualization'] }]" :aria-label="$t('audio_visualization')" @click="toggleAudioVisualization")
-    svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="95%" viewBox="0 0 24 24" space="preserve")
-      use(xlink:href="#icon-audio-wave")
-  button(:class="[$style.footerLeftControlBtn, { [$style.active]: isShowLrcSelectContent }]" :aria-label="$t('lyric__select')" @click="toggleVisibleLrc")
-    svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="95%" viewBox="0 0 24 24" space="preserve")
-      use(xlink:href="#icon-text")
-  button(:class="[$style.footerLeftControlBtn, { [$style.active]: isShowPlayComment }]" :aria-label="$t('comment__show')" @click="toggleVisibleComment")
-    svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="95%" viewBox="0 0 24 24" space="preserve")
-      use(xlink:href="#icon-comment")
-  common-sound-effect-btn
-  common-playback-rate-btn
-  common-volume-btn
-  common-toggle-play-mode-btn
-  button(:class="$style.footerLeftControlBtn" :aria-label="$t('player__add_music_to')" @click="isShowAddMusicTo = true")
-    svg(version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" space="preserve")
-      use(xlink:href="#icon-add-2")
+  div
+    button(:class="['my__button']" :aria-label="toggleDesktopLyricBtnTitle" @click="toggleDesktopLyric" @contextmenu="toggleLockDesktopLyric")
+      svg(v-show="appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="125%" viewBox="0 0 512 512" space="preserve")
+        use(xlink:href="#icon-desktop-lyric-on")
+      svg(v-show="!appSetting['desktopLyric.enable']" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="125%" viewBox="0 0 512 512" space="preserve")
+        use(xlink:href="#icon-desktop-lyric-off")
+    button(class="my__button" :aria-label="$t('lyric__select')" @click="toggleVisibleLrc")
+      component(is="PhClipboardText" size="80%" weight="regular")
+    common-sound-effect-btn
+  div
+    common-playback-rate-btn
+    common-volume-btn
+    button(class="my__button" :aria-label="$t('player__add_music_to')" @click="isShowAddMusicTo = true")
+      component(is="PhHeart" size="80%" weight="regular")
   common-list-add-modal(v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo")
-
 </template>
 
 <script>
 import { ref } from '@common/utils/vueTools'
 import { useI18n } from '@renderer/plugins/i18n'
+import { PhClipboardText, PhHeart } from '@phosphor-icons/vue'
 
 import {
   isShowLrcSelectContent,
@@ -46,6 +39,10 @@ import { setMediaDeviceId } from '@renderer/plugins/player'
 import { appSetting, saveMediaDeviceId, setEnableAudioVisualization } from '@renderer/store/setting'
 
 export default {
+  components: {
+    PhClipboardText,
+    PhHeart,
+  },
   setup() {
     const t = useI18n()
     // const setting = useRefGetter('setting')
@@ -111,13 +108,14 @@ export default {
 .footerLeftControlBtns {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
 
-  button {
-    width: 20px;
-    color: var(--color-font);
+  >div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
   }
 
   .footerLeftControlBtn {

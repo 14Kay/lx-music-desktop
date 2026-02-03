@@ -1,15 +1,11 @@
 <template>
-  <material-modal
-:show="props.modelValue" teleport="#view" width="40%" @close="emit('update:model-value', $event)"
-    @after-enter="$refs.input.focus()"
->
+  <material-modal :show="props.modelValue" teleport="#view" width="40%" @close="emit('update:model-value', $event)"
+    @after-enter="$refs.input.focus()">
     <main :class="$style.main">
       <h2>{{ $t('list__new_list_btn') }}</h2>
       <div :class="$style.inputContent">
-        <base-input
-ref="input" v-model.trim="text" :class="$style.input" :placeholder="$t('list__new_list_input')"
-          @submit="handleSubmit"
-/>
+        <base-input ref="input" v-model.trim="text" :class="$style.input" :placeholder="$t('list__new_list_input')"
+          @submit="handleSubmit" />
       </div>
       <div :class="$style.footer">
         <base-btn :class="$style.btn" @click="handleSubmit">{{ $t('btn_confirm') }}</base-btn>
@@ -129,6 +125,6 @@ const handleSubmit = () => {
   // line-height: 36px;
   // padding: 0 10px !important;
   min-width: 80px;
-  // .mixin-ellipsis-1;
+  // .mixin-ellipsis-1();
 }
 </style>

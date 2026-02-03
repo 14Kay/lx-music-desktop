@@ -72,11 +72,10 @@ export default {
 
     // const theme = useRefGetter('theme')
     // const setting = useRefGetter('setting')
-    let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-light-200-alpha-400')
+    let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-font-secondary')
     // watch(theme, theme => {
     //   themeColor = themes[theme || 'green']
     // })
-
     // https://developer.mozilla.org/zh-CN/docs/Web/API/AnalyserNode/smoothingTimeConstant
     const renderFrame = () => {
       x = 0

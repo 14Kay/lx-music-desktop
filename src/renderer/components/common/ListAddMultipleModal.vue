@@ -3,12 +3,17 @@
     <main :class="$style.main">
       <h2>{{ $t('list_add__multiple_' + (isMove ? 'title_move' : 'title_add'), { num: musicList.length }) }}</h2>
       <div class="scroll" :class="$style.btnContent">
-        <base-btn v-for="(item, index) in lists" :key="item.id" :class="$style.btn" :aria-label="$t('list_add__multiple_btn_title', { name: item.name })" @click="handleClick(index)">{{ item.name }}</base-btn>
-        <base-btn :class="[$style.btn, $style.newList, isEditing ? $style.editing : null]" :aria-label="$t('lists__new_list_btn')" @click="handleEditing($event)">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 0 42 42" space="preserve">
+        <base-btn v-for="(item, index) in lists" :key="item.id" :class="$style.btn"
+          :aria-label="$t('list_add__multiple_btn_title', { name: item.name })" @click="handleClick(index)">{{ item.name
+          }}</base-btn>
+        <base-btn :class="[$style.btn, $style.newList, isEditing ? $style.editing : null]"
+          :aria-label="$t('lists__new_list_btn')" @click="handleEditing($event)">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 0 42 42"
+            space="preserve">
             <use xlink:href="#icon-addTo" />
           </svg>
-          <base-input :class="$style.newListInput" :value="newListName" :placeholder="$t('lists__new_list_input')" @keyup.enter="handleSaveList($event)" @blur="handleSaveList($event)" />
+          <base-input :class="$style.newListInput" :value="newListName" :placeholder="$t('lists__new_list_input')"
+            @keyup.enter="handleSaveList($event)" @blur="handleSaveList($event)" />
         </base-btn>
         <span v-for="i in spaceNum" :key="i" :class="$style.btn" />
       </div>
@@ -155,6 +160,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
@@ -176,6 +182,7 @@ export default {
 }
 
 @item-width: (100% / 3);
+
 .btn {
   position: relative;
   box-sizing: border-box;
@@ -186,7 +193,7 @@ export default {
   padding: 0 10px !important;
   width: calc(@item-width - 15px);
   min-width: 160px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
 
 .newList {
@@ -206,11 +213,13 @@ export default {
     svg {
       display: none;
     }
+
     .newListInput {
       display: block;
     }
   }
 }
+
 .newListInput {
   position: absolute;
   left: 0;
@@ -228,22 +237,23 @@ export default {
 }
 
 @item-width2: (100% / 4);
-@media (min-width: 1920px){
+@media (min-width: 1920px) {
   .btn {
     width: calc(@item-width2 - 15px);
   }
 }
+
 @item-width3: (100% / 5);
-@media (min-width: 2560px){
+@media (min-width: 2560px) {
   .btn {
     width: calc(@item-width3 - 15px);
   }
 }
+
 @item-width4: (100% / 6);
-@media (min-width: 3840px){
+@media (min-width: 3840px) {
   .btn {
     width: calc(@item-width4 - 15px);
   }
 }
-
 </style>

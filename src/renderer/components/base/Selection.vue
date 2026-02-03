@@ -162,7 +162,7 @@ export default {
 
   span {
     flex: auto;
-    .mixin-ellipsis-1;
+    .mixin-ellipsis-1();
   }
 
   .icon {
@@ -213,7 +213,7 @@ export default {
   transition: background-color @transition-normal;
   background-color: transparent;
   box-sizing: border-box;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 
   &:hover {
     background-color: var(--color-button-background-hover);

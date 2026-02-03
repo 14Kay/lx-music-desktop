@@ -29,8 +29,8 @@
                         <PhHeart size="45%" :weight="isCollected ? 'fill' : 'regular'" />
                     </div>
 
-                    <div class="my__button" @click="emit('delete')"
-                        v-if="listId != LIST_IDS.LOVE && listId != LIST_IDS.DEFAULT && !showCollect">
+                    <div v-if="listId != LIST_IDS.LOVE && listId != LIST_IDS.DEFAULT && !showCollect" class="my__button"
+                        @click="emit('delete')">
                         <PhTrash size="45%" />
                     </div>
                     <div class="my__button" @click.stop="showMenu = !showMenu">
@@ -60,11 +60,10 @@ import { LIST_IDS } from '@common/constants'
 import useRename from './useRename'
 import useSearch from './useSearch'
 import { resizeImage } from '@renderer/utils/resizeCover'
-import { PhTrash, PhPause, PhPlay, PhDotsThree, PhHeart } from '@phosphor-icons/vue'
+import { PhTrash, PhPause, PhPlay, PhDotsThree, PhHeart, PhMagnifyingGlass } from '@phosphor-icons/vue'
 import { playMusicInfo, isPlay } from '@renderer/store/player/state'
 import { tempListMeta } from '@renderer/store/list/state'
-import { pause, play } from '@renderer/core/player'
-import { PhMagnifyingGlass } from '@phosphor-icons/vue'
+import { pause } from '@renderer/core/player'
 
 const emit = defineEmits(['play', 'collect', 'delete', 'search'])
 const showMenu = ref(false)
@@ -163,7 +162,7 @@ const handleClose = () => {
         transition: @transition-normal;
         transition-property: background-color, opacity;
         box-sizing: border-box;
-        .mixin-ellipsis-1;
+        .mixin-ellipsis-1();
         // background-color: var(--color-primary-light-600-alpha-800);
 
         &:hover {

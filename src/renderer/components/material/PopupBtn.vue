@@ -1,5 +1,6 @@
 <template>
-  <div ref="dom_btn" :class="$style.content" @click="handleShowPopup" @mouseenter="handlMsEnter" @mouseleave="handlMsLeave">
+  <div ref="dom_btn" :class="$style.content" @click="handleShowPopup" @mouseenter="handlMsEnter"
+    @mouseleave="handlMsLeave">
     <slot />
     <base-popup v-model:visible="visible" :btn-el="dom_btn" @mouseenter="handlMsEnter" @mouseleave="handlMsLeave">
       <slot name="content" />
@@ -58,9 +59,9 @@ defineExpose({
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .content {
   position: relative;
   display: inline-block;
 }
-
 </style>

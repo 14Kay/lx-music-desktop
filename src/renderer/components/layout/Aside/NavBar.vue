@@ -110,7 +110,7 @@ export default {
   //   transition: @transition-normal;
   //   transition-property: color;
   //   color: @color-theme-font-label;
-  //   .mixin-ellipsis-1;
+  //   .mixin-ellipsis-1();
   // }
 }
 
@@ -155,7 +155,7 @@ export default {
   justify-content: center;
 
   // border-radius: @radius-border;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 
   &:before {
     .mixin-after;

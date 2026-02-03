@@ -71,15 +71,15 @@ export default {
         nextPage: 1,
         limit: 20,
         list: [
-        // {
-        //   text: ['123123hhh'],
-        //   userName: 'dsads',
-        //   avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
-        //   time: '2020-10-22 22:14:17',
-        //   timeStr: '2020-10-22 22:14:17',
-        //   likedCount: 100,
-        //   reply: [],
-        // },
+          // {
+          //   text: ['123123hhh'],
+          //   userName: 'dsads',
+          //   avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
+          //   time: '2020-10-22 22:14:17',
+          //   timeStr: '2020-10-22 22:14:17',
+          //   likedCount: 100,
+          //   reply: [],
+          // },
         ],
       },
       hotComment: {
@@ -91,24 +91,24 @@ export default {
         nextPage: 1,
         limit: 20,
         list: [
-        // {
-        //   text: ['123123hhh'],
-        //   userName: 'dsads',
-        //   avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
-        //   time: '2020-10-22 22:14:17',
-        //   timeStr: '2020-10-22 22:14:17',
-        //   likedCount: 100,
-        //   reply: [
-        //     {
-        //       text: ['123123hhh'],
-        //       userName: 'dsads',
-        //       avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
-        //       time: '2020-10-22 22:14:17',
-        //       timeStr: '2020-10-22 22:14:17',
-        //       likedCount: 100,
-        //     },
-        //   ],
-        // },
+          // {
+          //   text: ['123123hhh'],
+          //   userName: 'dsads',
+          //   avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
+          //   time: '2020-10-22 22:14:17',
+          //   timeStr: '2020-10-22 22:14:17',
+          //   likedCount: 100,
+          //   reply: [
+          //     {
+          //       text: ['123123hhh'],
+          //       userName: 'dsads',
+          //       avatar: 'http://img4.kuwo.cn/star/userhead/39/52/1602393411654_512039239s.jpg',
+          //       time: '2020-10-22 22:14:17',
+          //       timeStr: '2020-10-22 22:14:17',
+          //       likedCount: 100,
+          //     },
+          //   ],
+          // },
         ],
       },
     }
@@ -248,23 +248,26 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   transition: @transition-normal;
-  transition-property: transform,opacity;
+  transition-property: transform, opacity;
   transform-origin: 100%;
   overflow: hidden;
 }
+
 .commentHeader {
   flex: none;
   padding-bottom: 5px;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+
   // border-bottom: 1px solid #eee;
   h3 {
     font-size: 14px;
-    .mixin-ellipsis-1;
+    .mixin-ellipsis-1();
     line-height: 1.2;
   }
 }
+
 .commentHeaderBtns {
   flex: 1 0 auto;
   display: flex;
@@ -272,6 +275,7 @@ export default {
   justify-content: flex-end;
   color: var(--color-primary);
 }
+
 .commentHeaderBtn {
   height: 22px;
   width: 22px;
@@ -286,6 +290,7 @@ export default {
     opacity: .7;
   }
 }
+
 .commentMain {
   flex: auto;
   background-color: var(--color-primary-light-400-alpha-700);
@@ -293,6 +298,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .tab_header {
   display: flex;
   flex-flow: row nowrap;
@@ -300,6 +306,7 @@ export default {
   padding-left: 15px;
   padding-right: 10px;
 }
+
 .tab_main {
   flex: auto;
   display: flex;
@@ -308,11 +315,13 @@ export default {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 }
+
 .tab_content {
   flex-shrink: 0;
   width: 100%;
   position: relative;
 }
+
 .tab_content_scroll {
   position: absolute;
   left: 0;
@@ -323,11 +332,13 @@ export default {
   padding-right: 10px;
   scroll-behavior: smooth;
 }
+
 .commentLabel {
   padding: 15px;
   color: var(--color-font-label);
   font-size: 14px;
 }
+
 .commentType {
   padding: 5px;
   margin: 5px 0;
@@ -337,13 +348,16 @@ export default {
   cursor: pointer;
   transition: @transition-normal;
   transition-property: opacity, color;
+
   &:hover {
     opacity: .7;
   }
+
   &.active {
     color: var(--color-primary);
   }
 }
+
 .commentFloor {
   opacity: 1;
   transition: opacity @transition-normal;
@@ -352,6 +366,7 @@ export default {
     opacity: .4;
   }
 }
+
 .pagination {
   padding: 10px 0;
 }
@@ -363,5 +378,4 @@ export default {
   font-size: 14px;
   color: var(--color-font-label);
 }
-
 </style>

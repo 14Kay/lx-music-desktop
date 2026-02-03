@@ -18,7 +18,7 @@ import { skippedList } from '@renderer/store/player/state'
 /**
  * 过滤列表中已播放的歌曲
  */
-export const filterList = async ({ playedList, listId, list, playerMusicInfo, isNext }: {
+export const filterList = async({ playedList, listId, list, playerMusicInfo, isNext }: {
   playedList: LX.Player.PlayMusicInfo[]
   listId: string
   list: Array<LX.Music.MusicInfo | LX.Download.ListItem>

@@ -44,7 +44,12 @@ dd
 dd
   h3#basic_font {{ $t('setting__basic_font') }}
   div
-    base-selection.gap-teft(:list="fontList" :model-value="appSetting['common.font']" item-key="id" item-name="label" @update:model-value="updateSetting({ 'common.font': $event })")
+    div(v-if="selectedFonts.length" :class="$style.fontList" )
+      div(v-for="(font, index) in selectedFonts" :key="index" :class="$style.fontItem")
+        span {{ font.replace(/(^"|"$)/g, '') }}
+        button(:class="$style.removeBtn" @click="handleRemoveFont(index)")
+          PhTrash(:size="14")
+    base-selection.gap-left(:list="fontList" :model-value="''" item-key="id" item-name="label" @update:model-value="handleAddFont")
 
 dd
   h3#basic_lang {{ $t('setting__basic_lang') }}
@@ -64,22 +69,19 @@ dd
 
 <script>
 import { computed, ref } from '@common/utils/vueTools'
-import { windowSizeList, userApi, isFullscreen, themeId } from '@renderer/store'
+import { PhTrash } from '@phosphor-icons/vue'
+import { windowSizeList, userApi, isFullscreen } from '@renderer/store'
 import { langList, useI18n } from '@root/lang'
 import { getSystemFonts } from '@renderer/utils/ipc'
 import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 import { useTimeout } from '@renderer/core/player/timeoutStop'
-
-import PlayTimeoutModal from './PlayTimeoutModal.vue'
-import UserApiModal from './UserApiModal.vue'
 import { appSetting, updateSetting } from '@renderer/store/setting'
 import { debounce } from '@common/utils'
 
 export default {
   name: 'SettingBasic',
   components: {
-    PlayTimeoutModal,
-    UserApiModal,
+    PhTrash,
   },
   setup() {
     const t = useI18n()
@@ -135,11 +137,33 @@ export default {
 
     const systemFontList = ref([])
     const fontList = computed(() => {
-      return [{ id: '', label: t('setting__desktop_lyric_font_default') }, ...systemFontList.value]
+      return [{ id: '', label: '添加字体' }, ...systemFontList.value.map(f => ({ id: f, label: f.replace(/(^"|"$)/g, '') }))]
     })
     void getSystemFonts().then(fonts => {
-      systemFontList.value = fonts.map(f => ({ id: f, label: f.replace(/(^"|"$)/g, '') }))
+      systemFontList.value = fonts
     })
+
+    const parseFonts = (str) => {
+      return str ? str.split(',').map(f => f.trim()).filter(f => f) : []
+    }
+
+    const selectedFonts = computed(() => {
+      return parseFonts(appSetting['common.font'])
+    })
+
+    const handleAddFont = (font) => {
+      if (!font) return
+      const currentFonts = parseFonts(appSetting['common.font'])
+      if (currentFonts.includes(font)) return
+      currentFonts.push(font)
+      updateSetting({ 'common.font': currentFonts.join(',') })
+    }
+
+    const handleRemoveFont = (index) => {
+      const currentFonts = parseFonts(appSetting['common.font'])
+      currentFonts.splice(index, 1)
+      updateSetting({ 'common.font': currentFonts.join(',') })
+    }
 
     const fontSizeList = computed(() => {
       return [
@@ -174,6 +198,9 @@ export default {
       fontSizeList,
       setUsername,
       setAvatar,
+      selectedFonts,
+      handleAddFont,
+      handleRemoveFont,
     }
   },
 }
@@ -403,6 +430,40 @@ export default {
 
   .status {
     margin-left: 5px;
+  }
+}
+
+.fontList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.fontItem {
+  display: flex;
+  align-items: center;
+  background: var(--color-primary-light-100-alpha-200);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--color-font);
+}
+
+.removeBtn {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--color-font);
+  opacity: 0.6;
+  margin-left: 6px;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+    color: var(--color-primary);
   }
 }
 </style>

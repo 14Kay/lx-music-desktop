@@ -1,6 +1,13 @@
 <template>
   <div v-if="maxPage > 1" :class="$style.pagination">
     <ul>
+      <li v-if="maxPage > btnLength && page > pageEvg + 1" :class="$style.first">
+        <div type="button" :aria-label="$t('pagination__page', { num: 1 })" @click="handleClick(1)">
+          <PhCaretLineLeft size="1.2em" />
+          <span>First</span>
+        </div>
+      </li>
+
       <li v-if="page == 1" :class="$style.disabled">
         <div>
           <PhCaretLeft size="1.2em" />
@@ -13,22 +20,11 @@
           <span>Prev</span>
         </div>
       </li>
-      <li v-if="maxPage > btnLength && page > pageEvg + 1" :class="$style.first">
-        <div type="button" :aria-label="$t('pagination__page', { num: 1 })" @click="handleClick(1)">
-          <PhCaretLineLeft size="1.2em" />
-          <span>First</span>
-        </div>
-      </li>
       <li v-for="p in pages" :key="p" :class="{ [$style.active]: p == page }">
         <div v-if="p === page" v-text="page" />
         <div v-else type="button" :aria-label="$t('pagination__page', { num: p })" @click="handleClick(p)" v-text="p" />
       </li>
-      <li v-if="maxPage > btnLength && maxPage - page > pageEvg" :class="$style.last">
-        <div type="button" :aria-label="$t('pagination__page', { num: maxPage })" @click="handleClick(maxPage)">
-          <span>Last</span>
-          <PhCaretLineRight size="1.2em" />
-        </div>
-      </li>
+
       <li v-if="page == maxPage" :class="$style.disabled">
         <div>
           <span>Next</span>
@@ -39,6 +35,13 @@
         <div type="button" :aria-label="$t('pagination__next')" @click="handleClick(page + 1)">
           <span>Next</span>
           <PhCaretRight size="1.2em" />
+        </div>
+      </li>
+
+      <li v-if="maxPage > btnLength && maxPage - page > pageEvg" :class="$style.last">
+        <div type="button" :aria-label="$t('pagination__page', { num: maxPage })" @click="handleClick(maxPage)">
+          <span>Last</span>
+          <PhCaretLineRight size="1.2em" />
         </div>
       </li>
     </ul>

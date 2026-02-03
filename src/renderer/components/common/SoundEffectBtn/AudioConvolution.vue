@@ -3,37 +3,29 @@
     <h3 class="player__sound_effect_title">{{ $t('player__sound_effect_convolution') }}</h3>
     <div :class="$style.convolution">
       <div :class="$style.convolutionList">
-        <base-checkbox
-v-for="item in convolutions" :id="`player__convolution_${item.name}`" :key="item.name"
+        <base-checkbox v-for="item in convolutions" :id="`player__convolution_${item.name}`" :key="item.name"
           :class="$style.checkbox" :model-value="appSetting['player.soundEffect.convolution.fileName']"
           :label="$t(`player__sound_effect_convolution_file_${item.name}`)" :value="item.source"
-          @update:model-value="updateConvolution($event)"
-/>
+          @update:model-value="updateConvolution($event)" />
       </div>
       <div :class="[$style.sliderList, { [$style.disabled]: disabledConvolution }]">
         <div :class="$style.sliderItem">
           <span :class="$style.label">{{ $t('player__sound_effect_convolution_main_gain') }}</span>
-          <base-slider-bar
-:class="$style.slider" :value="appSetting['player.soundEffect.convolution.mainGain']"
-            :min="0" :max="50" :disabled="disabledConvolution" @change="handleUpdateMainGain"
-/>
+          <base-slider-bar :class="$style.slider" :value="appSetting['player.soundEffect.convolution.mainGain']"
+            :min="0" :max="50" :disabled="disabledConvolution" @change="handleUpdateMainGain" />
           <span :class="[$style.value]">{{ appSetting['player.soundEffect.convolution.mainGain'] * 10 }}%</span>
         </div>
         <div :class="$style.sliderItem">
           <span :class="$style.label">{{ $t('player__sound_effect_convolution_send_gain') }}</span>
-          <base-slider-bar
-:class="$style.slider" :value="appSetting['player.soundEffect.convolution.sendGain']"
-            :min="0" :max="50" :disabled="disabledConvolution" @change="handleUpdateSendGain"
-/>
+          <base-slider-bar :class="$style.slider" :value="appSetting['player.soundEffect.convolution.sendGain']"
+            :min="0" :max="50" :disabled="disabledConvolution" @change="handleUpdateSendGain" />
           <span :class="[$style.value]">{{ appSetting['player.soundEffect.convolution.sendGain'] * 10 }}%</span>
         </div>
       </div>
     </div>
     <div :class="$style.saveList">
-      <base-btn
-v-for="item in userPresetList" :key="item.id" min @click="handleSetPreset(item)"
-        @contextmenu="handleRemovePreset(item.id)"
->{{ item.name }}</base-btn>
+      <base-btn v-for="item in userPresetList" :key="item.id" min @click="handleSetPreset(item)"
+        @contextmenu="handleRemovePreset(item.id)">{{ item.name }}</base-btn>
       <AddConvolutionPresetBtn v-if="userPresetList.length < 31" :disabled="disabledConvolution" />
     </div>
   </div>

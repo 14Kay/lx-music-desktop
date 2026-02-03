@@ -93,7 +93,7 @@ export default {
     }
 
     const handleHotKeyFocus = (event, info, type) => {
-      setTimeout(async() => {
+      setTimeout(async () => {
         await hotKeySetEnable(false)
         window.lx.isEditingHotKey = true
         isEditHotKey = true
@@ -105,7 +105,7 @@ export default {
     }
 
     const handleHotKeyBlur = (event, info, type) => {
-      setTimeout(async() => {
+      setTimeout(async () => {
         await hotKeySetEnable(true)
         window.lx.isEditingHotKey = false
         isEditHotKey = false
@@ -190,14 +190,14 @@ export default {
     //     current_hot_key.value[type] = info
     //   }
     // }
-    const handleHotKeySaveConfig = async() => {
+    const handleHotKeySaveConfig = async () => {
       // console.log(this.current_hot_key)
       await hotKeySetConfig({
         action: 'config',
         data: toRaw(current_hot_key.value),
       })
     }
-    const handleEnableHotKey = async() => {
+    const handleEnableHotKey = async () => {
       await hotKeySetConfig({
         action: 'enable',
         data: current_hot_key.value.global.enable,
@@ -205,7 +205,7 @@ export default {
       await handleHotKeySaveConfig()
       await getHotKeyStatus()
     }
-    const getHotKeyStatus = async() => {
+    const getHotKeyStatus = async () => {
       return hotKeyGetStatus().then(status => {
         // console.log(status)
         hotKeyStatus.value = status
@@ -249,30 +249,36 @@ export default {
   margin-bottom: 15px;
   transition: opacity @transition-normal;
 }
+
 .hotKeyItem {
   width: 30%;
   padding-right: 35px;
   margin-top: 15px;
   box-sizing: border-box;
 }
+
 .hotKeyItemTitle {
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   padding-bottom: 5px;
   color: var(--color-font-label);
   font-size: 12px;
 }
+
 .hotKeyItemInput {
   width: 100%;
   box-sizing: border-box;
+
   // font-family: monospace;
   &:focus {
     background-color: var(--color-primary-background-active);
     text-decoration: none;
   }
+
   &::placeholder {
     color: var(--color-200) !important;
   }
 }
+
 .hotKeyFailed {
   text-decoration: line-through;
 }
@@ -305,6 +311,4 @@ export default {
 //     top: 2px;
 //     z-index: 1;
 //   }
-// }
-
-</style>
+// }</style>

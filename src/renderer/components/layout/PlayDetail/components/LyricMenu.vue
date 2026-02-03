@@ -10,17 +10,24 @@
     </div> -->
       <div :class="$style.group">
         <div :class="$style.subGroup">
-          <div :class="$style.title">{{ $t('lyric_menu__lrc_size', { size: appSetting['playDetail.style.fontSize'] }) }}</div>
-          <button :class="[$style.btn, $style.titleBtn]" :disabled="appSetting['playDetail.style.fontSize'] == 100" ignore-tip :aria-label="$t('lyric_menu__size_reset')" @click="fontSizeReset">{{ $t('lyric_menu__size_reset') }}</button>
+          <div :class="$style.title">{{ $t('lyric_menu__lrc_size', { size: appSetting['playDetail.style.fontSize'] }) }}
+          </div>
+          <button :class="[$style.btn, $style.titleBtn]" :disabled="appSetting['playDetail.style.fontSize'] == 100"
+            ignore-tip :aria-label="$t('lyric_menu__size_reset')" @click="fontSizeReset">{{ $t('lyric_menu__size_reset')
+            }}</button>
         </div>
         <div :class="$style.subGroup">
-          <button :class="$style.btn" :aria-label="$t('lyric_menu__size_add')" @click="fontSizeUp(5)" @contextmenu="fontSizeUp(1)">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="18px" viewBox="0 0 24 24" space="preserve">
+          <button :class="$style.btn" :aria-label="$t('lyric_menu__size_add')" @click="fontSizeUp(5)"
+            @contextmenu="fontSizeUp(1)">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="18px"
+              viewBox="0 0 24 24" space="preserve">
               <use xlink:href="#icon-font-increase" />
             </svg>
           </button>
-          <button :class="$style.btn" :aria-label="$t('lyric_menu__size_dec')" @click="fontSizeDown(5)" @contextmenu="fontSizeDown(1)">
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="18px" viewBox="0 0 24 24" space="preserve">
+          <button :class="$style.btn" :aria-label="$t('lyric_menu__size_dec')" @click="fontSizeDown(5)"
+            @contextmenu="fontSizeDown(1)">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="18px"
+              viewBox="0 0 24 24" space="preserve">
               <use xlink:href="#icon-font-decrease" />
             </svg>
           </button>
@@ -29,15 +36,20 @@
       <div :class="$style.group">
         <div :class="$style.subGroup">
           <div :class="$style.title">{{ $t('lyric_menu__offset', { offset }) }}</div>
-          <button :class="[$style.btn, $style.titleBtn]" :disabled="offsetDisabled || offset == originOffset" @click="offsetReset">{{ $t('lyric_menu__offset_reset') }}</button>
+          <button :class="[$style.btn, $style.titleBtn]" :disabled="offsetDisabled || offset == originOffset"
+            @click="offsetReset">{{ $t('lyric_menu__offset_reset') }}</button>
         </div>
         <div :class="$style.subGroup">
-          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip :aria-label="$t('lyric_menu__offset_add_10')" @click="setOffset(10)">+ 10ms</button>
-          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip :aria-label="$t('lyric_menu__offset_dec_10')" @click="setOffset(-10)">- 10ms</button>
+          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip
+            :aria-label="$t('lyric_menu__offset_add_10')" @click="setOffset(10)">+ 10ms</button>
+          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip
+            :aria-label="$t('lyric_menu__offset_dec_10')" @click="setOffset(-10)">- 10ms</button>
         </div>
         <div :class="$style.subGroup">
-          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip :aria-label="$t('lyric_menu__offset_add_100')" @click="setOffset(100)">+ 100ms</button>
-          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip :aria-label="$t('lyric_menu__offset_dec_100')" @click="setOffset(-100)">- 100ms</button>
+          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip
+            :aria-label="$t('lyric_menu__offset_add_100')" @click="setOffset(100)">+ 100ms</button>
+          <button :class="$style.btn" :disabled="offsetDisabled" ignore-tip
+            :aria-label="$t('lyric_menu__offset_dec_100')" @click="setOffset(-100)">- 100ms</button>
         </div>
       </div>
     </div>
@@ -219,7 +231,7 @@ export default {
   transition-property: transform, opacity;
   border-radius: @radius-border;
   background-color: var(--color-content-background);
-  box-shadow: 0 1px 8px 0 rgba(0,0,0,.2);
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, .2);
   z-index: 10;
   overflow: hidden;
 }
@@ -228,6 +240,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .title {
   flex: auto;
   padding: 10px 0 10px 10px;
@@ -256,16 +269,18 @@ export default {
   transition: @transition-normal;
   transition-property: background-color, opacity;
   box-sizing: border-box;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   background-color: var(--color-content-background);
   border: none;
 
   &:hover {
     background-color: var(--color-primary-background-hover);
   }
+
   &:active {
     background-color: var(--color-primary-background-active);
   }
+
   &.active {
     background-color: var(--color-content-background);
     color: var(--color-button-font-selected);
@@ -276,11 +291,13 @@ export default {
   &[disabled] {
     cursor: default;
     opacity: .4;
+
     &:hover {
       background: none !important;
     }
   }
 }
+
 .titleBtn {
   flex: none;
   padding: 0 10;
@@ -291,6 +308,4 @@ export default {
     opacity: .3;
   }
 }
-
 </style>
-

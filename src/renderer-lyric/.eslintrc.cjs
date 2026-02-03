@@ -6,7 +6,13 @@ module.exports = {
   ...base,
   overrides: [
     html,
-    vue,
+    {
+      ...vue,
+      parserOptions: {
+        ...vue.parserOptions,
+        project: './tsconfig.json',
+      },
+    },
     {
       ...typescript,
       parserOptions: {

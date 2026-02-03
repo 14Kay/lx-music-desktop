@@ -70,11 +70,10 @@ import { computed } from '@common/utils/vueTools'
 import { useRouter } from '@common/utils/vueRouter'
 import { clipboardWriteText } from '@common/utils/electron'
 import ControlBtns from './ControlBtns.vue'
-import PlayTime from './PlayTime.vue'
 import PlayProgress from './PlayProgress.vue'
 import usePlayProgress from '@renderer/utils/compositions/usePlayProgress'
 // import { lyric } from '@renderer/core/share/lyric'
-import { PhShuffle, PhPause, PhPlay, PhRewind, PhFastForward, PhPlaylist } from '@phosphor-icons/vue'
+import { PhPause, PhPlay, PhRewind, PhFastForward } from '@phosphor-icons/vue'
 import useToggleDesktopLyric from '@renderer/utils/compositions/useToggleDesktopLyric'
 import { appSetting } from '@renderer/store/setting'
 
@@ -97,9 +96,7 @@ export default {
   name: 'CorePlayBar',
   components: {
     ControlBtns,
-    PlayTime,
     PlayProgress,
-    PhShuffle,
     PhPause,
     PhPlay,
     PhRewind,
@@ -312,7 +309,7 @@ export default {
   max-width: 100%;
   font-size: 12px;
   color: var(--color-font-label);
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
 
 .name {
@@ -321,7 +318,7 @@ export default {
 
 .name,
 .singer {
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   width: 100%;
 }
 
@@ -333,7 +330,7 @@ export default {
 .status {
   padding-top: 3px;
   height: 23px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   max-width: 100%;
 }
 

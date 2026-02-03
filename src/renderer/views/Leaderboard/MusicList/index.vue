@@ -1,16 +1,8 @@
 <template>
   <div :class="$style.container">
-    <material-online-list
-      ref="listRef"
-      :page="listDetailInfo.page"
-      :limit="listDetailInfo.limit"
-      :total="listDetailInfo.total"
-      :list="listDetailInfo.list"
-      :no-item="listDetailInfo.noItemLabel"
-      @show-menu="hideListsMenu"
-      @play-list="handlePlayList"
-      @toggle-page="togglePage"
-    />
+    <material-online-list ref="listRef" :page="listDetailInfo.page" :limit="listDetailInfo.limit"
+      :total="listDetailInfo.total" :list="listDetailInfo.list" :no-item="listDetailInfo.noItemLabel"
+      @show-menu="hideListsMenu" @play-list="handlePlayList" @toggle-page="togglePage" />
   </div>
 </template>
 
@@ -72,5 +64,4 @@ defineExpose({ hideMenu })
   height: 100%;
   flex: auto;
 }
-
 </style>

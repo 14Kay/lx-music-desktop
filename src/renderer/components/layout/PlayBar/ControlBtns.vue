@@ -1,11 +1,11 @@
 <template>
   <div :class="$style.controlBtn">
 
-    <div class="my__button" @click="addMusicTo">
+    <div class="my__button" aria-label="收藏" @click="addMusicTo">
       <PhHeart size="52%" weight="regular" />
     </div>
 
-    <div :class="[$style.list, 'my__button']" @click="togglePlaylistPopup">
+    <div :class="[$style.list, 'my__button']" aria-label="播放列表" @click="togglePlaylistPopup">
       <svg t="1769493815060" height="54%" width="54%" viewBox="0 0 1024 1024" version="1.1"
         xmlns="http://www.w3.org/2000/svg">
         <rect x="112" y="185" width="400" height="80" fill="currentColor" />
@@ -14,7 +14,7 @@
       </svg>
     </div>
 
-    <div ref="dom_menuBtn" class="my__button" @click.stop="showMenu">
+    <div ref="dom_menuBtn" aria-label="更多操作" class="my__button" @click.stop="showMenu">
       <PhDotsThreeVertical size="62%" weight="bold" />
     </div>
     <common-list-add-modal v-model:show="isShowAddMusicTo" :music-info="playMusicInfo.musicInfo || {}" />
@@ -42,17 +42,14 @@ import useToggleDesktopLyric from '@renderer/utils/compositions/useToggleDesktop
 import { musicInfo, playMusicInfo, playInfo } from '@renderer/store/player/state'
 import { appSetting } from '@renderer/store/setting'
 import { lastFMTrackResult } from '@renderer/store'
-import { PhDotsThreeVertical, PhShuffle, PhHeart, PhPlaylist } from '@phosphor-icons/vue'
+import { PhDotsThreeVertical, PhHeart } from '@phosphor-icons/vue'
 import PlaylistPopup from './PlaylistPopup.vue'
 import MusicToggleModal from '@renderer/views/Library/Playlist/MusicList/components/MusicToggleModal.vue'
 
 export default {
   components: {
     PhDotsThreeVertical,
-    PhShuffle,
     PhHeart,
-    PhPlaylist,
-    PhPlaylist,
     PlaylistPopup,
     MusicToggleModal,
   },
@@ -206,11 +203,6 @@ export default {
       isShowDownload,
       isShowMusicToggleModal,
       toggleSource,
-      handleMenuClick,
-      isShowDownload,
-      isShowMusicToggleModal,
-      toggleSource,
-      playMusicInfo,
       dom_menuBtn,
     }
   },

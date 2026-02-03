@@ -34,12 +34,6 @@ const openLastFM = () => {
 @import '@renderer/assets/styles/layout.less';
 
 .aside {
-  // box-shadow: 0 0 5px rgba(0, 0, 0, .3);
-  transition: @transition-normal;
-  transition-property: background-color;
-  // background-color: @color-theme-sidebar;
-  // background-color: @color-aside-background;
-  // border-right: 2px solid var(--color-primary);
   -webkit-app-region: drag;
   -webkit-user-select: none;
   display: flex;

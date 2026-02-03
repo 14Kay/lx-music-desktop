@@ -1,5 +1,5 @@
 <template>
-  <div :class="['right', $style.right]" :style="lrcFontSize">
+  <div :class="['right', 'my__number', $style.right]" :style="lrcFontSize">
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <div v-show="!isShowLrcSelectContent" ref="dom_lyric"
         :class="['lyric', $style.lyric, { [$style.draging]: isMsDown }, { [$style.lrcActiveZoom]: isZoomActiveLrc }]"
@@ -90,7 +90,7 @@ export default {
     const dom_lrc_select_content = useSelectAllLrc()
 
     watch([isFullscreen, isShowPlayComment], () => {
-      setTimeout(handleScrollLrc, 400)
+      setTimeout(() => handleScrollLrc(), 400)
     })
 
     const lyricMenuVisible = ref(false)
@@ -210,8 +210,10 @@ export default {
   height: 100%;
   overflow: hidden;
   font-size: var(--playDetail-lrc-font-size, 16px);
-  -webkit-mask-image: linear-gradient(transparent 0%, #fff 20%, #fff 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(transparent 0%, #fff 40%, #fff 60%, transparent 100%);
   cursor: grab;
+
+  font-weight: 600;
 
   &.draging {
     cursor: grabbing;

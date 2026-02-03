@@ -1,5 +1,5 @@
-import { ref, watch, computed, onBeforeUnmount } from '@common/utils/vueTools'
-import { playMusicInfo, playInfo } from '@renderer/store/player/state'
+import { ref, watch, computed, onBeforeUnmount, shallowRef } from '@common/utils/vueTools'
+import { playMusicInfo, playInfo, isPlay } from '@renderer/store/player/state'
 import { getListMusics } from '@renderer/store/list/action'
 import { appSetting } from '@renderer/store/setting'
 
@@ -12,7 +12,7 @@ export default ({ props, onLoadedList }) => {
 
   const excludeListIds = computed(() => ([props.listId]))
 
-  const list = ref([])
+  const list = shallowRef([])
   watch(() => props.listId, id => {
     getListMusics(id).then(l => {
       list.value = [...l]
@@ -33,6 +33,7 @@ export default ({ props, onLoadedList }) => {
   const playerInfo = computed(() => ({
     isPlayList: playMusicInfo.listId == props.listId,
     playIndex: playInfo.playIndex,
+    isPlay: isPlay.value,
   }))
 
   const setSelectedIndex = index => {

@@ -4,23 +4,25 @@
       <h2 :class="$style.listsTitle">{{ $t('my_list') }}</h2>
       <div :class="$style.headerBtns">
         <button :class="$style.listsAdd" :aria-label="$t('lists__new_list_btn')" @click="isShowNewList = true">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="70%" viewBox="0 0 24 24" space="preserve">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="70%"
+            viewBox="0 0 24 24" space="preserve">
             <use xlink:href="#icon-list-add" />
           </svg>
         </button>
-        <button :class="$style.listsAdd" :aria-label="$t('list_update_modal__title')" @click="isShowListUpdateModal = true">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="transform: rotate(45deg);" height="70%" viewBox="0 0 24 24" space="preserve">
+        <button :class="$style.listsAdd" :aria-label="$t('list_update_modal__title')"
+          @click="isShowListUpdateModal = true">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+            style="transform: rotate(45deg);" height="70%" viewBox="0 0 24 24" space="preserve">
             <use xlink:href="#icon-refresh" />
           </svg>
         </button>
       </div>
     </div>
     <ul ref="dom_lists_list" class="scroll" :class="[$style.listsContent, { [$style.sortable]: isModDown }]">
-      <li
-        class="default-list" :class="[$style.listsItem, {[$style.active]: defaultList.id == listId}, {[$style.clicked]: rightClickItemIndex == -2}, {[$style.fetching]: fetchingListStatus[defaultList.id]}]"
+      <li class="default-list"
+        :class="[$style.listsItem, { [$style.active]: defaultList.id == listId }, { [$style.clicked]: rightClickItemIndex == -2 }, { [$style.fetching]: fetchingListStatus[defaultList.id] }]"
         :aria-label="$t(defaultList.name)" :aria-selected="defaultList.id == listId"
-        @contextmenu="handleListsItemRigthClick($event, -2)" @click="handleListToggle(defaultList.id)"
-      >
+        @contextmenu="handleListsItemRigthClick($event, -2)" @click="handleListToggle(defaultList.id)">
         <!-- <div v-if="defaultList.id == listId" :class="$style.activeIcon">
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="40%" viewBox="0 0 451.846 451.847" space="preserve">
             <use xlink:href="#icon-right" />
@@ -33,11 +35,10 @@
           {{ $t(defaultList.name) }}
         </span>
       </li>
-      <li
-        class="default-list" :class="[$style.listsItem, {[$style.active]: loveList.id == listId}, {[$style.clicked]: rightClickItemIndex == -1}, {[$style.fetching]: fetchingListStatus[loveList.id]}]"
+      <li class="default-list"
+        :class="[$style.listsItem, { [$style.active]: loveList.id == listId }, { [$style.clicked]: rightClickItemIndex == -1 }, { [$style.fetching]: fetchingListStatus[loveList.id] }]"
         :aria-label="$t(loveList.name)" :aria-selected="loveList.id == listId"
-        @contextmenu="handleListsItemRigthClick($event, -1)" @click="handleListToggle(loveList.id)"
-      >
+        @contextmenu="handleListsItemRigthClick($event, -1)" @click="handleListToggle(loveList.id)">
         <span :class="$style.listsLabel">
           <transition name="list-active">
             <svg-icon v-if="loveList.id == listId" name="angle-right-solid" :class="$style.activeIcon" />
@@ -45,29 +46,24 @@
           {{ $t(loveList.name) }}
         </span>
       </li>
-      <li
-        v-for="(item, index) in userLists"
-        :key="item.id" class="user-list"
-        :class="[$style.listsItem, {[$style.active]: item.id == listId}, {[$style.clicked]: rightClickItemIndex == index}, {[$style.fetching]: fetchingListStatus[item.id]}]"
-        :data-index="index" :aria-label="item.name" :aria-selected="defaultList.id == listId" @contextmenu="handleListsItemRigthClick($event, index)"
-      >
+      <li v-for="(item, index) in userLists" :key="item.id" class="user-list"
+        :class="[$style.listsItem, { [$style.active]: item.id == listId }, { [$style.clicked]: rightClickItemIndex == index }, { [$style.fetching]: fetchingListStatus[item.id] }]"
+        :data-index="index" :aria-label="item.name" :aria-selected="defaultList.id == listId"
+        @contextmenu="handleListsItemRigthClick($event, index)">
         <span :class="$style.listsLabel" @click="handleListToggle(item.id, index + 2)">
           <transition name="list-active">
             <svg-icon v-if="item.id == listId" name="angle-right-solid" :class="$style.activeIcon" />
           </transition>
           {{ item.name }}
         </span>
-        <base-input
-          :class="$style.listsInput" type="text" :value="item.name"
-          :placeholder="item.name" @keyup.enter="handleSaveListName(index, $event)" @blur="handleSaveListName(index, $event)"
-        />
+        <base-input :class="$style.listsInput" type="text" :value="item.name" :placeholder="item.name"
+          @keyup.enter="handleSaveListName(index, $event)" @blur="handleSaveListName(index, $event)" />
       </li>
-      <transition enter-active-class="animated-fast slideInLeft" leave-active-class="animated-fast fadeOut" @after-leave="isNewListLeave = false" @after-enter="$refs.dom_listsNewInput.focus()">
-        <li v-if="isShowNewList" :class="[$style.listsItem, $style.listsNew, {[$style.newLeave]: isNewListLeave}]">
-          <base-input
-            ref="dom_listsNewInput" :class="$style.listsInput" type="text" :placeholder="$t('lists__new_list_input')"
-            @keyup.enter="handleCreateList" @blur="handleCreateList"
-          />
+      <transition enter-active-class="animated-fast slideInLeft" leave-active-class="animated-fast fadeOut"
+        @after-leave="isNewListLeave = false" @after-enter="$refs.dom_listsNewInput.focus()">
+        <li v-if="isShowNewList" :class="[$style.listsItem, $style.listsNew, { [$style.newLeave]: isNewListLeave }]">
+          <base-input ref="dom_listsNewInput" :class="$style.listsInput" type="text"
+            :placeholder="$t('lists__new_list_input')" @keyup.enter="handleCreateList" @blur="handleCreateList" />
         </li>
       </transition>
     </ul>
@@ -137,7 +133,7 @@ export default {
     const { handleRename, handleSaveListName, isShowNewList, isNewListLeave, handleCreateList } = useEditList({ dom_lists_list })
     useListScroll({ dom_lists_list })
 
-    const handleOpenSourceDetailPage = async(listInfo) => {
+    const handleOpenSourceDetailPage = async (listInfo) => {
       const { source, sourceListId } = listInfo
       if (!sourceListId) return
       let url
@@ -253,34 +249,40 @@ export default {
 @import '@renderer/assets/styles/layout.less';
 
 @lists-item-height: 36px;
+
 .lists {
   flex: none;
   width: 16%;
   display: flex;
   flex-flow: column nowrap;
 }
+
 .listHeader {
   position: relative;
   display: flex;
   flex-flow: row nowrap;
   border-bottom: var(--color-list-header-border-bottom);
+
   &:hover {
     .listsAdd {
       opacity: 1;
     }
   }
 }
+
 .listsTitle {
   flex: auto;
   font-size: 12px;
   line-height: 38px;
   padding: 0 10px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
+
 .headerBtns {
   flex: none;
   display: flex;
 }
+
 .listsAdd {
   // position: absolute;
   // right: 0;
@@ -294,16 +296,20 @@ export default {
   opacity: .1;
   transition: opacity @transition-normal;
   color: var(--color-button-font);
+
   svg {
     vertical-align: bottom;
   }
+
   &:active {
     opacity: .7 !important;
   }
+
   &:hover {
     opacity: .6 !important;
   }
 }
+
 .listsContent {
   flex: auto;
   min-width: 0;
@@ -316,7 +322,11 @@ export default {
     }
 
     .listsItem {
-      &:hover, &.active, &.selected, &.clicked {
+
+      &:hover,
+      &.active,
+      &.selected,
+      &.clicked {
         background-color: transparent !important;
       }
 
@@ -326,55 +336,67 @@ export default {
     }
   }
 }
+
 .listsItem {
   position: relative;
   transition: .3s ease;
   transition-property: color, background-color, opacity;
   background-color: transparent;
+
   &:not(.active) {
     &:hover {
       background-color: var(--color-primary-background-hover);
       cursor: pointer;
     }
   }
+
   &.active {
     // background-color:
     color: var(--color-primary);
   }
+
   &.selected {
     background-color: var(--color-primary-font-active);
   }
+
   &.clicked {
     background-color: var(--color-primary-background-hover);
   }
+
   &.fetching {
     opacity: .5;
   }
+
   &.editing {
     padding: 0 10px;
     background-color: var(--color-primary-background-hover);
+
     .listsLabel {
       display: none;
     }
+
     .listsInput {
       display: block;
     }
   }
 }
+
 .activeIcon {
   height: .9em;
   width: .9em;
   margin-left: -0.45em;
   vertical-align: -0.05em;
 }
+
 .listsLabel {
   display: block;
   height: @lists-item-height;
   padding: 0 10px;
   font-size: 13px;
   line-height: @lists-item-height;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
+
 .listsInput {
   width: 100%;
   height: @lists-item-height;
@@ -393,14 +415,14 @@ export default {
 .listsNew {
   padding: 0 10px;
   background-color: var(--color-primary-background-hover) !important;
+
   .listsInput {
     display: block;
   }
 }
+
 .newLeave {
   margin-top: -@lists-item-height;
   z-index: -1;
 }
-
-
 </style>

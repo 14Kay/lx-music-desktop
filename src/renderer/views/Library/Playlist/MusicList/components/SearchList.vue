@@ -1,19 +1,21 @@
 <template>
   <teleport to="#view">
     <div v-show="isShow" ref="dom_container" :class="$style.container">
-      <transition enter-active-class="animated-fast zoomIn" leave-active-class="animated zoomOut" @after-leave="handleAnimated">
+      <transition enter-active-class="animated-fast zoomIn" leave-active-class="animated zoomOut"
+        @after-leave="handleAnimated">
         <div v-show="visible" :class="$style.search">
           <div :class="$style.form">
-            <input
-              ref="dom_input" v-model.trim="text" class="ignore-esc" :placeholder="placeholder" @input="handleDelaySearch"
-              @keydown.arrow-down.arrow-up.prevent @keyup.arrow-down.prevent.exact="handleKeyDown" @keyup.arrow-up.prevent.exact="handleKeyUp"
-              @keyup.enter="handleTemplistClick(selectIndex)"
-              @keyup.escape.prevent.exact="handleKeyEsc" @keydown.control.prevent="handle_key_mod_down" @keydown.meta.prevent="handle_key_mod_down"
-              @keyup.control.prevent="handle_key_mod_up" @keyup.meta.prevent="handle_key_mod_up" @contextmenu="handleContextMenu"
-            >
+            <input ref="dom_input" v-model.trim="text" class="ignore-esc" :placeholder="placeholder"
+              @input="handleDelaySearch" @keydown.arrow-down.arrow-up.prevent
+              @keyup.arrow-down.prevent.exact="handleKeyDown" @keyup.arrow-up.prevent.exact="handleKeyUp"
+              @keyup.enter="handleTemplistClick(selectIndex)" @keyup.escape.prevent.exact="handleKeyEsc"
+              @keydown.control.prevent="handle_key_mod_down" @keydown.meta.prevent="handle_key_mod_down"
+              @keyup.control.prevent="handle_key_mod_up" @keyup.meta.prevent="handle_key_mod_up"
+              @contextmenu="handleContextMenu">
             <button type="button" @click="handleHide">
               <slot>
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="70%" viewBox="0 0 212.982 212.982" space="preserve">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="70%"
+                  viewBox="0 0 212.982 212.982" space="preserve">
                   <use xlink:href="#icon-delete" />
                 </svg>
               </slot>
@@ -21,7 +23,9 @@
           </div>
           <div v-if="resultList" ref="dom_scrollContainer" class="scroll" :class="$style.list" :style="listStyle">
             <ul ref="dom_list">
-              <li v-for="(item, index) in resultList" :key="item.songmid" :class="selectIndex === index ? $style.select : null" @mouseenter="selectIndex = index" @click="handleTemplistClick(index)">
+              <li v-for="(item, index) in resultList" :key="item.songmid"
+                :class="selectIndex === index ? $style.select : null" @mouseenter="selectIndex = index"
+                @click="handleTemplistClick(index)">
                 <div :class="$style.img" />
                 <div :class="$style.text">
                   <h3 :class="$style.text">{{ item.name }} - {{ item.singer }}</h3>
@@ -241,12 +245,12 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   background-color: var(--color-primary-light-600-alpha-100);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.07),
-                0 2px 4px rgba(0,0,0,0.07),
-                0 4px 8px rgba(0,0,0,0.07),
-                0 8px 16px rgba(0,0,0,0.07),
-                0 16px 32px rgba(0,0,0,0.07),
-                0 32px 64px rgba(0,0,0,0.07);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07),
+    0 2px 4px rgba(0, 0, 0, 0.07),
+    0 4px 8px rgba(0, 0, 0, 0.07),
+    0 8px 16px rgba(0, 0, 0, 0.07),
+    0 16px 32px rgba(0, 0, 0, 0.07),
+    0 32px 64px rgba(0, 0, 0, 0.07);
 
   &.active {
     .form {
@@ -254,15 +258,18 @@ export default {
         border-bottom-left-radius: 0;
 
       }
+
       button {
         border-bottom-right-radius: 0;
       }
     }
   }
+
   .form {
     display: flex;
     height: @height-toolbar * 0.52;
     position: relative;
+
     input {
       flex: auto;
       // border: 1px solid;
@@ -279,11 +286,13 @@ export default {
       overflow: hidden;
       font-size: 13.5px;
       line-height: @height-toolbar * 0.52 + 5px;
+
       &::placeholder {
         color: var(--color-button-font);
         font-size: .98em;
       }
     }
+
     button {
       flex: none;
       border: none;
@@ -302,11 +311,13 @@ export default {
       &:hover {
         background-color: var(--color-button-background-hover);
       }
+
       &:active {
         background-color: var(--color-button-background-active);
       }
     }
   }
+
   .list {
     // background-color: @color-search-form-background;
     font-size: 13px;
@@ -329,6 +340,7 @@ export default {
       &.select {
         background-color: var(--color-primary-dark-100-alpha-700);
       }
+
       border-radius: 4px;
       // &:last-child {
       //   border-bottom-left-radius: 4px;
@@ -341,15 +353,18 @@ export default {
 .img {
   flex: none;
 }
+
 .text {
   flex: auto;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
+
 .albumName {
   font-size: 12px;
   opacity: 0.6;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
+
 .source {
   flex: none;
   font-size: 12px;
@@ -360,5 +375,4 @@ export default {
   // transform: rotate(45deg);
   // background-color:
 }
-
 </style>

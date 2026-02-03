@@ -1,9 +1,5 @@
 <template>
-  <button
-    :class="[$style.btn, {[$style.min]: min}, {[$style.outline]: outline}]"
-    tabindex="0"
-    :disabled="disabled"
-  >
+  <button :class="[$style.btn, { [$style.min]: min }, { [$style.outline]: outline }]" tabindex="0" :disabled="disabled">
     <slot />
   </button>
 </template>
@@ -41,6 +37,7 @@ export default {
   transition: background-color 0.2s ease;
   background-color: var(--color-button-background);
   font-size: 14px;
+
   &[disabled] {
     opacity: .4;
     cursor: default;
@@ -53,6 +50,7 @@ export default {
   &:hover {
     background-color: var(--color-button-background-hover);
   }
+
   &:active {
     background-color: var(--color-button-background-active);
   }
@@ -62,5 +60,4 @@ export default {
   padding: 3px 8px;
   font-size: 12px;
 }
-
 </style>

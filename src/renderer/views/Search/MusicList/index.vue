@@ -1,17 +1,8 @@
 <template>
   <div :class="$style.container">
-    <material-online-list
-      ref="listRef"
-      :page="listInfo.page"
-      :limit="listInfo.limit"
-      :total="listInfo.total"
-      :list="listInfo.list"
-      :no-item="listInfo.noItemLabel"
-      :source-tag="sourceId == 'all'"
-      check-api-source
-      @toggle-page="handleTogglePage"
-      @play-list="handlePlayList"
-    />
+    <material-online-list ref="listRef" :page="listInfo.page" :limit="listInfo.limit" :total="listInfo.total"
+      :list="listInfo.list" :no-item="listInfo.noItemLabel" :source-tag="sourceId == 'all'" check-api-source
+      @toggle-page="handleTogglePage" @play-list="handlePlayList" />
   </div>
 </template>
 
@@ -78,5 +69,4 @@ const handleTogglePage = (page: number) => {
   height: 100%;
   flex: auto;
 }
-
 </style>

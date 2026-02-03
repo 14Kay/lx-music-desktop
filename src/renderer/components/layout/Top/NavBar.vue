@@ -1,14 +1,13 @@
 <template>
-    <div ref="dom_menu">
-        <ul :class="$style.list" role="toolbar">
-            <li v-for="item in menus" :key="item.to" :class="$style.navItem" role="presentation">
-                <router-link
-:class="[$style.link, { [$style.active]: $route.meta.name == item.name }]" role="tab"
-                    :aria-selected="$route.meta.name == item.name" :to="item.to" :aria-label="item.tips"
-                    >{{ item.title }}</router-link>
-            </li>
-        </ul>
-    </div>
+  <div ref="dom_menu">
+    <ul :class="$style.list" role="toolbar">
+      <li v-for="item in menus" :key="item.to" :class="$style.navItem" role="presentation">
+        <router-link :class="[$style.link, { [$style.active]: $route.meta.name == item.name }]" role="tab"
+          :aria-selected="$route.meta.name == item.name" :to="item.to" :aria-label="item.tips">{{ item.title
+          }}</router-link>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script lang="ts">
@@ -80,39 +79,40 @@ export default {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .list {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    text-transform: uppercase;
-    user-select: none;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  text-transform: uppercase;
+  user-select: none;
 
-    a {
-        -webkit-app-region: no-drag;
-        font-size: 18px;
-        font-weight: 700;
-        text-decoration: none;
-        border-radius: 6px;
-        padding: 6px 10px;
-        color: var(--color-1000);
-        transition: 0.2s;
-        -webkit-user-drag: none;
+  a {
+    -webkit-app-region: no-drag;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--color-1000);
+    transition: 0.2s;
+    -webkit-user-drag: none;
 
-        margin-right: 12px;
-        margin-left: 12px;
+    margin-right: 12px;
+    margin-left: 12px;
 
-        &:hover {
-            background: var(--color-primary-dark-500-alpha-900);
-        }
-
-        &:active {
-            transform: scale(0.92);
-            transition: 0.2s;
-        }
+    &:hover {
+      background: var(--color-primary-dark-500-alpha-900);
     }
 
-    a.active {
-        color: var(--color-primary);
+    &:active {
+      transform: scale(0.92);
+      transition: 0.2s;
     }
+  }
+
+  a.active {
+    color: var(--color-primary);
+  }
 }
 </style>

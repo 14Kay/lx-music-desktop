@@ -23,7 +23,7 @@ const list_ref = ref<any>(null)
 const router = useRouter()
 const route = useRoute()
 
-const getListData = async(source: LX.OnlineSource, tabId: string, sortId: string, page: number) => {
+const getListData = async (source: LX.OnlineSource, tabId: string, sortId: string, page: number) => {
   // console.log(source, tabId, sortId, page)
   await getAndSetList(source, tabId, sortId, page).then(() => {
     if (listInfo.key == window.lx.songListInfo.songlistKey && window.lx.songListInfo.songlistPosition) {
@@ -71,6 +71,7 @@ onBeforeRouteLeave(() => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .container {
   overflow: hidden;
   height: 100%;
@@ -92,6 +93,7 @@ onBeforeRouteLeave(() => {
     justify-content: space-between;
   }
 }
+
 .item {
   width: 32%;
   box-sizing: border-box;
@@ -99,10 +101,12 @@ onBeforeRouteLeave(() => {
   margin-top: 15px;
   cursor: pointer;
   transition: opacity @transition-normal;
+
   &:hover {
     opacity: .7;
   }
 }
+
 .left {
   flex: none;
   width: 88px;
@@ -117,12 +121,15 @@ onBeforeRouteLeave(() => {
   img {
     object-fit: cover;
   }
+
   // box-shadow: 0 0 2px 0 rgba(0,0,0,.2);
 }
+
 .right {
   flex: auto;
   padding: 3px 15px 5px 7px;
   overflow: hidden;
+
   h4 {
     font-size: 14px;
     height: 2.6em;
@@ -131,36 +138,41 @@ onBeforeRouteLeave(() => {
     .mixin-ellipsis-2;
   }
 }
+
 .songlist_info {
   display: flex;
   flex-flow: row nowrap;
   gap: 15px;
   margin-top: 12px;
   font-size: 12px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   text-align: justify;
   line-height: 1.2;
   // text-indent: 24px;
   color: var(--color-font-label);
+
   svg {
     margin-right: 2px;
   }
 }
+
 .author {
   margin-top: 6px;
   font-size: 12px;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
   text-align: justify;
   line-height: 1.2;
   // text-indent: 24px;
   color: var(--color-font-label);
 }
+
 .pagination {
   text-align: center;
   padding: 15px 0;
   // left: 50%;
   // transform: translateX(-50%);
 }
+
 .noitem {
   position: absolute;
   top: 0;
@@ -178,5 +190,4 @@ onBeforeRouteLeave(() => {
     color: var(--color-font-label);
   }
 }
-
 </style>

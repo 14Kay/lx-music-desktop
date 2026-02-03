@@ -34,6 +34,10 @@ import { appSetting } from '@renderer/store/setting'
 import { PhMagnifyingGlass, PhX } from '@phosphor-icons/vue'
 
 export default {
+  components: {
+    PhMagnifyingGlass,
+    PhX,
+  },
   props: {
     placeholder: {
       type: String,
@@ -78,10 +82,7 @@ export default {
       },
     }
   },
-  components: {
-    PhMagnifyingGlass,
-    PhX,
-  },
+
   watch: {
     list(n) {
       if (!this.visibleList) return
@@ -214,7 +215,7 @@ export default {
 
   &.active {
     background-color: var(--color-content-background);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     color: var(--color-font);
 
     .form {
@@ -319,7 +320,7 @@ export default {
       line-height: 1.4;
 
       span {
-        .mixin-ellipsis-1;
+        .mixin-ellipsis-1();
       }
 
       &.select,

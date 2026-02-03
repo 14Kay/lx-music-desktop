@@ -1,28 +1,32 @@
 <template>
-  <material-modal :show="visible" bg-close teleport="#view" width="60%" max-width="900px" @close="$emit('update:visible', false)">
+  <material-modal :show="visible" bg-close teleport="#view" width="60%" max-width="900px"
+    @close="$emit('update:visible', false)">
     <div :class="$style.header">
       <h2>{{ listName }}</h2>
     </div>
-    <base-virtualized-list
-      v-if="duplicateList.length" v-slot="{ item, index }" :list="duplicateList" key-name="id" :class="$style.list" style="contain: none;"
-      :item-height="listItemHeight" container-class="scroll" content-class="list"
-    >
+    <base-virtualized-list v-if="duplicateList.length" v-slot="{ item, index }" :list="duplicateList" key-name="id"
+      :class="$style.list" style="contain: none;" :item-height="listItemHeight" container-class="scroll"
+      content-class="list">
       <div :class="$style.listItem">
         <div :class="$style.num">{{ item.index + 1 }}</div>
         <div :class="$style.textContent">
-          <h3 :class="$style.text" :aria-label="`${item.musicInfo.name} - ${item.musicInfo.singer}`">{{ item.musicInfo.name }} - {{ item.musicInfo.singer }}</h3>
-          <h3 v-if="item.musicInfo.meta.albumName" :class="[$style.text, $style.albumName]" :aria-label="item.musicInfo.meta.albumName">{{ item.musicInfo.meta.albumName }}</h3>
+          <h3 :class="$style.text" :aria-label="`${item.musicInfo.name} - ${item.musicInfo.singer}`">{{
+            item.musicInfo.name }} - {{ item.musicInfo.singer }}</h3>
+          <h3 v-if="item.musicInfo.meta.albumName" :class="[$style.text, $style.albumName]"
+            :aria-label="item.musicInfo.meta.albumName">{{ item.musicInfo.meta.albumName }}</h3>
         </div>
         <div :class="$style.label">{{ item.musicInfo.source }}</div>
         <div :class="$style.label">{{ item.musicInfo.interval }}</div>
         <div :class="$style.btns">
           <button type="button" :class="$style.btn" @click="handlePlay(index)">
-            <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 287.386 287.386" space="preserve">
+            <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+              height="50%" viewBox="0 0 287.386 287.386" space="preserve">
               <use xlink:href="#icon-testPlay" />
             </svg>
           </button>
           <button type="button" :class="$style.btn" @click="handleRemove(index)">
-            <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" height="50%" viewBox="0 0 212.982 212.982" space="preserve">
+            <svg v-once version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+              height="50%" viewBox="0 0 212.982 212.982" space="preserve">
               <use xlink:href="#icon-delete" />
             </svg>
           </button>
@@ -68,13 +72,13 @@ export default {
       const { index: musicInfoIndex } = duplicateList.value[index]
       playList(props.listInfo.id, musicInfoIndex)
     }
-    const handleFilterList = async() => {
+    const handleFilterList = async () => {
       // console.time('filter')
       duplicateList.value = markRawList(await window.lx.worker.main.filterDuplicateMusic(await getListMusics(props.listInfo.id)))
       // console.log(duplicateList.value)
       // console.timeEnd('filter')
     }
-    const handleRemove = async(index) => {
+    const handleRemove = async (index) => {
       const { musicInfo: targetMusicInfo } = duplicateList.value.splice(index, 1)[0]
       duplicateList.value = [...duplicateList.value]
       await removeListMusics({ listId: props.listInfo.id, ids: [targetMusicInfo.id] })
@@ -117,10 +121,12 @@ export default {
   flex: none;
   padding: 15px;
   text-align: center;
+
   h2 {
     word-break: break-all;
   }
 }
+
 .main {
   min-height: 175px;
   min-width: 380px;
@@ -134,6 +140,7 @@ export default {
   // background-color: @color-search-form-background;
   font-size: 13px;
   transition-property: height;
+
   // position: relative;
   .listItem {
     position: relative;
@@ -149,6 +156,7 @@ export default {
     &:hover {
       background-color: var(--color-primary-background-hover);
     }
+
     // border-radius: 4px;
     // &:last-child {
     //   border-bottom-left-radius: 4px;
@@ -174,15 +182,18 @@ export default {
   align-items: flex-start;
   overflow: hidden;
 }
+
 .text {
   max-width: 100%;
-  .mixin-ellipsis-1;
+  .mixin-ellipsis-1();
 }
+
 .albumName {
   font-size: 12px;
   opacity: 0.6;
-  // .mixin-ellipsis-1;
+  // .mixin-ellipsis-1();
 }
+
 .label {
   flex: none;
   font-size: 12px;
@@ -193,6 +204,7 @@ export default {
   // transform: rotate(45deg);
   // background-color:
 }
+
 .btns {
   flex: none;
   font-size: 12px;
@@ -200,6 +212,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .btn {
   background-color: transparent;
   border: none;
@@ -211,6 +224,7 @@ export default {
   outline: none;
   transition: background-color 0.2s ease;
   line-height: 0;
+
   &:last-child {
     margin-right: 0;
   }
@@ -222,6 +236,7 @@ export default {
   &:hover {
     background-color: var(--color-primary-background-hover);
   }
+
   &:active {
     background-color: var(--color-primary-font-active);
   }
@@ -240,5 +255,4 @@ export default {
     color: var(--color-font-label);
   }
 }
-
 </style>

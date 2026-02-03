@@ -3,7 +3,7 @@ material-modal(:show="modelValue" bg-close teleport="#view" @close="handleClose"
   main.scroll(:class="$style.main")
     h2 {{ $t('user_api__title') }}
     ul.scroll(v-if="apiList.length" :class="$style.content")
-      li(v-for="(api, index) in apiList" :key="api.id" :class="[$style.listItem, {[$style.active]: appSetting['common.apiSource'] == api.id}]")
+      li(v-for="(api, index) in apiList" :key="api.id" :class="[$style.listItem, { [$style.active]: appSetting['common.apiSource'] == api.id }]")
         div(:class="$style.listLeft")
           h3
             | {{ api.name }}
@@ -132,6 +132,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   min-height: 0;
+
   // max-height: 100%;
   // overflow: hidden;
   h2 {
@@ -159,6 +160,7 @@ export default {
   margin-top: 15px;
   padding: 0 7px;
 }
+
 .listItem {
   display: flex;
   flex-flow: row nowrap;
@@ -166,22 +168,27 @@ export default {
   transition: background-color 0.2s ease;
   padding: 15px 10px;
   border-radius: @radius-border;
+
   &:hover {
     background-color: var(--color-primary-background-hover);
   }
+
   &.active {
     background-color: var(--color-primary-background-active);
   }
+
   h3 {
     font-size: 15px;
     color: var(--color-font);
     word-break: break-all;
+
     span {
       font-size: 12px;
       color: var(--color-font-label);
       margin-left: 6px;
     }
   }
+
   p {
     margin-top: 5px;
     font-size: 14px;
@@ -189,6 +196,7 @@ export default {
     word-break: break-all;
   }
 }
+
 .noitem {
   height: 100px;
   font-size: 18px;
@@ -197,6 +205,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .listLeft {
   flex: auto;
   min-width: 0;
@@ -204,6 +213,7 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
 }
+
 .listBtn {
   flex: none;
   height: 30px;
@@ -212,41 +222,47 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+
   svg {
     width: 60%;
   }
 }
+
 .note {
   padding: 0 7px;
   margin-top: 15px;
   font-size: 12px;
   line-height: 1.25;
   color: var(--color-font);
+
   p {
-    + p {
+    +p {
       margin-top: 5px;
     }
   }
 }
+
 .footer {
   padding: 0 7px;
   margin-top: 15px;
   display: flex;
   flex-flow: row nowrap;
 }
+
 .footerBtn {
   flex: auto;
   height: 36px;
   line-height: 36px;
   padding: 0 10px !important;
   width: 150px;
-  .mixin-ellipsis-1;
-  + .footerBtn {
+  .mixin-ellipsis-1();
+
+  +.footerBtn {
     margin-left: 15px;
   }
 }
-.ruleLink {
-  .mixin-ellipsis-1;
-}
 
+.ruleLink {
+  .mixin-ellipsis-1();
+}
 </style>

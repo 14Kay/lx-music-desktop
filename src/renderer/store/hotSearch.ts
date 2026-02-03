@@ -80,12 +80,12 @@ const setLists = (results: Array<{ source: Source, list: string[] }>): string[] 
 /**
  * 获取热搜列表
  */
-export const getList = async (source: Source): Promise<string[]> => {
+export const getList = async(source: Source): Promise<string[]> => {
   // 如果是 'all'，则并发请求所有源
   if (source === 'all') {
     const promises = sources
       .filter(s => s !== 'all') // 排除 'all' 本身
-      .map(async (s) => {
+      .map(async(s) => {
         // 如果内存里已经有数据，直接用（缓存策略）
         // 注意：这里可能需要一个过期时间机制，否则永远不会刷新
         const currentList = sourceList[s]

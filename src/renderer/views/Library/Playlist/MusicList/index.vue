@@ -7,12 +7,25 @@
         <div class="list-item"
           :class="[{ [$style.active]: playerInfo.isPlayList && playerInfo.playIndex === index }, { selected: selectedIndex == index || rightClickSelectedIndex == index }, { active: selectedList.includes(item) }, { disabled: !assertApiSupport(item.source) }]"
           @click="handleListItemClick($event, index)" @contextmenu="handleListItemRightClick($event, index)">
-          <div style="flex: 0 0 4%;" class="my__number">{{ formatIndex(index) }}</div>
+          <div style="flex: 0 0 4%;" class="my__number">
+            <template v-if="playerInfo.isPlayList && playerInfo.playIndex === index">
+              <div v-if="playerInfo.isPlay" :class="$style.playingAnim">
+                <div :class="$style.bar"></div>
+                <div :class="$style.bar"></div>
+                <div :class="$style.bar"></div>
+              </div>
+              <PhPlay v-else :class="$style.playIcon" size="16" weight="fill"
+                @click="handleListItemClick($event, index)" />
+            </template>
+            <template v-else>
+              {{ formatIndex(index) }}
+            </template>
+          </div>
           <div :class="$style.songInfo" class="list-item-cell auto name">
             <img :class="$style.cover" :src="resizeImage(item.meta.picUrl, 224)" :alt="item.name" loading="lazy">
             <div :class="$style.info">
               <div :class="$style.title">
-                <span class="select name" :aria-label="item.name">{{ item.name }}</span>
+                <span :class="[$style.name, 'select']" :aria-label="item.name">{{ item.name }}</span>
                 <span v-if="isShowSource" class="no-select label-source">{{ item.source }}</span>
               </div>
               <div :class="$style.subtitle">
@@ -54,6 +67,7 @@
 <script>
 import { clipboardWriteText } from '@common/utils/electron'
 import { assertApiSupport } from '@renderer/store/utils'
+import { PhPlay } from '@phosphor-icons/vue'
 import SearchList from './components/SearchList.vue'
 import MusicSortModal from './components/MusicSortModal.vue'
 import MusicToggleModal from './components/MusicToggleModal.vue'
@@ -76,6 +90,7 @@ export default {
     SearchList,
     MusicSortModal,
     MusicToggleModal,
+    PhPlay,
   },
   props: {
     listId: {
@@ -225,6 +240,10 @@ export default {
       doubleClickPlay(targetIndex)
     }
 
+    const handleTogglePlay = () => {
+      window.app_event.togglePlay()
+    }
+
     const handleListItemRightClick = (event, index) => {
       rightClickSelectedIndex.value = index
       showMenu(event, list.value[index], index)
@@ -270,6 +289,7 @@ export default {
     return {
       listItemHeight,
       handleListItemClick,
+      handleTogglePlay,
       selectedList,
       handleListItemRightClick,
       removeAllSelect,
@@ -381,12 +401,13 @@ export default {
 
   :global(.list-item) {
     &.active {
-      color: var(--color-button-font);
-      background-color: var(--color-aside-background);
+      .name {
+        color: var(--color-button-font);
+      }
     }
 
     &:hover:not(.active) {
-      background-color: var(--color-aside-background);
+      background-color: var(--color-hover);
     }
   }
 
@@ -410,19 +431,6 @@ export default {
   position: relative;
 }
 
-.playIcon {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--color-button-font);
-  opacity: .7;
-}
 
 .content {
   min-height: 0;
@@ -444,5 +452,52 @@ export default {
     font-size: 24px;
     color: var(--color-font-label);
   }
+}
+
+.playingAnim {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+
+  .bar {
+    width: 3px;
+    background-color: var(--color-primary);
+    animation: barAnim-music-list 0.5s ease-in-out infinite alternate;
+    border-radius: 2px;
+    transform-origin: bottom;
+
+    &:nth-child(1) {
+      height: 60%;
+      animation-delay: -0.2s;
+    }
+
+    &:nth-child(2) {
+      height: 100%;
+      animation-delay: -0.4s;
+    }
+
+    &:nth-child(3) {
+      height: 80%;
+      animation-delay: -0.6s;
+    }
+  }
+}
+
+:global {
+  @keyframes barAnim-music-list {
+    0% {
+      height: 20%;
+    }
+
+    100% {
+      height: 100%;
+    }
+  }
+}
+
+.playIcon {
+  color: var(--color-primary);
+  cursor: pointer;
 }
 </style>

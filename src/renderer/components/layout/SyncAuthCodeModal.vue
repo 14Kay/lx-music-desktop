@@ -1,14 +1,10 @@
 <template>
-  <material-modal
-:show="sync.isShowAuthCodeModal" :bg-close="false" @close="handleClose"
-    @after-enter="$refs.input.focus()"
->
+  <material-modal :show="sync.isShowAuthCodeModal" :bg-close="false" @close="handleClose"
+    @after-enter="$refs.input.focus()">
     <main :class="$style.main">
       <h2>{{ $t('sync__auth_code_title') }}</h2>
-      <base-input
-ref="input" v-model="authCode" :class="$style.input" :placeholder="$t('sync__auth_code_input_tip')"
-        @submit="handleSubmit" @blur="verify"
-/>
+      <base-input ref="input" v-model="authCode" :class="$style.input" :placeholder="$t('sync__auth_code_input_tip')"
+        @submit="handleSubmit" @blur="verify" />
       <div :class="$style.footer">
         <base-btn :class="$style.btn" @click="handleSubmit">{{ $t('btn_confirm') }}</base-btn>
       </div>
@@ -101,7 +97,7 @@ export default {
   // line-height: 36px;
   // padding: 0 10px !important;
   min-width: 70px;
-  // .mixin-ellipsis-1;
+  // .mixin-ellipsis-1();
 
   +.btn {
     margin-left: 10px;

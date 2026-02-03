@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.favorite">
-    <div :class="$style.favoriteCount" @click="showPlayerDetail" :style="themeColor ? { background: themeColor } : {}">
+    <div :class="$style.favoriteCount" :style="themeColor ? { background: themeColor } : {}" @click="showPlayerDetail">
       <div>
         <common-audio-visualizer :class="$style.audio" :color="visualizerColor" :bar-count="120" />
         <div :class="$style.content">
@@ -40,8 +40,6 @@
 
 <script setup lang="ts">
 import List from './List.vue'
-import useListInfo from './useListInfo'
-import { useI18n } from '@root/lang'
 import { ref, watch } from 'vue'
 import { togglePlay } from '@renderer/core/player'
 
@@ -56,22 +54,6 @@ import {
   playMusicInfo,
 } from '@renderer/store/player/state'
 
-const t = useI18n()
-const { listId, columnNumber } = defineProps({
-  listId: {
-    type: String,
-    required: true,
-  },
-  columnNumber: {
-    type: Number,
-    default: 4,
-  },
-})
-const {
-  count,
-  cover,
-} = useListInfo({ listId, maxCount: columnNumber * 3 })
-
 const showPlayerDetail = () => {
   if (!playMusicInfo.musicInfo) return
   setShowPlayerDetail(true)
@@ -80,7 +62,7 @@ const showPlayerDetail = () => {
 const themeColor = ref('')
 const visualizerColor = ref('')
 
-const getDominantColor = (imgUrl: string) => {
+const getDominantColor = async (imgUrl: string) => {
   return new Promise<{ r: number, g: number, b: number } | null>((resolve) => {
     const img = new Image()
     img.crossOrigin = "Anonymous"
@@ -89,12 +71,24 @@ const getDominantColor = (imgUrl: string) => {
       try {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
-        if (!ctx) return resolve(null)
+        if (!ctx) {
+          resolve(null)
+          return
+        }
         canvas.width = 1
         canvas.height = 1
         ctx.drawImage(img, 0, 0, 1, 1)
         const data = ctx.getImageData(0, 0, 1, 1).data
-        resolve({ r: data[0], g: data[1], b: data[2] })
+        const r = data[0]
+        const g = data[1]
+        const b = data[2]
+        // Prevent return white color
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000
+        if (brightness > 220) {
+          resolve(null)
+          return
+        }
+        resolve({ r, g, b })
       } catch (e) {
         resolve(null)
       }
@@ -111,7 +105,7 @@ watch(() => musicInfo.pic, async (pic) => {
   }
   const color = await getDominantColor(pic)
   if (color) {
-    themeColor.value = `rgba(${color.r}, ${color.g}, ${color.b}, 0.9)`
+    themeColor.value = `rgba(${color.r}, ${color.g}, ${color.b}, 1)`
     visualizerColor.value = 'rgba(255, 255, 255, 0.6)'
   } else {
     // Retrieval failed (likely CORS), fallback to defaults
@@ -223,7 +217,7 @@ watch(() => musicInfo.pic, async (pic) => {
   transition: all 0.4s;
   box-sizing: border-box;
   position: relative;
-  background: var(--color-primary-alpha-900);
+  background: var(--color-primary);
   overflow: hidden;
 
   >div {

@@ -45,8 +45,8 @@
                   <base-svg-icon v-show="item.isExist" :class="$style.collection" icon-class="heart-solid"
                     @click="handleUnCollection(index)" /> -->
                   <div class="my__button">
-                    <PhHeart v-show="!item.isExist" size="52%" @click="handleCollection(index)" weight="regular" />
-                    <PhHeart v-show="item.isExist" size="52%" @click="handleUnCollection(index)" weight="fill" />
+                    <PhHeart v-show="!item.isExist" size="52%" weight="regular" @click="handleCollection(index)" />
+                    <PhHeart v-show="item.isExist" size="52%" weight="fill" @click="handleUnCollection(index)" />
                   </div>
                   <div class="my__button" @click.stop="handleListItemRightClick($event, index)">
                     <PhDotsThreeVertical size="62%" weight="bold" />

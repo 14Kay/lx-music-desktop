@@ -58,41 +58,40 @@ export default {
     let dataArray
     let WIDTH
     let HEIGHT
-    let MAX_HEIGHT
     let barWidth
     let barHeight
     let x = 0
     let isPlaying = false
     let animationFrameId
+    let resizeObserver
 
     let num
     let mult
     const maxNum = 255
     let frequencyAvg = 0
 
-    // const theme = useRefGetter('theme')
-    // const setting = useRefGetter('setting')
     let themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-font-secondary')
-    // watch(theme, theme => {
-    //   themeColor = themes[theme || 'green']
-    // })
-    // https://developer.mozilla.org/zh-CN/docs/Web/API/AnalyserNode/smoothingTimeConstant
+
     const renderFrame = () => {
       x = 0
 
       analyser.getByteFrequencyData(dataArray)
 
       ctx.clearRect(0, 0, WIDTH, HEIGHT)
-      // ctx.fillRect(0, 0, WIDTH, HEIGHT)
       ctx.fillStyle = props.color || themeColor
 
       if (props.barCount > 0) {
-        // High frequencies (above ~15kHz) are often empty/silent in music
-        // We limit to the first ~75% of bins to make the visualizer look "fuller"
-        const effectiveBufferLength = Math.floor(bufferLength * 0.75)
-        const step = effectiveBufferLength / props.barCount
+        // We limit to the first ~16kHz to ensure consistency across sample rates (44.1k vs 48k)
+        // and to avoid empty bars at the end for compressed audio.
+        const sampleRate = analyser.context.sampleRate
+        const nyquist = sampleRate / 2
+        // Cap at 16kHz or Nyquist, whichever is smaller. 16kHz is a good limit for MP3s.
+        const maxFreq = Math.min(16000, nyquist)
+        const effectiveBufferLength = Math.floor(bufferLength * (maxFreq / nyquist))
 
-        // Recalculate barWidth to ensure it fills WIDTH exactly
+        const step = effectiveBufferLength / props.barCount
+        const dpr = window.devicePixelRatio || 1
+
         const actualBarWidth = WIDTH / props.barCount
 
         for (let i = 0; i < props.barCount; i++) {
@@ -100,17 +99,26 @@ export default {
           const start = Math.floor(i * step)
           const end = Math.floor((i + 1) * step)
           const count = end - start
-          for (let j = start; j < end; j++) {
-            sum += dataArray[j]
-          }
-          let avg = count > 0 ? sum / count : 0
-          if (count === 0 && start < dataArray.length) avg = dataArray[start]
 
-          barHeight = (avg / 255) * HEIGHT
+          if (count > 0) {
+            for (let j = start; j < end; j++) {
+              sum += dataArray[j]
+            }
+            barHeight = (sum / count / 255) * HEIGHT
+          } else {
+            // Fallback for when step < 1 (low buffer size or high bar count)
+            barHeight = (dataArray[start] / 255) * HEIGHT
+            if (start >= dataArray.length) barHeight = 0
+          }
+
+          // Boost high frequencies slightly as they naturally have less energy
+          // 1.0 at bass -> 1.8 at treble
+          const boost = 1 + (i / props.barCount) * 0.8
+          barHeight *= boost
 
           const xPos = i * actualBarWidth
-          // Draw with slight overlap (0.5px) to prevent gaps
-          ctx.fillRect(xPos, HEIGHT - barHeight, actualBarWidth + 0.5, barHeight)
+          // Draw with overlap to prevent gaps, scaled by DPR
+          ctx.fillRect(xPos, HEIGHT - barHeight, actualBarWidth + 0.5 * dpr, barHeight)
         }
       } else {
         // legacy render logic
@@ -124,19 +132,14 @@ export default {
         frequencyAvg *= 1.4
 
         frequencyAvg = frequencyAvg / maxNum
-        // ctx.scale(1, 1 + frequencyAvg)
 
         for (let i = 0; i < bufferLength; i++) {
           if (x > WIDTH) break
 
           barHeight = dataArray[i]
 
-          // let r = barHeight + (25 * (i / bufferLength))
-          // let g = 250 * (i / bufferLength)
-          // let b = 50
-
-          // ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')'
-          barHeight = (barHeight * frequencyAvg + barHeight * 0.42) * MAX_HEIGHT
+          // Simplified legacy height calculation logic
+          barHeight = (barHeight * frequencyAvg + barHeight * 0.42) * (HEIGHT * 0.5 / 255)
           ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight)
 
           x += barWidth
@@ -149,15 +152,10 @@ export default {
 
     const handlePlay = () => {
       isPlaying = true
-      // analyser.fftSize = 256
       bufferLength = analyser.frequencyBinCount
-      // console.log(bufferLength)
-      if (props.barCount > 0 && WIDTH) {
-        barWidth = WIDTH / props.barCount
-      } else {
-        barWidth = getBarWidth(WIDTH)
-      }
       dataArray = new Uint8Array(bufferLength)
+
+      handleResize() // Ensure update dimensions/buffers on play
       renderFrame()
     }
     const handlePause = () => {
@@ -167,14 +165,23 @@ export default {
 
     const handleResize = () => {
       const canvas = dom_canvas.value
-      canvas.width = canvas.clientWidth
-      canvas.height = canvas.clientHeight
+      if (!canvas) return
+
+      const dpr = window.devicePixelRatio || 1
+      const clientWidth = canvas.clientWidth
+      const clientHeight = canvas.clientHeight
+
+      // Update canvas resolution for High DPI
+      if (canvas.width !== clientWidth * dpr || canvas.height !== clientHeight * dpr) {
+        canvas.width = clientWidth * dpr
+        canvas.height = clientHeight * dpr
+      }
+
       WIDTH = canvas.width
       HEIGHT = canvas.height
-      MAX_HEIGHT = Math.round(HEIGHT * 0.4 / 255 * 10000) / 10000
-      // console.log(MAX_HEIGHT)
+
       if (props.barCount > 0) {
-        barWidth = WIDTH / props.barCount
+        // barWidth dynamically calc in renderFrame
       } else {
         barWidth = getBarWidth(WIDTH)
       }
@@ -183,24 +190,25 @@ export default {
     window.app_event.on('play', handlePlay)
     window.app_event.on('pause', handlePause)
     window.app_event.on('error', handlePause)
-    window.addEventListener('resize', handleResize)
+    // Use ResizeObserver instead of window resize for better accuracy
+
     onBeforeUnmount(() => {
       handlePause()
       window.app_event.off('play', handlePlay)
       window.app_event.off('pause', handlePause)
       window.app_event.off('error', handlePause)
-      window.removeEventListener('resize', handleResize)
+      if (resizeObserver) resizeObserver.disconnect()
     })
 
     onMounted(() => {
       const canvas = dom_canvas.value
       ctx = canvas.getContext('2d')
-      canvas.width = canvas.clientWidth
-      canvas.height = canvas.clientHeight
-      WIDTH = canvas.width
-      HEIGHT = canvas.height
-      MAX_HEIGHT = Math.round(HEIGHT * 0.8 / 255 * 10000) / 10000
-      // console.log(MAX_HEIGHT)
+
+      resizeObserver = new ResizeObserver(handleResize)
+      resizeObserver.observe(canvas)
+
+      handleResize()
+
       if (isPlay.value) handlePlay()
     })
 
@@ -220,6 +228,8 @@ export default {
   height: 100%;
   pointer-events: none;
   z-index: 100;
+  right: 0;
+  bottom: 0;
 }
 
 .canvas {

@@ -31,7 +31,7 @@ const defaultSetting: LX.AppSetting = {
   version: '2.1.0',
   'common.avatar': 'https://s4.music.126.net/style/web2/img/default/default_avatar.jpg?param=60y60',
   'common.username': getComputerName() || 'guest',
-  'common.windowSizeId': 3,
+  'common.windowSizeId': 2,
   'common.fontSize': 16,
   'common.startInFullscreen': false,
   'common.langId': null,
@@ -183,6 +183,8 @@ const defaultSetting: LX.AppSetting = {
   'lastFM.session.key': '',
   'lastFM.session.name': '',
   'lastFM.session.subscriber': 0,
+  'lastFM.userInfo.name': '',
+  'lastFM.userInfo.avatar': '',
 }
 
 

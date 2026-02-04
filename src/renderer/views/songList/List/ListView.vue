@@ -135,7 +135,7 @@ onBeforeRouteLeave(() => {
     height: 2.6em;
     text-align: justify;
     line-height: 1.3;
-    .mixin-ellipsis-2;
+    .mixin-ellipsis-2();
   }
 }
 

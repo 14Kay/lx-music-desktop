@@ -69,7 +69,7 @@ export const createAudio = () => {
 
 const initAnalyser = () => {
   analyser = audioContext.createAnalyser()
-  analyser.fftSize = 256
+  analyser.fftSize = 2048
 }
 
 const initBiquadFilter = () => {

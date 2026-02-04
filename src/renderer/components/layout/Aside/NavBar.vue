@@ -158,7 +158,7 @@ export default {
   .mixin-ellipsis-1();
 
   &:before {
-    .mixin-after;
+    .mixin-after();
     left: 0;
     top: 0;
     width: 3px;

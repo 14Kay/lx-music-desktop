@@ -1,6 +1,6 @@
 import { ref, reactive, shallowRef, markRaw, computed, watch } from '@common/utils/vueTools'
 import { windowSizeList as configWindowSizeList } from '@common/config'
-import { appSetting } from './setting'
+import { appSetting, updateSetting } from './setting'
 import pkg from '../../../package.json'
 import { type ProgressInfo } from 'electron-updater'
 import music from '@renderer/utils/musicSdk'
@@ -148,8 +148,8 @@ export const userApi = reactive<{
 
 
 export const lastFmUserInfo = reactive({
-  name: '',
-  avatar: '',
+  name: computed(() => appSetting['lastFM.userInfo.name']),
+  avatar: computed(() => appSetting['lastFM.userInfo.avatar']),
 })
 
 export const fetchLastFmUserInfo = async() => {
@@ -162,9 +162,13 @@ export const fetchLastFmUserInfo = async() => {
         username: appSetting['lastFM.session.name'] || '',
       })
       // console.log(userInfo)
-      lastFmUserInfo.name = userInfo.user.name
+      // lastFmUserInfo.name = userInfo.user.name
       const img = userInfo.user.image.find(i => i.size == 'medium') ?? userInfo.user.image[0]
-      lastFmUserInfo.avatar = img?.['#text'] ?? ''
+      // lastFmUserInfo.avatar = img?.['#text'] ?? ''
+      updateSetting({
+        'lastFM.userInfo.name': userInfo.user.name,
+        'lastFM.userInfo.avatar': img?.['#text'] ?? '',
+      })
     } catch (err) {
       console.error('Failed to fetch Last.fm user info', err)
     }
@@ -175,8 +179,10 @@ watch(() => [appSetting['lastFM.enable'], appSetting['lastFM.session.key']], ([e
   if (enable && sessionKey) {
     void fetchLastFmUserInfo()
   } else {
-    lastFmUserInfo.name = ''
-    lastFmUserInfo.avatar = ''
+    updateSetting({
+      'lastFM.userInfo.name': '',
+      'lastFM.userInfo.avatar': '',
+    })
   }
 })
 

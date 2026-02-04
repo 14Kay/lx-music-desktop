@@ -7,14 +7,17 @@
     <div :class="$style.eqList">
       <div v-for="(v, i) in freqs" :key="v" :class="$style.eqItem">
         <span :class="$style.label">{{ labels[i] }}</span>
-        <base-slider-bar :class="$style.slider" :value="appSetting[`player.soundEffect.biquadFilter.hz${v}`]" :min="-15" :max="15" @change="handleUpdate(v, $event)" />
+        <base-slider-bar :class="$style.slider" :value="appSetting[`player.soundEffect.biquadFilter.hz${v}`]" :min="-15"
+          :max="15" @change="handleUpdate(v, $event)" />
         <span :class="$style.value">{{ appSetting[`player.soundEffect.biquadFilter.hz${v}`] }}db</span>
       </div>
     </div>
     <div :class="$style.saveList">
       <!-- <base-btn min @click="handleSetPreset(item)">{{ $t(`player__sound_effect_biquad_filter_preset_slow`) }}</base-btn> -->
-      <base-btn v-for="item in freqsPreset" :key="item.name" min @click="handleSetPreset(item)">{{ $t(`player__sound_effect_biquad_filter_preset_${item.name}`) }}</base-btn>
-      <base-btn v-for="item in userPresetList" :key="item.id" min @click="handleSetPreset(item)" @contextmenu="handleRemovePreset(item.id)">{{ item.name }}</base-btn>
+      <base-btn v-for="item in freqsPreset" :key="item.name" min @click="handleSetPreset(item)">{{
+        $t(`player__sound_effect_biquad_filter_preset_${item.name}`) }}</base-btn>
+      <base-btn v-for="item in userPresetList" :key="item.id" min @click="handleSetPreset(item)"
+        @contextmenu="handleRemovePreset(item.id)">{{ item.name }}</base-btn>
       <AddEQPresetBtn v-if="userPresetList.length < 31" />
     </div>
     <!-- <div :class="$style.footer">
@@ -32,7 +35,7 @@ import { getUserEQPresetList, removeUserEQPreset } from '@renderer/store/soundEf
 
 const labels = freqs.map(num => num < 1000 ? num : `${num / 1000}k`)
 
-const handleUpdate = async(key, value) => {
+const handleUpdate = async (key, value) => {
   if (appSetting['player.mediaDeviceId'] != 'default') {
     await setMediaDeviceId('default').catch(_ => _)
     saveMediaDeviceId('default')
@@ -83,6 +86,7 @@ onMounted(() => {
 
 <style lang="less" module>
 @import '@renderer/assets/styles/layout.less';
+
 .contnet {
   display: flex;
   flex-flow: column nowrap;
@@ -90,6 +94,7 @@ onMounted(() => {
   min-height: 0;
   flex: none;
 }
+
 .header {
   display: flex;
   flex-flow: row nowrap;
@@ -98,6 +103,7 @@ onMounted(() => {
   padding-bottom: 5px;
   // padding-top: 5px;
 }
+
 .eqList {
   display: flex;
   flex-flow: row wrap;
@@ -107,13 +113,14 @@ onMounted(() => {
   position: relative;
 
   &:before {
-    .mixin-after;
+    .mixin-after();
     position: absolute;
     left: 50%;
     height: 100%;
     border-left: 1px dashed var(--color-primary-light-100-alpha-700);
   }
 }
+
 .eqItem {
   display: flex;
   flex-flow: row nowrap;
@@ -121,34 +128,42 @@ onMounted(() => {
   gap: 8px;
   margin-bottom: 15px;
   box-sizing: border-box;
+
   &:nth-child(odd) {
     padding-right: 10px;
   }
+
   &:nth-child(even) {
     padding-left: 10px;
   }
-  &:nth-last-child(1), &:nth-last-child(2) {
+
+  &:nth-last-child(1),
+  &:nth-last-child(2) {
     margin-bottom: 0;
   }
 }
+
 .label {
   flex: none;
   width: 40px;
   font-size: 12px;
   text-align: center;
 }
+
 .value {
   flex: none;
   width: 40px;
   font-size: 12px;
   text-align: center;
 }
+
 .footer {
   display: flex;
   flex-flow: row nowrap;
   // justify-content: space-between;
   justify-content: center;
   align-items: center;
+
   // font-size: 13px;
   span {
     line-height: 1.2;
@@ -165,5 +180,4 @@ onMounted(() => {
   margin-top: 10px;
   gap: 10px;
 }
-
 </style>

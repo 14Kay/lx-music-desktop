@@ -2,7 +2,7 @@
   <div :class="$style.favorite">
     <div :class="$style.favoriteCount" :style="themeColor ? { background: themeColor } : {}" @click="showPlayerDetail">
       <div>
-        <common-audio-visualizer :class="$style.audio" :color="visualizerColor" :bar-count="120" />
+        <common-audio-visualizer :class="$style.audio" :color="visualizerColor" :bar-count="128" />
         <div :class="$style.content">
           <div :class="$style.music">
             <div :class="$style.cover">
@@ -206,7 +206,7 @@ watch(() => musicInfo.pic, async (pic) => {
 .favorite {
   display: flex;
   margin-top: 24px;
-  min-height: 220px;
+  min-height: 286px;
 }
 
 .favoriteCount {
@@ -242,6 +242,7 @@ watch(() => musicInfo.pic, async (pic) => {
     padding: 0 24px;
     z-index: 3;
     box-sizing: border-box;
+    gap: @gap;
 
     .title {
       font-size: 24px;

@@ -699,6 +699,12 @@ declare global {
       'lastFM.session.name': string
       'lastFM.session.key': string
       'lastFM.session.subscriber': 0 | 1
+      /**
+       * last FM 用户信息
+       */
+      'lastFM.userInfo.name': string
+      'lastFM.userInfo.avatar': string
+
     }
   }
 

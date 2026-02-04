@@ -1,6 +1,11 @@
 <template lang="pug">
 dt#basic {{ $t('setting__basic') }}
 dd
+  h3#basic_window_size {{ $t('setting__username') }}
+  div
+    base-input.gap-left(:class="$style.portInput" :model-value="appSetting['common.username']" type="string" :placeholder="$t('setting__username_tip')" @update:model-value="setUsername")
+
+dd
   .gap-top
     base-checkbox(id="setting_show_animate" :model-value="appSetting['common.isShowAnimation']" :label="$t('setting__basic_show_animation')" @update:model-value="updateSetting({ 'common.isShowAnimation': $event })")
   .gap-top
@@ -64,7 +69,8 @@ dd
     base-checkbox.gap-left(
       v-for="item in sourceNameTypes" :id="`setting_abasic_sourcename_${item.id}`" :key="item.id"
       name="setting_basic_sourcename" need :model-value="appSetting['common.sourceNameType']" :value="item.id" :label="item.label" @update:model-value="updateSetting({ 'common.sourceNameType': $event })")
-
+user-api-modal(v-model="isShowUserApiModal")
+play-timeout-modal(v-model="isShowPlayTimeoutModal")
 </template>
 
 <script>
@@ -77,11 +83,15 @@ import apiSourceInfo from '@renderer/utils/musicSdk/api-source-info'
 import { useTimeout } from '@renderer/core/player/timeoutStop'
 import { appSetting, updateSetting } from '@renderer/store/setting'
 import { debounce } from '@common/utils'
+import UserApiModal from './UserApiModal.vue'
+import PlayTimeoutModal from './PlayTimeoutModal.vue'
 
 export default {
   name: 'SettingBasic',
   components: {
     PhTrash,
+    UserApiModal,
+    PlayTimeoutModal,
   },
   setup() {
     const t = useI18n()

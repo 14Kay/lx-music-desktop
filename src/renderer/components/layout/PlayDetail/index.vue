@@ -202,8 +202,6 @@ export default {
   min-height: 0;
   overflow: hidden;
   display: flex;
-  margin: 0 30px;
-
   position: absolute;
   top: 0;
   left: 0;

@@ -199,10 +199,11 @@ export default {
 @import '@renderer/assets/styles/layout.less';
 
 .right {
-  flex: 0 0 60%;
+  flex: 0 0 54%;
   // padding: 0 30px;
   position: relative;
   transition: flex-basis @transition-normal;
+  left: -@gap;
 }
 
 .lyric {
@@ -225,8 +226,8 @@ export default {
     }
 
     .line-content {
-      line-height: 1.2;
-      padding: calc(var(--playDetail-lrc-font-size, 16px) / 2) 1px;
+      line-height: 1.4;
+      padding: @gap;
       overflow-wrap: break-word;
       color: var(--color-450);
       transition: @transition-normal;

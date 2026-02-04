@@ -311,6 +311,7 @@ export default {
   display: flex;
   flex-flow: row wrap;
 }
+
 .item {
   padding-right: 40px;
   width: 70px;
@@ -318,6 +319,7 @@ export default {
   flex-flow: column nowrap;
   align-items: center;
 }
+
 .color {
   width: 80%;
   aspect-ratio: 1 / 1;
@@ -327,15 +329,16 @@ export default {
   transition: @transition-fast !important;
   transition-property: background-color, opacity !important;
   box-shadow: 0 0 3px var(--color-primary-light-100-alpha-300);
+
   &:hover {
     opacity: .7;
   }
 }
+
 .label {
-  .mixin-ellipsis-2;
+  .mixin-ellipsis-2();
   padding-top: 10px;
   text-align: center;
   line-height: 1.1;
 }
-
 </style>
